@@ -1,0 +1,67 @@
+﻿@inject NavigationManager NavigationManager
+@if (@link == null)
+{
+    <button class="button @hasType() @hasSize()">
+        @value
+    </button>
+}
+else
+{
+    <button @onclick="buttonClick" class="button @hasType() @hasSize()">
+        @value
+    </button>
+}
+
+@code {
+    [Parameter] public string value { get; set; }
+    [Parameter] public ButtonType? type { get; set; }
+    [Parameter] public ButtonSize? size { get; set; }
+    [Parameter] public string link { get; set; }
+
+    private void buttonClick()
+    {
+        NavigationManager.NavigateTo(link);
+    }
+
+    private string hasType()
+    {
+        switch (type)
+        {
+            case ButtonType.edit:
+                return "button--edit";
+            case ButtonType.delete:
+                return "button--delete";
+            case ButtonType.action:
+                return "button--action";
+            default:
+                return "";
+        }
+    }
+
+    private string hasSize()
+    {
+        switch (size)
+        {
+            case ButtonSize.normal:
+                return "button--normal";
+            case ButtonSize.small:
+                return "button--small";
+            default:
+                return "";
+        }
+    }
+
+
+    public enum ButtonType
+    {
+        edit,
+        delete,
+        action
+    }
+
+    public enum ButtonSize
+    {
+        small,
+        normal
+    }
+}

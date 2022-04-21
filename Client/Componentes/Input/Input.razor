@@ -1,0 +1,26 @@
+﻿<div class="field__control">
+    <label class="field__label" for="@id">
+        @label
+    </label>
+    <input readonly="@readOnly" value="@value" class="field__input @isFocused()" id="@id" type="text">
+</div>
+
+@code {
+    [Parameter] public string label { get; set; }
+    [Parameter] public string id { get; set; }
+    [Parameter] public string value { get; set; }
+    [Parameter] public bool readOnly { get; set; }
+
+    private string isFocused()
+    {
+        if(readOnly == false)
+        {
+            return "field__input--active";
+        }
+        else
+        {
+            return "";
+        }
+    }
+
+}

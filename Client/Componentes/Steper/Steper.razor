@@ -1,0 +1,33 @@
+﻿<div class="step">
+    @foreach (string describe in stepDescribe)
+    {
+        <div class="step__info">
+            <div class="step__icon @isActive()">
+                @index
+            </div>
+            <div class="step__describe">
+                @describe
+            </div>
+        </div>
+        <hr class="step__divider">
+        index++;
+    }
+</div>
+
+@code {
+    private int index = 1;
+    [Parameter] public int stepActive { get; set; }
+    [Parameter] public string[] stepDescribe { get; set; }
+
+    private string isActive()
+    {
+        if(index == stepActive)
+        {
+            return "step__icon--active";
+        }
+        else
+        {
+            return "";
+        }
+    }
+}

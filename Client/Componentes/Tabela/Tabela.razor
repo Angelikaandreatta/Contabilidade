@@ -1,0 +1,50 @@
+﻿@using Projeto_Contabilidade.Client.Componentes.Botao;
+
+
+<div class="table__header--title">
+    <h2 class="table__title">@tableTitle</h2>
+
+    <Botao link="@tableLink" value="Novo" size="Botao.ButtonSize.small" type="Botao.ButtonType.action"></Botao>
+</div>
+<table class="table">
+    <tr class="table__tr table__header">
+        @foreach (string tableHeader in tableHeaders)
+        {
+            <th class="table__th">
+                @tableHeader
+            </th>
+        }
+        <th class="table__th">
+            Ações
+        </th>
+    </tr>
+    <tbody>
+
+        <tr class="table__tr">
+            @foreach (string data in tableData)
+            {
+                <td class="table__td">
+                    @data
+                </td>
+            }
+            <td class="table__td">
+                <div>
+                    <Botao value="Editar" link="InformacaoCliente" type="Botao.ButtonType.edit"></Botao>
+                    <Botao value="Deletar" type="Botao.ButtonType.delete"></Botao>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+@code {
+
+    [Parameter] public string tableTitle { get; set; }
+
+    [Parameter] public string[] tableData { get; set; }
+
+    [Parameter] public string[] tableHeaders { get; set; }
+
+    [Parameter] public string tableLink { get; set; }
+
+}

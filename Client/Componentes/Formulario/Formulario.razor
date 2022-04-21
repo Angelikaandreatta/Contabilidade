@@ -1,0 +1,26 @@
+﻿@using Projeto_Contabilidade.Client.Componentes.Botao
+@using Projeto_Contabilidade.Client.Componentes.Input
+<form class="form">
+    <h3 class="form__title">
+        @formTitle
+    </h3>
+    <div class="form__inputs">
+        @foreach (string input in formInputs)
+        {
+            <Input readOnly="false" label="@input"> </Input>
+        }
+    </div>
+    <div class="form__line__button">
+        <Botao value="Voltar" size="Botao.ButtonSize.normal" type="Botao.ButtonType.action"></Botao>
+        <Botao value="Próximo" size="Botao.ButtonSize.normal" type="Botao.ButtonType.action"></Botao>
+    </div>
+</form>
+
+@code {
+
+    [Parameter] public string formTitle { get; set; }
+
+    [Parameter] public string[] formInputs { get; set; }
+
+    [Parameter] public int step { get; set; }
+}
