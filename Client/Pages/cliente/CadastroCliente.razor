@@ -1,0 +1,41 @@
+﻿@page "/CadastroCliente"
+@page "/CadastroCliente/{codCliente}"
+@inject IJSRuntime jsRuntime
+
+
+@using Projeto_Contabilidade.Client.Pages.cliente
+
+<div class="card">
+    <h4 class="card-header">Cadastro de Cliente</h4>
+    <div class="card-body">
+
+        <EditForm Model="vmCliente">
+
+
+        </EditForm>
+        
+    </div>
+</div>
+
+@code {
+    [Parameter] public string codCliente { get; set; }
+    ClienteViewModel vmCliente = new ClienteViewModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        //Inicialização da Página
+    }
+
+    private async Task CadastrarCliente()
+    {
+        try
+        {
+
+        }
+        catch (InvalidOperationException ex)
+        {
+
+        }
+    }
+
+}
