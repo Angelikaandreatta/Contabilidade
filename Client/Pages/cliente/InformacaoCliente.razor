@@ -1,0 +1,25 @@
+﻿@page "/InformacaoCliente"
+@using Projeto_Contabilidade.Client.Componentes.Tabela
+@using Projeto_Contabilidade.Client.Componentes.Botao
+@using Projeto_Contabilidade.Client.Componentes.Input
+
+<div class="info">
+    <h3>Senhoria Seu Carlos</h3>
+    <div class="info__controls">
+        <Input readOnly="true" value="81.489.456/0001-77" label="CNPJ" id="info_cnpj"></Input>
+        <Input readOnly="true" value="04/12/2001" label="Data Cadastro" id="info_dataCadastro"></Input>
+        <Input readOnly="true" value="Master" label="Plano Contratado" id="info_planoContratado"></Input>
+        <Input readOnly="true" value="84" label="Total de Empregados" id="info_totalEmpregados"></Input>
+    </div>
+    <TabelaContato tableLink="CadastroContato" tableData="@tableData"></TabelaContato>
+    <div class="info__buttons">
+        <Botao value="Editar" size="Botao.ButtonSize.normal" type="Botao.ButtonType.edit"></Botao>
+        <Botao value="Deletar" size="Botao.ButtonSize.normal" type="Botao.ButtonType.delete"></Botao>
+    </div>
+</div>
+
+@code {
+    [Parameter] public string[] formInputs { get; set; }
+
+    string[] tableData = { "Jurislei Armando", "Diretor Marketing"};
+}

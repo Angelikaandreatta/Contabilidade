@@ -1,7 +1,7 @@
 ﻿@using Projeto_Contabilidade.Client.Componentes.Botao
 <div class="table__header--title">
     <h2 class="table__title">Contatos Cadastrados</h2>
-    <Botao value="Add Contato" type="Botao.ButtonType.action"></Botao>
+    <Botao link="@tableLink" value="Add Contato" type="Botao.ButtonType.action"></Botao>
 </div>
 <table class="table">
 
@@ -13,7 +13,7 @@
             </td>
         }
         <td class="table__data">
-            <Botao value="Editar" link="@tableLink" type="Botao.ButtonType.edit"></Botao>
+            <Botao value="Editar" link="InformacaoContato" type="Botao.ButtonType.edit"></Botao>
             <Botao value="Deletar" type="Botao.ButtonType.delete"></Botao>
         </td>
     </tr>

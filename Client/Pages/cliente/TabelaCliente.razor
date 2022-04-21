@@ -1,0 +1,29 @@
+﻿@page "/TabelaCliente"
+@using Projeto_Contabilidade.Client.Componentes.Tabela
+<Tabela tableLink="CadastroCliente" tableTitle="Clientes Cadastrados" tableData="@tableModel.tableData" tableHeaders="@tableModel.tableHeaders"></Tabela>
+
+@code {
+
+    public TableModel tableModel = new TableModel();
+    List<TableModel> tableList = new List<TableModel>();
+
+    protected override void OnInitialized()
+    {
+        addLine();
+    }
+
+    public void addLine()
+    {
+        tableList.Add(tableModel);
+        tableList.Add(tableModel);
+        tableList.Add(tableModel);
+    }
+
+
+    public class TableModel
+    {
+        public string[] tableHeaders = { "Nome", "Total Valor Emprestado", "Cliente Desde de Quando" };
+        public string[] tableData = { "Senhoria seu Carlos", "R$ 300.000.00", "04/12/2001" };
+    }
+
+}

@@ -1,0 +1,47 @@
+﻿.info {
+    display: flex;
+    flex-direction: column;
+    padding: 80px;
+    gap: 40px;
+    width: 100%;
+}
+
+.info__title {
+    font-size: 24px;
+}
+
+.info__subTitle {
+    font-size: 18px;
+    color: #C4C4C4;
+}
+
+.info__controls {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px 120px;
+    flex-wrap: wrap;
+}
+
+.info__control {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 14px;
+    width: 240px;
+}
+
+.info__label {
+}
+
+.info__input {
+    border: none;
+    border-bottom: 2px solid #c4c4c4;
+    transition: .1s ease all;
+    outline: none;
+}
+
+.info__buttons {
+    display: flex;
+    justify-content: end;
+    gap: 40px;
+}

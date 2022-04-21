@@ -1,0 +1,22 @@
+﻿@page "/CadastroContato"
+@using Projeto_Contabilidade.Client.Componentes.Steper
+@using Projeto_Contabilidade.Client.Componentes.Formulario
+
+<div class="card">
+    <h4 class="card-header">Cadastro de Contato</h4>
+    <div class="card-body">
+        @*Inserir 'EditForm'*@
+        <Steper stepActive="@stepActive" stepDescribe="@steperDescribes"></Steper>
+        <Formulario formTitle="Informações de Contato" formInputs="@formInputs"></Formulario>
+    </div>
+</div>
+
+@code {
+
+    public int stepActive = 1;
+    // Mock Formulário
+    string[] formInputs = { "Nome", "CPF", "E-mail", "Telefone" };
+
+    // Mock Steper
+    string[] steperDescribes = { "Informações Gerais", "Informações Contato" };
+}
