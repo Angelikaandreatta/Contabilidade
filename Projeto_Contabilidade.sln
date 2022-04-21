@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.32407.337
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Projeto_Contabilidade.Server", "Projeto_Contabilidade\Server\Projeto_Contabilidade.Server.csproj", "{72997C4F-E2B3-4D15-940B-23831183A53E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Projeto_Contabilidade.Client", "Client\Projeto_Contabilidade.Client.csproj", "{196666D4-4857-4B71-BDBD-7859435EED83}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Projeto_Contabilidade.Client", "Projeto_Contabilidade\Client\Projeto_Contabilidade.Client.csproj", "{8A8202BF-44AA-460A-8341-B6C7E35B6A89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Projeto_Contabilidade.Server", "Server\Projeto_Contabilidade.Server.csproj", "{77329EFC-0A37-4FD0-BA81-87455ABCDC2E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Projeto_Contabilidade.Shared", "Projeto_Contabilidade\Shared\Projeto_Contabilidade.Shared.csproj", "{A5CE10CE-ADC4-4917-B7A2-900375FE5C3B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Projeto_Contabilidade.Shared", "Shared\Projeto_Contabilidade.Shared.csproj", "{94176EE4-88E3-4160-854D-CB21FB9BA183}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,18 +15,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{72997C4F-E2B3-4D15-940B-23831183A53E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{72997C4F-E2B3-4D15-940B-23831183A53E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{72997C4F-E2B3-4D15-940B-23831183A53E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{72997C4F-E2B3-4D15-940B-23831183A53E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8A8202BF-44AA-460A-8341-B6C7E35B6A89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8A8202BF-44AA-460A-8341-B6C7E35B6A89}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8A8202BF-44AA-460A-8341-B6C7E35B6A89}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8A8202BF-44AA-460A-8341-B6C7E35B6A89}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A5CE10CE-ADC4-4917-B7A2-900375FE5C3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A5CE10CE-ADC4-4917-B7A2-900375FE5C3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A5CE10CE-ADC4-4917-B7A2-900375FE5C3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A5CE10CE-ADC4-4917-B7A2-900375FE5C3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{196666D4-4857-4B71-BDBD-7859435EED83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{196666D4-4857-4B71-BDBD-7859435EED83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{196666D4-4857-4B71-BDBD-7859435EED83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{196666D4-4857-4B71-BDBD-7859435EED83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77329EFC-0A37-4FD0-BA81-87455ABCDC2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77329EFC-0A37-4FD0-BA81-87455ABCDC2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77329EFC-0A37-4FD0-BA81-87455ABCDC2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77329EFC-0A37-4FD0-BA81-87455ABCDC2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94176EE4-88E3-4160-854D-CB21FB9BA183}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94176EE4-88E3-4160-854D-CB21FB9BA183}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94176EE4-88E3-4160-854D-CB21FB9BA183}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94176EE4-88E3-4160-854D-CB21FB9BA183}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
