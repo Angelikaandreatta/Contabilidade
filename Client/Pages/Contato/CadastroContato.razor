@@ -5,13 +5,17 @@
 <div class="card">
     <h4 class="card-header">Cadastro de Contato</h4>
     <div class="card-body">
+
         @*Inserir 'EditForm'*@
-        <Steper stepActive="@stepActive" stepDescribe="@steperDescribes"></Steper>
-        <Formulario formTitle="Informações de Contato" formInputs="@formInputs"></Formulario>
+        <Steper StepActive="@stepActive">
+            <Step Describe="Informações Gerais" Index=1 Active="stepActive == 1 ? true : false"></Step>
+            <Step Describe="Informações Contato" Index=2 Active="stepActive == 2 ? true : false"></Step>
+        </Steper>
     </div>
 </div>
 
 @code {
+    private string teste = "teste";
 
     public int stepActive = 1;
     // Mock Formulário

@@ -1,0 +1,29 @@
+﻿<div class="step__info">
+    <div class="step__icon @isActive()">
+        @Index
+    </div>
+    <div class="step__describe">
+        @Describe
+    </div>
+</div>
+<hr class="step__divider">
+
+@code {
+    [Parameter] public string Describe { get; set; }
+    [Parameter] public int Index { get; set; }
+    [Parameter] public bool Active { get; set; }
+
+    private string isActive()
+    {
+        if(Active)
+        {
+            return "step__icon--active";
+        }
+        else
+        {
+            return "";
+        }
+    }
+
+
+}

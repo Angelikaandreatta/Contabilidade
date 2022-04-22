@@ -4,22 +4,49 @@
 
 @using Projeto_Contabilidade.Client.Pages.cliente
 @using Projeto_Contabilidade.Client.Componentes.Steper
-@using Projeto_Contabilidade.Client.Componentes.Formulario
+@using Projeto_Contabilidade.Client.Componentes.Input
+@using Projeto_Contabilidade.Client.Componentes.Botao
 
 <div class="card">
     <h4 class="card-header">Cadastro de Cliente</h4>
     <div class="card-body">
 
         <EditForm Model="vmCliente">
-            <Steper stepActive="@stepActive" stepDescribe="@steperDescribes"></Steper>
-            <Formulario formTitle="Informações de Contato" formInputs="@formInputs"></Formulario>
+            <div class="form__div">
+                <Steper StepActive="@stepActive">
+                    <Step Describe="Informações Gerais" Index=1 Active="stepActive == 1 ? true : false"></Step>
+                    <Step Describe="Informações Contato" Index=2 Active="stepActive == 2 ? true : false"></Step>
+                </Steper>
+                <div class="form__inputs">
+                    <div class="field__control">
+                        <label>Nome</label>
+                        <InputText class="field__input field__input--active" @bind-Value="vmCliente.Nome_Cliente"></InputText>
+                    </div>
+                    <div class="field__control">
+                        <label>CNPJ</label>
+                        <InputText class="field__input field__input--active" @bind-Value="vmCliente.Cnpj"></InputText>
+                    </div>
+                    <div class="field__control">
+                        <label>E-Mail</label>
+                        <InputText class="field__input field__input--active" @bind-Value="vmCliente.Email"></InputText>
+                    </div>
+                    <div class="field__control">
+                        <label>IE</label>
+                        <InputText class="field__input field__input--active" @bind-Value="vmCliente.Ie"></InputText>
+                    </div>
+                </div>
+                <div class="form__line__button">
+                    <Botao value="Voltar" size="Botao.ButtonSize.normal" type="Botao.ButtonType.action"></Botao>
+                    <Botao value="Próximo" size="Botao.ButtonSize.normal" type="Botao.ButtonType.action"></Botao>
+                </div>
+            </div>
         </EditForm>
 
     </div>
 </div>
 
 @code {
-    public int stepActive = 1;
+    public int stepActive = 2;
     [Parameter] public string codCliente { get; set; }
     ClienteViewModel vmCliente = new ClienteViewModel();
 
@@ -39,11 +66,5 @@
 
         }
     }
-
-    // Mock Formulário
-    string[] formInputs = { "Nome", "CNPJ", "E-mail", "Telefone" };
-
-    // Mock Steper
-    string[] steperDescribes = { "Informações Gerais", "Informações Contato" };
 
 }
