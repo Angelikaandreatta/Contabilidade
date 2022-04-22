@@ -1,11 +1,14 @@
-﻿.form__div{
+﻿.steper {
+    width: 500px;
+    margin: 0px auto;
+}
+
+.form__div{
     display: flex;
     flex-direction: column;
     padding: 32px;
     gap: 40px;
     flex-wrap: wrap;
-    max-width: 600px;
-    margin: 0px auto;
 }
 
 .form__title {

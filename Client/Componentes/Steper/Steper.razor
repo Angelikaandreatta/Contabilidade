@@ -1,21 +1,117 @@
-﻿<div class="step">
-    @ChildContent
-</div>
+﻿@inject NavigationManager NavigationManager
+
+<CascadingValue Value="this">
+    <div class="steper">
+        <div class="step">
+            @foreach (Step stepPage in Steps)
+            {
+                <div class="step__info " @onclick=@( () => ActivateStep(stepPage) )>
+                    <div class="step__icon @GetStepCSS(stepPage)">
+                        <span class="oi @stepPage.Icon"></span>
+                    </div>
+                    <div class="step__describe">
+                        @stepPage.Text
+                    </div>
+                </div>
+                <hr class="step__divider">
+            }
+        </div>
+        <div class="tab-content">
+            @ChildContent
+            <div class="step__line__button">
+                @if (Steps.Count > 0)
+                {
+                    @if (ActiveStep != Steps[0])
+                    {
+                        <button @onclick=@(() => PreviousStep()) class="button button--normal button--action">
+                            Voltar
+                        </button>
+                    }
+                    @if (ActiveStep == Steps[Steps.Count - 1])
+                    {
+                        <button @onclick=@(() => NavigationManager.NavigateTo("TabelaCliente")) class="button button--normal button--action">
+                            Finalizar
+                        </button>
+                    }
+                    else
+                    {
+
+                        <button @onclick=@(() => NextStep()) class="button button--normal button--action">
+                            Proximo
+                        </button>
+
+                    }
+                }
+
+            </div>
+        </div>
+    </div>
+</CascadingValue>
 
 @code {
     private int index = 1;
-    [Parameter] public int StepActive { get; set; }
+    [Parameter] public string Texto1 { get; set; }
+    [Parameter] public string Texto2 { get; set; }
     [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public EventCallback<Step> OnStepChanged { get; set; }
+    public Step ActiveStep { get; set; }
+    List<Step> Steps = new List<Step>();
 
-    private string isActive()
+    internal void AddStep(Step stepPage)
     {
-        if(index == StepActive)
-        {
-            return "step__icon--active";
-        }
-        else
-        {
+        Steps.Add(stepPage);
+        if (Steps.Count == 1)
+            ActiveStep = stepPage;
+
+        StateHasChanged();
+    }
+
+    string GetStepCSS(Step step)
+    {
+        if (!step.Enabled)
             return "";
+
+        return step == ActiveStep ? "step__icon--active" : "";
+    }
+
+    void ActivateStep(Step step)
+    {
+
+        if (step.Enabled)
+        {
+            ActiveStep = step;
+            OnStepChanged.InvokeAsync(step);
         }
     }
+
+    void PreviousStep()
+    {
+        int index = 0;
+        foreach (Step step in Steps)
+        {
+            if (step == ActiveStep && step != Steps[0])
+            {
+                ActivateStep(Steps[index - 1]);
+            }
+            index++;
+        }
+    }
+    void NextStep()
+    {
+        int index = 0;
+        Console.WriteLine(Steps.Count);
+        foreach (Step step in Steps)
+        {
+            if (step == ActiveStep && step != Steps[Steps.Count - 1])
+            {
+                Console.WriteLine("Passo Ativo" + ActiveStep.Text);
+                Console.WriteLine("Próximo Passo" + Steps[index + 1].Text);
+                ActivateStep(Steps[index + 1]);
+            }
+            index++;
+        }
+
+    }
+
+
 }

@@ -1,9 +1,11 @@
-﻿.step {
+﻿.steper{
+    width: 600px;
+    margin: 0px auto;
+}
+.step {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 500px;
-    margin: 0px auto;
 }
 
 .step__divider {
@@ -42,4 +44,11 @@
 
 .step__describe {
     text-align: center;
+}
+
+.step__line__button{
+    display: flex;
+    padding: 0px 32px;
+    justify-content: flex-end;
+    gap: 80px;
 }

@@ -3,10 +3,6 @@
     border-collapse: collapse;
 }
 
-.table__title {
-    font-weight: normal;
-}
-
 .table__header--title {
     display: flex;
     justify-content: space-between;
@@ -31,9 +27,6 @@
 
 .table__line {
     transition: .2s ease all;
-}
-
-.table__line {
     border-bottom: 1px solid #c4c4c4;
 }
 

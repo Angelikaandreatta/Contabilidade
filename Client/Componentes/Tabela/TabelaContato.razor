@@ -1,10 +1,14 @@
 ﻿@using Projeto_Contabilidade.Client.Componentes.Botao
+@inject NavigationManager NavigationManager
+
 <div class="table__header--title">
     <h2 class="table__title">Contatos Cadastrados</h2>
-    <Botao link="@tableLink" value="Add Contato" type="Botao.ButtonType.action"></Botao>
+    <div class="table__search">
+        <span class="oi oi-magnifying-glass"></span>
+        <input placeholder="Pesquisa" class="table__search--input" />
+    </div>
 </div>
 <table class="table">
-
     <tr class="table__line">
         @foreach (string data in tableData)
         {
@@ -13,11 +17,17 @@
             </td>
         }
         <td class="table__data">
-            <Botao value="Editar" link="InformacaoContato" type="Botao.ButtonType.edit"></Botao>
-            <Botao value="Deletar" type="Botao.ButtonType.delete"></Botao>
+            <button @onclick=@(() => NavigationManager.NavigateTo("InformacaoContato")) class="button button--small button--edit">Editar</button>
+            <button class="button button--small button--delete">Deletar</button>
         </td>
     </tr>
-
+    <tr class="table__line">
+        <td colspan=3 class="table__data">
+            <button @onclick=@(() => NavigationManager.NavigateTo("CadastroContato")) class="button button--action">
+                Novo Contato
+            </button>
+        </td>
+    </tr>
 </table>
 
 @code {

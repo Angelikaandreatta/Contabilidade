@@ -1,6 +1,7 @@
 ﻿@page "/InformacaoContato"
 @using Projeto_Contabilidade.Client.Componentes.Input
 @using Projeto_Contabilidade.Client.Componentes.Botao
+@inject NavigationManager NavigationManager
 <div class="info">
     <h3 class="info__title">Jurislei Armando</h3>
     <h4 class="info__subTitle">Diretor de Marketing</h4>
@@ -11,8 +12,12 @@
         <Input readOnly="true" value="jurislei@gmail.com" label="Email" id="info_email"></Input>
     </div>
     <div class="info__buttons">
-        <Botao link="CadastroContato" value="Editar" size="Botao.ButtonSize.normal" type="Botao.ButtonType.edit"></Botao>
-        <Botao value="Deletar" size="Botao.ButtonSize.normal" type="Botao.ButtonType.delete"></Botao>
+        <button class="button button--normal button--edit" @onclick=@(() => NavigationManager.NavigateTo("CadastroContato"))>
+            Editar
+        </button>
+        <button class="button button--normal button--delete" )>
+            Deletar
+        </button>
     </div>
 </div>
 

@@ -7,20 +7,26 @@
     <div class="card-body">
 
         @*Inserir 'EditForm'*@
-        <Steper StepActive="@stepActive">
-            <Step Describe="Informações Gerais" Index=1 Active="stepActive == 1 ? true : false"></Step>
-            <Step Describe="Informações Contato" Index=2 Active="stepActive == 2 ? true : false"></Step>
+        <Steper>
+            <Step Text="Informações Gerais" Value="Step1" Enabled="IsEnabled">
+                <div class="form__inputs">
+                    @*<div class="field__control">
+                        <label>Nome</label>
+                        <InputText class="field__input field__input--active"></InputText>
+                    </div>*@
+                </div>
+            </Step>
         </Steper>
+
     </div>
 </div>
 
 @code {
-    private string teste = "teste";
+    public bool IsEnabled = false;
 
     public int stepActive = 1;
     // Mock Formulário
     string[] formInputs = { "Nome", "CPF", "E-mail", "Telefone" };
 
-    // Mock Steper
-    string[] steperDescribes = { "Informações Gerais", "Informações Contato" };
+
 }

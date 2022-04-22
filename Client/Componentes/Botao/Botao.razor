@@ -7,9 +7,10 @@
 }
 else
 {
-    <button @onclick="buttonClick" class="button @hasType() @hasSize()">
+    <button @onclick="OnClick" class="button @hasType() @hasSize()">
         @value
     </button>
+    
 }
 
 @code {
@@ -17,6 +18,7 @@ else
     [Parameter] public ButtonType? type { get; set; }
     [Parameter] public ButtonSize? size { get; set; }
     [Parameter] public string link { get; set; }
+    [Parameter] public EventCallback OnClick { get; set; }
 
     private void buttonClick()
     {

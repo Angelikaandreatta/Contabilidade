@@ -4,7 +4,6 @@
     padding: 8px 16px;
     transition: .1s ease all;
     cursor: pointer;
-    outline: none;
 }
 
 .button__link {
