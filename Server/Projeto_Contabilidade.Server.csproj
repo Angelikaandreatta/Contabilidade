@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Client\Projeto_Contabilidade.Client.csproj" />
+    <ProjectReference Include="..\Controle\Controle.csproj" />
     <ProjectReference Include="..\Shared\Projeto_Contabilidade.Shared.csproj" />
   </ItemGroup>
 
