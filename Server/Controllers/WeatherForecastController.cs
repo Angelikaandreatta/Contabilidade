@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Projeto_Contabilidade.Server.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("[Controller]")]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]

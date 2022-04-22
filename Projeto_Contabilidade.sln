@@ -1,13 +1,22 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.1.32407.343
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32228.343
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Projeto_Contabilidade.Client", "Client\Projeto_Contabilidade.Client.csproj", "{196666D4-4857-4B71-BDBD-7859435EED83}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Projeto_Contabilidade.Server", "Server\Projeto_Contabilidade.Server.csproj", "{77329EFC-0A37-4FD0-BA81-87455ABCDC2E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{72837704-7E12-49E5-8032-3BB18836C993} = {72837704-7E12-49E5-8032-3BB18836C993}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Projeto_Contabilidade.Shared", "Shared\Projeto_Contabilidade.Shared.csproj", "{94176EE4-88E3-4160-854D-CB21FB9BA183}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Negocio", "Negocio\Negocio.csproj", "{72837704-7E12-49E5-8032-3BB18836C993}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BancoDeDados", "BancoDeDados\BancoDeDados.csproj", "{A7B39C5A-FD61-4BF7-A7CE-FAD186DFB8B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Controle", "Controle\Controle.csproj", "{64A37E5D-8AAE-4FAD-B963-37E148850D75}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +36,18 @@ Global
 		{94176EE4-88E3-4160-854D-CB21FB9BA183}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94176EE4-88E3-4160-854D-CB21FB9BA183}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94176EE4-88E3-4160-854D-CB21FB9BA183}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72837704-7E12-49E5-8032-3BB18836C993}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72837704-7E12-49E5-8032-3BB18836C993}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72837704-7E12-49E5-8032-3BB18836C993}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72837704-7E12-49E5-8032-3BB18836C993}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7B39C5A-FD61-4BF7-A7CE-FAD186DFB8B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7B39C5A-FD61-4BF7-A7CE-FAD186DFB8B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7B39C5A-FD61-4BF7-A7CE-FAD186DFB8B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7B39C5A-FD61-4BF7-A7CE-FAD186DFB8B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64A37E5D-8AAE-4FAD-B963-37E148850D75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64A37E5D-8AAE-4FAD-B963-37E148850D75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64A37E5D-8AAE-4FAD-B963-37E148850D75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64A37E5D-8AAE-4FAD-B963-37E148850D75}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
