@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Negocio.Cadastro
 {
-    class Periodico
+    public class Periodico
     {
         public int cod_Periodico { get; set; }
 
@@ -22,10 +22,6 @@ namespace Negocio.Cadastro
         {
             List<string> lstRetorno = new List<string>();
 
-            if (string.IsNullOrWhiteSpace(pPeriodico.cod_Periodico.ToString()))
-            {
-                lstRetorno.Add("Informe o código do periódico");
-            }
             if (string.IsNullOrWhiteSpace(pPeriodico.nome_Periodico))
             {
                 lstRetorno.Add("Informe o nome do periódico");
