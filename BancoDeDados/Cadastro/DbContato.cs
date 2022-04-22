@@ -10,7 +10,7 @@ using BancoDeDados.UtilDb;
 
 namespace BancoDeDados.Cadastro
 {
-    class DbContato
+    public class DbContato
     {
         public Contato Gravar(Contato pContato)
         {

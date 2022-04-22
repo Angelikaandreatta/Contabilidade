@@ -11,7 +11,7 @@ using BancoDeDados.UtilDb;
 
 namespace BancoDeDados.Cadastro
 {
-    class DbEmprestimo
+    public class DbEmprestimo
     {
         public Emprestimo Gravar(Emprestimo pEmprestimo)
         {
@@ -21,7 +21,7 @@ namespace BancoDeDados.Cadastro
             comando.InsertSqlObj("quantidade", $"'{pEmprestimo.quantidade}'");
             comando.InsertSqlObj("juros", $"'{pEmprestimo.juros}'");
             comando.InsertSqlObj("data_Emprestimo", $"{ new FormatarValores().FormatarDataParaSQL(DateTime.Now.Date)}");
-            comando.InsertSqlObj("data_Devolucao", $"{ new FormatarValores().FormatarDataParaSQL(DateTime.Now.Date)}");
+            comando.InsertSqlObj("data_Devolucao", $"{ pEmprestimo.data_Devolucao}");
             comando.InsertSqlObj("cod_Periodico", $"'{pEmprestimo.cod_Periodico}'");
 
             if (comando.ExecutarComandoInsertSql() > 0)

@@ -24,10 +24,6 @@ namespace Negocio.Cadastro
         {
             List<string> lstRetorno = new List<string>();
 
-            if (string.IsNullOrWhiteSpace(pEmprestimo.cod_Emprestimo.ToString()))
-            {
-                lstRetorno.Add("Informe o código do empréstimo");
-            }
             if (string.IsNullOrWhiteSpace(pEmprestimo.quantidade.ToString()))
             {
                 lstRetorno.Add("Informe a quantidade do empréstimo");
@@ -36,11 +32,6 @@ namespace Negocio.Cadastro
             {
                 lstRetorno.Add("Informe a quantidade de juros");
             }
-            if (string.IsNullOrWhiteSpace(pEmprestimo.data_Emprestimo.ToString()))
-            {
-                lstRetorno.Add("Informe a data que foi realizado o empréstimo");
-            }
-
             if (string.IsNullOrWhiteSpace(pEmprestimo.data_Devolucao.ToString()))
             {
                 lstRetorno.Add("Informe a data que foi devolvido o empréstimo");

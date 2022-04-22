@@ -112,7 +112,7 @@ namespace BancoDeDados.Cadastro
             }
         }
 
-        public Periodico PeriodicoCliente(Periodico pPeriodico)
+        public Periodico CarregarPeriodico(Periodico pPeriodico)
         {
             SqlCommand sql = new SqlCommand("", new ConexaoDB().Conectar());
             sql.CommandText = "select * from tb_Periodico";
