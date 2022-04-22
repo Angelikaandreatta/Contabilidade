@@ -1,4 +1,4 @@
-﻿/*.step {
+﻿.step {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -43,4 +43,3 @@
 .step__describe {
     text-align: center;
 }
-*/
