@@ -71,6 +71,17 @@
                     </div>
                 </Step>
             </Steper>
+            <div class="form__buttons">
+                <button @onclick="Excluir" class="button button--normal button--delete">
+                    Excluir
+                </button>
+                <button @onclick="LimparTelaCliente" class="button button--normal button--action">
+                    Limpar
+                </button>
+                <button @onclick="CadastrarCliente" class="button button--normal button--action">
+                    Gravar
+                </button>
+            </div>
         </EditForm>
     </div>
 </div>
@@ -90,7 +101,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-       // await CadastrarCliente();
+        // await CadastrarCliente();
     }
 
     public Cliente Editar

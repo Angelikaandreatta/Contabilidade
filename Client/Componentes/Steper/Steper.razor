@@ -18,19 +18,13 @@
         </div>
         <div class="tab-content">
             @ChildContent
-            <div class="step__line__button">
+            <div class="step__line__button @(Steps.Count > 0 && ActiveStep != Steps[0] ? "justify-content-start" : "")">
                 @if (Steps.Count > 0)
                 {
                     @if (ActiveStep != Steps[0])
                     {
                         <button @onclick=@(() => PreviousStep()) class="button button--normal button--action">
                             Voltar
-                        </button>
-                    }
-                    @if (ActiveStep == Steps[Steps.Count - 1])
-                    {
-                        <button @onclick=@(() => NavigationManager.NavigateTo("CadastroCliente")) class="button button--normal button--action">
-                            Finalizar
                         </button>
                     }
                     else
@@ -50,8 +44,6 @@
 
 @code {
     private int index = 1;
-    [Parameter] public string Texto1 { get; set; }
-    [Parameter] public string Texto2 { get; set; }
     [Parameter] public RenderFragment ChildContent { get; set; }
     [Parameter] public EventCallback<Step> OnStepChanged { get; set; }
     public Step ActiveStep { get; set; }
@@ -99,13 +91,10 @@
     void NextStep()
     {
         int index = 0;
-        Console.WriteLine(Steps.Count);
         foreach (Step step in Steps)
         {
             if (step == ActiveStep && step != Steps[Steps.Count - 1])
             {
-                Console.WriteLine("Passo Ativo" + ActiveStep.Text);
-                Console.WriteLine("Próximo Passo" + Steps[index + 1].Text);
                 ActivateStep(Steps[index + 1]);
             }
             index++;

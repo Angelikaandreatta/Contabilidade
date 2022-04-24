@@ -80,6 +80,14 @@ a, .btn-link {
     flex-wrap: wrap;
 }
 
+.form__buttons{
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem auto;
+    padding: 32px;
+    width: 600px;
+}
+
 .form__line__button {
     display: flex;
     justify-content: space-between;
