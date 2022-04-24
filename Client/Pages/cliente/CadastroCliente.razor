@@ -91,7 +91,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        //Inicialização da Página
+        await CadastrarCliente();
     }
 
     public Cliente Editar
@@ -123,14 +123,16 @@
             HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, url);
             string jsonCorpo = System.Text.Json.JsonSerializer.Serialize(vmCliente);
             requestMessage.Content = new StringContent(jsonCorpo, Encoding.UTF8, "application/json");
+
+            //Ver essa parte, uso e instãncia.
             var response = new HttpResponseMessage();
             var resposta = response.RequestMessage.Content.ReadAsStringAsync();
 
             if (response.IsSuccessStatusCode == true)
             {
-
                 //Verificar no blazor como usar o retorno de mensagem sem usando requestMessage
                 throw new HttpRequestException($"Cliente gravado com sucesso");
+                //Console.WriteLine("Cliente gravado com sucesso");
 
                 LimparTelaCliente();
                 editando = false;
