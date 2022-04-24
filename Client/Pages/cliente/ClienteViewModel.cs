@@ -7,6 +7,11 @@ namespace Projeto_Contabilidade.Client.Pages.cliente
 {
     public class ClienteViewModel
     {
+        public ClienteViewModel()
+        {
+            this.vmCidade = new VmCidade();
+        }
+
         private string cod_cliente = "";
         public string Cod_Cliente { get => cod_cliente; set => cod_cliente = value; }
 

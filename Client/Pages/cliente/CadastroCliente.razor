@@ -70,12 +70,15 @@
 </div>
 
 @code {
+
     public string texto1 = "Teste1";
     public string texto2 = "Teste2";
     public bool IsEnabled = true;
 
     [Parameter] public string codCliente { get; set; }
     ClienteViewModel vmCliente = new ClienteViewModel();
+    private bool loading;
+    private string error;
 
     protected override async Task OnInitializedAsync()
     {
@@ -86,11 +89,28 @@
     {
         try
         {
+            string url = $"Cliente/Gravar";
+            HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, url);
+            // string jsonCorpo = UtilJson.SerializarObjetoParaJsonUTF8NewtonSoft(cliente);
+            string jsonCorpo = System.Text.Json.JsonSerializer.Serialize(vmCliente);
+            //requestMessage.Content = new StringContent(jsonCorpo, Encoding.UTF8, "application/json");
+            //var resposta = await client.SendAsync(requestMessage);
+
+            //if (resposta.IsSuccessStatusCode)
+            //{
+
+            //    LimparTela();
+
+            //}
+            //else
+            //{
+
+            //}
 
         }
         catch (InvalidOperationException ex)
         {
-
+            throw new InvalidOperationException(ex.Message);
         }
     }
 
@@ -98,7 +118,21 @@
     {
         texto1 = $"Step value: {step.Value}";
         texto2 = $"Step text: {step.Text}";
+    }
 
+
+    public void LimparTela()
+    {
+        vmCliente.Nome_Cliente = "";
+        vmCliente.Cnpj = "";
+        vmCliente.Ie = "";
+        vmCliente.Email = "";
+        vmCliente.Rua = "";
+        vmCliente.Numero = "";
+        vmCliente.Bairro = "";
+        vmCliente.Cep = "";
+        vmCliente.Uf = "";
+        vmCliente.vmCidade.Nome_Cidade = "";
     }
 
 }
