@@ -5,11 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Pages\Cliente\InformacaoCliente.razor.css" />
+    <None Remove="Pages\cliente\InformacaoCliente.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Pages\Cliente\InformacaoCliente.razor.css" />
+    <Content Include="Pages\cliente\InformacaoCliente.razor.css" />
   </ItemGroup>
 
   <ItemGroup>

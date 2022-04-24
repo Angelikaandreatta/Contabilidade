@@ -1,8 +1,7 @@
 ﻿@page "/CadastroContato"
 @page "/CadastroContato/{codContato}"
+@using Projeto_Contabilidade.Client.Pages.Contato
 @using Projeto_Contabilidade.Client.Componentes.Steper
-@using Projeto_Contabilidade.Client.Componentes.Formulario
-
 
 <div class="card">
     <h4 class="card-header">Cadastro de Contato</h4>
@@ -10,14 +9,32 @@
 
         <EditForm Model="vmContato">
             <Steper>
-                @*<Step Text="Informações Gerais" Value="Step1" Enabled="IsEnabled">
+                <Step Text="Informações Gerais" Value="Step1" Enabled="IsEnabled">
+                    <div class="form__div">
+                        <h3 class="form__title">
+                            Informações Gerais
+                        </h3>
                         <div class="form__inputs">
+                            <div class="field__control">
+                                <label>Cliente</label>
+                                <InputSelect class="field__input" @bind-Value="vmContato.Cod_Contato"></InputSelect>
+                            </div>
                             <div class="field__control">
                                 <label>Nome</label>
                                 <InputText class="field__input field__input--active" @bind-Value="vmContato.Nome_Contato"></InputText>
                             </div>
+                            <div class="field__control">
+                                <label>Celular</label>
+                                <InputText class="field__input field__input--active" @bind-Value="vmContato.Nome_Contato"></InputText>
+                            </div>
+                            <div class="field__control">
+                                <label>E-mail</label>
+                                <InputText class="field__input field__input--active" @bind-Value="vmContato.Nome_Contato"></InputText>
+                            </div>
+
                         </div>
-                    </Step>*@
+                    </div>
+                </Step>
             </Steper>
         </EditForm>
     </div>
