@@ -7,10 +7,10 @@ namespace Projeto_Contabilidade.Client.Pages.cliente
 {
     public class ClienteViewModel
     {
-        public ClienteViewModel()
-        {
-            this.vmCidade = new VmCidade();
-        }
+        //public ClienteViewModel()
+        ////{
+        ////    this.vmCidade = new VmCidade();
+        //}
 
         private string cod_cliente = "";
         public string Cod_Cliente { get => cod_cliente; set => cod_cliente = value; }
@@ -45,16 +45,22 @@ namespace Projeto_Contabilidade.Client.Pages.cliente
         private DateTime? data_Cadastro = null;
         public DateTime? Data_Cadastro { get => data_Cadastro; set => data_Cadastro = value; }
 
-        public VmCidade vmCidade { get; set; } = null;
-    }
-
-    public class VmCidade
-    {
         private string cod_Cidade = "";
         public string Cod_Cidade { get => cod_Cidade; set => cod_Cidade = value; }
 
         private string nome_Cidade = "";
         public string Nome_Cidade { get => nome_Cidade; set => nome_Cidade = value; }
+
+        //public VmCidade vmCidade { get; set; } = null;
     }
+
+    //public class VmCidade
+    //{
+    //    private string cod_Cidade = "";
+    //    public string Cod_Cidade { get => cod_Cidade; set => cod_Cidade = value; }
+
+    //    private string nome_Cidade = "";
+    //    public string Nome_Cidade { get => nome_Cidade; set => nome_Cidade = value; }
+    //}
 }
 

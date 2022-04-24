@@ -1,7 +1,8 @@
 ﻿@page "/CadastroCliente"
 @page "/CadastroCliente/{codCliente}"
 @inject IJSRuntime jsRuntime
-
+@using System.Text
+@using Negocio.Cadastro
 @using Projeto_Contabilidade.Client.Pages.cliente
 @using Projeto_Contabilidade.Client.Componentes.Steper
 @using Projeto_Contabilidade.Client.Componentes.Input
@@ -10,7 +11,6 @@
 <div class="card">
     <h4 class="card-header">Cadastro de Cliente</h4>
     <div class="card-body">
-
         <EditForm Model="vmCliente">
             <Steper>
                 <Step Text="Informações Gerais" Icon="oi-info" Value="Step1" Enabled="@IsEnabled">
@@ -45,22 +45,6 @@
                         </h3>
                         <div class="form__inputs">
                             <div class="field__control">
-                                <label>CEP</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Cep"></InputText>
-                            </div>
-                            <div class="field__control">
-                                <label>UF</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Uf"></InputText>
-                            </div>
-                            <div class="field__control">
-                                <label>Cidade</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmCidade.Nome_Cidade"></InputText>
-                            </div>
-                            <div class="field__control">
-                                <label>Bairro</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Bairro"></InputText>
-                            </div>
-                            <div class="field__control">
                                 <label>Rua</label>
                                 <InputText class="field__input field__input--active" @bind-Value="vmCliente.Rua"></InputText>
                             </div>
@@ -68,12 +52,27 @@
                                 <label>Número</label>
                                 <InputText class="field__input field__input--active" @bind-Value="vmCliente.Numero"></InputText>
                             </div>
+                            <div class="field__control">
+                                <label>Bairro</label>
+                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Bairro"></InputText>
+                            </div>
+                            <div class="field__control">
+                                <label>CEP</label>
+                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Cep"></InputText>
+                            </div>
+                            <div class="field__control">
+                                <label>Cidade</label>
+                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Nome_Cidade"></InputText>
+                            </div>
+                            <div class="field__control">
+                                <label>UF</label>
+                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Uf"></InputText>
+                            </div>
                         </div>
                     </div>
                 </Step>
             </Steper>
         </EditForm>
-
     </div>
 </div>
 
@@ -83,13 +82,37 @@
 
     [Parameter] public string codCliente { get; set; }
     ClienteViewModel vmCliente = new ClienteViewModel();
-    VmCidade vmCidade = new VmCidade();
+    //Não é necessário instânciar  a vmCidade pois a cidade está dentro da vmCliente, instânciada.
+    // VmCidade vmCidade = new VmCidade();
     private bool loading;
     private string error;
+    private bool editando = false;
+    private Cliente editarCliente = null;
 
     protected override async Task OnInitializedAsync()
     {
         //Inicialização da Página
+    }
+
+    public Cliente Editar
+    {
+        get
+        {
+            return editarCliente;
+        }
+        set
+        {
+            vmCliente.Nome_Cliente = editarCliente.nome_Cliente;
+            vmCliente.Cnpj = editarCliente.cnpj;
+            vmCliente.Email = editarCliente.email;
+            vmCliente.Ie = editarCliente.ie;
+            vmCliente.Cep = editarCliente.cep;
+            vmCliente.Uf = editarCliente.uf;
+            vmCliente.Bairro = editarCliente.bairro;
+            vmCliente.Rua = editarCliente.rua;
+            vmCliente.Numero = editarCliente.numero;
+            vmCliente.Nome_Cidade = editarCliente.nome_Cidade;
+        }
     }
 
     private async Task CadastrarCliente()
@@ -98,22 +121,26 @@
         {
             string url = $"Cliente/Gravar";
             HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, url);
-            // string jsonCorpo = UtilJson.SerializarObjetoParaJsonUTF8NewtonSoft(cliente);
             string jsonCorpo = System.Text.Json.JsonSerializer.Serialize(vmCliente);
-            //requestMessage.Content = new StringContent(jsonCorpo, Encoding.UTF8, "application/json");
-            //var resposta = await client.SendAsync(requestMessage);
+            requestMessage.Content = new StringContent(jsonCorpo, Encoding.UTF8, "application/json");
+            var response = new HttpResponseMessage();
+            var resposta = response.RequestMessage.Content.ReadAsStringAsync();
 
-            //if (resposta.IsSuccessStatusCode)
-            //{
+            if (response.IsSuccessStatusCode == true)
+            {
 
-            //    LimparTela();
+                //Verificar no blazor como usar o retorno de mensagem sem usando requestMessage
+                throw new HttpRequestException($"Cliente gravado com sucesso");
 
-            //}
-            //else
-            //{
+                LimparTelaCliente();
+                editando = false;
+                StateHasChanged();
 
-            //}
-
+            }
+            else
+            {
+                throw new InvalidOperationException("Erro ao gravar o Cliente.");
+            }
         }
         catch (InvalidOperationException ex)
         {
@@ -121,8 +148,33 @@
         }
     }
 
+    private async Task Excluir()
+    {
+        try
+        {
+            string url = $"Cliente/Excluir";
+            HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Delete, url);
+            string jsonCorpo = System.Text.Json.JsonSerializer.Serialize(vmCliente); ;
+            requestMessage.Content = new StringContent(jsonCorpo, Encoding.UTF8, "application/json");
+            var response = new HttpResponseMessage();
+            var resposta = response.RequestMessage.Content.ReadAsStringAsync();
 
-    public void LimparTela()
+            if (response.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException($"Cliente excluído com sucesso");
+                LimparTelaCliente();
+                editando = false;
+                StateHasChanged();
+
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+    }
+
+    public void LimparTelaCliente()
     {
         vmCliente.Nome_Cliente = "";
         vmCliente.Cnpj = "";
@@ -133,7 +185,7 @@
         vmCliente.Bairro = "";
         vmCliente.Cep = "";
         vmCliente.Uf = "";
-        vmCliente.vmCidade.Nome_Cidade = "";
+        vmCliente.Nome_Cidade = "";
     }
 
 }
