@@ -12,7 +12,7 @@
     <div class="card-body">
 
         <EditForm Model="vmCliente">
-            <Steper Texto1="@texto1" Texto2="@texto2" OnStepChanged="OnStepChanged">
+            <Steper>
                 <Step Text="Informações Gerais" Icon="oi-info" Value="Step1" Enabled="@IsEnabled">
                     <div class="form__div">
                         <h3 class="form__title">
@@ -53,12 +53,20 @@
                                 <InputText class="field__input field__input--active" @bind-Value="vmCliente.Uf"></InputText>
                             </div>
                             <div class="field__control">
+                                <label>Cidade</label>
+                                <InputText class="field__input field__input--active" @bind-Value="vmCidade.Nome_Cidade"></InputText>
+                            </div>
+                            <div class="field__control">
                                 <label>Bairro</label>
                                 <InputText class="field__input field__input--active" @bind-Value="vmCliente.Bairro"></InputText>
                             </div>
                             <div class="field__control">
                                 <label>Rua</label>
                                 <InputText class="field__input field__input--active" @bind-Value="vmCliente.Rua"></InputText>
+                            </div>
+                            <div class="field__control">
+                                <label>Número</label>
+                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Numero"></InputText>
                             </div>
                         </div>
                     </div>
@@ -71,12 +79,11 @@
 
 @code {
 
-    public string texto1 = "Teste1";
-    public string texto2 = "Teste2";
     public bool IsEnabled = true;
 
     [Parameter] public string codCliente { get; set; }
     ClienteViewModel vmCliente = new ClienteViewModel();
+    VmCidade vmCidade = new VmCidade();
     private bool loading;
     private string error;
 
@@ -112,12 +119,6 @@
         {
             throw new InvalidOperationException(ex.Message);
         }
-    }
-
-    public async Task OnStepChanged(Step step)
-    {
-        texto1 = $"Step value: {step.Value}";
-        texto2 = $"Step text: {step.Text}";
     }
 
 
