@@ -29,7 +29,8 @@ namespace BancoDeDados.Cadastro
             comando.InsertSqlObj("data_Cadastro", $"{ new FormatarValores().FormatarDataParaSQL(DateTime.Now.Date)}");
             comando.InsertSqlObj("cod_Cidade", $"{pCliente.cod_Cidade}");
             comando.InsertSqlObj("nome_Cidade", $"'{pCliente.nome_Cidade}'");
-            comando.InsertSqlObj("cod_Contato", $"{pCliente.cod_Contato}", true);
+            //comando.InsertSqlObj("cod_Contato", $"{pCliente.cod_Contato}", true);
+            comando.InsertSqlObj("cod_Contato", null, true);
 
             if (comando.ExecutarComandoInsertSql() > 0)
             {
@@ -57,7 +58,8 @@ namespace BancoDeDados.Cadastro
             comando.UpdateSqlObj("data_Cadastro", $"{DateTime.Now.Date}");
             comando.UpdateSqlObj("cod_Cidade", $"{pCliente.cod_Cidade}");
             comando.UpdateSqlObj("nome_Cidade", $"'{pCliente.nome_Cidade}'");
-            comando.UpdateSqlObj("cod_Contato", $"{pCliente.cod_Contato}");
+            //comando.UpdateSqlObj("cod_Contato", $"{pCliente.cod_Contato}");
+            comando.UpdateSqlObj("cod_Contato", null);
             comando.strWhere = $" where cod_Cliente = '{pCliente.cod_Cliente}'";
 
             if (comando.ExecutarComandoUpdateSql() > 0)

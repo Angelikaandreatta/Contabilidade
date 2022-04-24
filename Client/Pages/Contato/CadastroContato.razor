@@ -1,27 +1,31 @@
 ﻿@page "/CadastroContato"
+@page "/CadastroContato/{codContato}"
 @using Projeto_Contabilidade.Client.Componentes.Steper
 @using Projeto_Contabilidade.Client.Componentes.Formulario
+
 
 <div class="card">
     <h4 class="card-header">Cadastro de Contato</h4>
     <div class="card-body">
 
-        @*Inserir 'EditForm'*@
-        <Steper>
-            <Step Text="Informações Gerais" Value="Step1" Enabled="IsEnabled">
-                <div class="form__inputs">
-                    @*<div class="field__control">
-                        <label>Nome</label>
-                        <InputText class="field__input field__input--active"></InputText>
-                    </div>*@
-                </div>
-            </Step>
-        </Steper>
-
+        <EditForm Model="vmContato">
+            <Steper>
+                @*<Step Text="Informações Gerais" Value="Step1" Enabled="IsEnabled">
+                        <div class="form__inputs">
+                            <div class="field__control">
+                                <label>Nome</label>
+                                <InputText class="field__input field__input--active" @bind-Value="vmContato.Nome_Contato"></InputText>
+                            </div>
+                        </div>
+                    </Step>*@
+            </Steper>
+        </EditForm>
     </div>
 </div>
 
 @code {
+    [Parameter] public string codContato { get; set; }
+    ContatoViewModel vmContato = new ContatoViewModel();
     public bool IsEnabled = false;
 
     public int stepActive = 1;

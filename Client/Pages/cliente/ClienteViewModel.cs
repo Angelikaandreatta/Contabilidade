@@ -48,6 +48,9 @@ namespace Projeto_Contabilidade.Client.Pages.cliente
         private string cod_Cidade = "";
         public string Cod_Cidade { get => cod_Cidade; set => cod_Cidade = value; }
 
+        private string cod_Contato = "";
+        public string Cod_Contato { get => cod_Contato; set => cod_Contato = value; }
+
         private string nome_Cidade = "";
         public string Nome_Cidade { get => nome_Cidade; set => nome_Cidade = value; }
 
