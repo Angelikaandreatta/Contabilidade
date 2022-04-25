@@ -79,9 +79,18 @@
                 <button @onclick="LimparTelaCliente" class="button button--normal button--action">
                     Limpar
                 </button>
-                <button @onclick="CadastrarCliente" class="button button--normal button--action">
-                    Gravar
-                </button>
+                @if (string.IsNullOrWhiteSpace(vmCliente.Cod_Cliente) == true)
+                {
+                    <button @onclick="CadastrarCliente" class="button button--normal button--action">
+                        Gravar
+                    </button>
+                }
+                else
+                {
+                    <button @onclick="EditarCliente" class="button button--normal button--action">
+                        Editar
+                    </button>
+                }
             </div>
         </EditForm>
     </div>
@@ -126,10 +135,74 @@
         }
     }
 
+    private async Task EditarCliente()
+    {
+        Cliente clienteEditar = new Cliente();
+        clienteEditar.nome_Cliente = vmCliente.Nome_Cliente;
+        clienteEditar.cnpj = vmCliente.Cnpj;
+        clienteEditar.email = vmCliente.Email;
+        clienteEditar.ie = vmCliente.Ie;
+        clienteEditar.cep = vmCliente.Cep;
+        clienteEditar.uf = vmCliente.Uf;
+        clienteEditar.bairro = vmCliente.Bairro;
+        clienteEditar.rua = vmCliente.Rua;
+        clienteEditar.numero = vmCliente.Numero;
+        clienteEditar.cod_Cidade = 1;
+        clienteEditar.nome_Cidade = vmCliente.Nome_Cidade;
+        clienteEditar.cod_Contato = 1;
+
+        try
+        {
+            string url = $"https://localhost:44388/Cliente/Editar";
+
+            var response = await httpClient.PostAsJsonAsync(url, clienteEditar);
+
+            if (response.IsSuccessStatusCode == true)
+            {
+                vmCliente.Cod_Cliente = clienteEditar.cod_Cliente.ToString();
+                vmCliente.Nome_Cliente = clienteEditar.nome_Cliente;
+                vmCliente.Cnpj = clienteEditar.cnpj;
+                vmCliente.Email = clienteEditar.email;
+                vmCliente.Ie = clienteEditar.ie;
+                vmCliente.Cep = clienteEditar.cep;
+                vmCliente.Uf = clienteEditar.uf;
+                vmCliente.Bairro = clienteEditar.bairro;
+                vmCliente.Rua = clienteEditar.rua;
+                vmCliente.Numero = clienteEditar.numero;
+                vmCliente.Cod_Cidade = clienteEditar.cod_Cidade.ToString();
+                vmCliente.Nome_Cidade = clienteEditar.nome_Cidade;
+                vmCliente.Cod_Contato = clienteEditar.cod_Contato.ToString();
+
+                //Verificar no blazor como usar o retorno de mensagem sem usando requestMessage
+                throw new HttpRequestException($"Cliente editado com sucesso");
+                //Console.WriteLine("Cliente gravado com sucesso");
+            }
+            else
+            {
+                throw new InvalidOperationException("Erro ao editar o Cliente.");
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+    }
+
     private async Task CadastrarCliente()
     {
         Cliente clienteGravar = new Cliente();
-
+        clienteGravar.nome_Cliente = vmCliente.Nome_Cliente;
+        clienteGravar.cnpj = vmCliente.Cnpj;
+        clienteGravar.email = vmCliente.Email;
+        clienteGravar.ie = vmCliente.Ie;
+        clienteGravar.cep = vmCliente.Cep;
+        clienteGravar.uf = vmCliente.Uf;
+        clienteGravar.bairro = vmCliente.Bairro;
+        clienteGravar.rua = vmCliente.Rua;
+        clienteGravar.numero = vmCliente.Numero;
+        clienteGravar.cod_Cidade = 1;
+        clienteGravar.nome_Cidade = vmCliente.Nome_Cidade;
+        clienteGravar.cod_Contato = 1;
 
         try
         {
@@ -139,27 +212,28 @@
 
             if (response.IsSuccessStatusCode == true)
             {
+                vmCliente.Cod_Cliente = clienteGravar.cod_Cliente.ToString();
+                vmCliente.Nome_Cliente = clienteGravar.nome_Cliente;
+                vmCliente.Cnpj = clienteGravar.cnpj;
+                vmCliente.Email = clienteGravar.email;
+                vmCliente.Ie = clienteGravar.ie;
+                vmCliente.Cep = clienteGravar.cep;
+                vmCliente.Uf = clienteGravar.uf;
+                vmCliente.Bairro = clienteGravar.bairro;
+                vmCliente.Rua = clienteGravar.rua;
+                vmCliente.Numero = clienteGravar.numero;
+                vmCliente.Cod_Cidade = clienteGravar.cod_Cidade.ToString();
+                vmCliente.Nome_Cidade = clienteGravar.nome_Cidade;
+                vmCliente.Cod_Contato = clienteGravar.cod_Contato.ToString();
+
                 //Verificar no blazor como usar o retorno de mensagem sem usando requestMessage
                 throw new HttpRequestException($"Cliente gravado com sucesso");
                 //Console.WriteLine("Cliente gravado com sucesso");
-
-                LimparTelaCliente();
-                editando = false;
-                StateHasChanged();
-
             }
             else
             {
                 throw new InvalidOperationException("Erro ao gravar o Cliente.");
             }
-
-
-
-            //Ver essa parte, uso e instãncia.
-            //var response = new HttpResponseMessage();
-            //var resposta = response.RequestMessage.Content.ReadAsStringAsync();
-
-
         }
         catch (InvalidOperationException ex)
         {
@@ -171,20 +245,15 @@
     {
         try
         {
-            string url = $"Cliente/Excluir";
-            HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Delete, url);
-            string jsonCorpo = System.Text.Json.JsonSerializer.Serialize(vmCliente); ;
-            requestMessage.Content = new StringContent(jsonCorpo, Encoding.UTF8, "application/json");
-            var response = new HttpResponseMessage();
-            var resposta = response.RequestMessage.Content.ReadAsStringAsync();
+            Cliente clienteExcluir = new Cliente();
+            string url = $"https://localhost:44388/Cliente/Excluir";
+            var response = await httpClient.PostAsJsonAsync(url, clienteExcluir);
 
             if (response.IsSuccessStatusCode)
             {
                 throw new HttpRequestException($"Cliente excluído com sucesso");
                 LimparTelaCliente();
-                editando = false;
                 StateHasChanged();
-
             }
         }
         catch (InvalidOperationException ex)
