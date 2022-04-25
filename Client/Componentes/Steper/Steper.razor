@@ -19,7 +19,7 @@
         <div class="tab-content">
             @ChildContent
             <div class="step__line__button @(Steps.Count > 0 && ActiveStep != Steps[0] ? "justify-content-start" : "")">
-                @if (Steps.Count > 0)
+                @if (Steps.Count > 0 && Steps.Count != 1)
                 {
                     @if (ActiveStep != Steps[0])
                     {

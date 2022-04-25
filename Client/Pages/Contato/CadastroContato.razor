@@ -25,17 +25,37 @@
                             </div>
                             <div class="field__control">
                                 <label>Celular</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmContato.Nome_Contato"></InputText>
+                                <InputText class="field__input field__input--active" @bind-Value="vmContato.Celular"></InputText>
                             </div>
                             <div class="field__control">
                                 <label>E-mail</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmContato.Nome_Contato"></InputText>
+                                <InputText class="field__input field__input--active" @bind-Value="vmContato.Email"></InputText>
                             </div>
 
                         </div>
                     </div>
                 </Step>
             </Steper>
+             <div class="form__buttons">
+                <button class="button button--normal button--delete">
+                    Excluir
+                </button>
+                <button  class="button button--normal button--action">
+                    Limpar
+                </button>
+                @*@if (string.IsNullOrWhiteSpace(vmCliente.Cod_Cliente) == true)
+                {
+                    <button class="button button--normal button--action">
+                        Gravar
+                    </button>
+                }
+                else
+                {
+                    <button class="button button--normal button--action">
+                        Editar
+                    </button>
+                }*@
+            </div>
         </EditForm>
     </div>
 </div>
