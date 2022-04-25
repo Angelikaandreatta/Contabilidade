@@ -1,5 +1,6 @@
 ﻿@page "/CadastroCliente"
 @page "/CadastroCliente/{codCliente}"
+@inject HttpClient httpClient
 @inject IJSRuntime jsRuntime
 @using System.Text
 @using Negocio.Cadastro
@@ -127,16 +128,14 @@
 
     private async Task CadastrarCliente()
     {
+        Cliente clienteGravar = new Cliente();
+
+
         try
         {
             string url = $"https://localhost:44388/Cliente/Gravar";
-            HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, url);
-            string jsonCorpo = System.Text.Json.JsonSerializer.Serialize(vmCliente);
-            requestMessage.Content = new StringContent(jsonCorpo, Encoding.UTF8, "application/json");
 
-            //Ver essa parte, uso e instãncia.
-            var response = new HttpResponseMessage();
-            var resposta = response.RequestMessage.Content.ReadAsStringAsync();
+            var response = await httpClient.PostAsJsonAsync(url, clienteGravar);
 
             if (response.IsSuccessStatusCode == true)
             {
@@ -153,6 +152,14 @@
             {
                 throw new InvalidOperationException("Erro ao gravar o Cliente.");
             }
+
+
+
+            //Ver essa parte, uso e instãncia.
+            //var response = new HttpResponseMessage();
+            //var resposta = response.RequestMessage.Content.ReadAsStringAsync();
+
+
         }
         catch (InvalidOperationException ex)
         {
