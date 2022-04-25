@@ -9,7 +9,7 @@
 
         <EditForm Model="vmContato">
             <Steper>
-                <Step Text="Informações Gerais" Value="Step1" Enabled="IsEnabled">
+                <Step Icon="oi-info" Text="Informações Gerais" Value="Step1" Enabled="IsEnabled">
                     <div class="form__div">
                         <h3 class="form__title">
                             Informações Gerais
@@ -43,11 +43,6 @@
 @code {
     [Parameter] public string codContato { get; set; }
     ContatoViewModel vmContato = new ContatoViewModel();
-    public bool IsEnabled = false;
-
-    public int stepActive = 1;
-    // Mock Formulário
-    string[] formInputs = { "Nome", "CPF", "E-mail", "Telefone" };
-
+    public bool IsEnabled = true;
 
 }

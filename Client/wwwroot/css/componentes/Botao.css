@@ -17,9 +17,7 @@
 }
 
 .button--small {
-    width: 100px;
-    height: 24px;
-    padding: 8px;
+    width: 80px;
 }
 
 .button--edit {
