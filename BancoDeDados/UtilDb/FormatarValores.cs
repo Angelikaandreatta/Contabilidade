@@ -18,7 +18,7 @@ namespace BancoDeDados.UtilDb
             Mes = pData.Month.ToString();
             Ano = pData.Year.ToString();
 
-            return $"{dia}/{Mes}{Ano}";
+            return $"'{Mes}-{dia}-{Ano}'";
         }
 
     }

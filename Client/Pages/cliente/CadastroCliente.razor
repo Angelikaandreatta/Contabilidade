@@ -129,7 +129,7 @@
     {
         try
         {
-            string url = $"Cliente/Gravar";
+            string url = $"https://localhost:44388/Cliente/Gravar";
             HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, url);
             string jsonCorpo = System.Text.Json.JsonSerializer.Serialize(vmCliente);
             requestMessage.Content = new StringContent(jsonCorpo, Encoding.UTF8, "application/json");

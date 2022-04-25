@@ -62,7 +62,7 @@ namespace BancoDeDados
                 else
                 {
                     campo += $"{tabelaCampo}";
-                    value += $"null, ";
+                    value += $"null";
                     cmd.Parameters.AddWithValue($"{tabelaCampo}", $"null");
                 }
 

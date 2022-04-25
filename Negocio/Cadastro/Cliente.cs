@@ -28,7 +28,7 @@ namespace Negocio.Cadastro
 
         public string uf { get; set; }
 
-        public DateTime? data_Cadastro { get; set; }
+        public string data_Cadastro { get; set; }
 
         public int cod_Cidade { get; set; }
 

@@ -14,9 +14,11 @@ namespace BancoDeDados.Cadastro
     {
         public Cliente Gravar(Cliente pCliente)
         {
+            pCliente.cod_Cliente = this.ProximoCodigo();
+
             ComandoSQL comando = new ComandoSQL();
             comando.InsertTabela("tb_Cliente");
-            comando.InsertSqlObj("cod_Cliente", $"{this.ProximoCodigo()}");
+            comando.InsertSqlObj("cod_Cliente", $"{pCliente.cod_Cliente}");
             comando.InsertSqlObj("nome_Cliente", $"'{pCliente.nome_Cliente}'");
             comando.InsertSqlObj("cnpj", $"'{pCliente.cnpj}'");
             comando.InsertSqlObj("ie", $"'{pCliente.ie}'");
@@ -27,10 +29,9 @@ namespace BancoDeDados.Cadastro
             comando.InsertSqlObj("cep", $"'{pCliente.cep}'");
             comando.InsertSqlObj("uf", $"'{pCliente.uf}'");
             comando.InsertSqlObj("data_Cadastro", $"{ new FormatarValores().FormatarDataParaSQL(DateTime.Now.Date)}");
-            comando.InsertSqlObj("cod_Cidade", $"{pCliente.cod_Cidade}");
+            comando.InsertSqlObj("cod_Cidade", $"{1}");
             comando.InsertSqlObj("nome_Cidade", $"'{pCliente.nome_Cidade}'");
-            //comando.InsertSqlObj("cod_Contato", $"{pCliente.cod_Contato}", true);
-            comando.InsertSqlObj("cod_Contato", null, true);
+            comando.InsertSqlObj("cod_Contato", $"{1}", true);
 
             if (comando.ExecutarComandoInsertSql() > 0)
             {
@@ -55,12 +56,11 @@ namespace BancoDeDados.Cadastro
             comando.UpdateSqlObj("bairro", $"'{pCliente.bairro}'");
             comando.UpdateSqlObj("cep", $"'{pCliente.cep}'");
             comando.UpdateSqlObj("uf", $"'{pCliente.uf}'");
-            comando.UpdateSqlObj("data_Cadastro", $"{DateTime.Now.Date}");
-            comando.UpdateSqlObj("cod_Cidade", $"{pCliente.cod_Cidade}");
+            comando.UpdateSqlObj("data_Cadastro", $"{ new FormatarValores().FormatarDataParaSQL(DateTime.Now.Date)}");
+            comando.UpdateSqlObj("cod_Cidade", $"{1}");
             comando.UpdateSqlObj("nome_Cidade", $"'{pCliente.nome_Cidade}'");
-            //comando.UpdateSqlObj("cod_Contato", $"{pCliente.cod_Contato}");
-            comando.UpdateSqlObj("cod_Contato", null);
-            comando.strWhere = $" where cod_Cliente = '{pCliente.cod_Cliente}'";
+            comando.UpdateSqlObj("cod_Contato", $"{1}", true);
+            comando.strWhere = $" where cod_Cliente = {pCliente.cod_Cliente}";
 
             if (comando.ExecutarComandoUpdateSql() > 0)
             {
@@ -86,7 +86,12 @@ namespace BancoDeDados.Cadastro
                 dataTable.Load(dt);
                 DataRow rd = dataTable.Rows[0];
 
-                codigoRetorno = Int32.Parse(rd["maiorCodigo"].ToString());
+                string UltimoCod = rd["maiorCodigo"].ToString();
+
+                if (string.IsNullOrWhiteSpace(UltimoCod) == false)
+                {
+                    codigoRetorno = Int32.Parse(rd["maiorCodigo"].ToString());
+                }
                 codigoRetorno += 1;
 
                 return codigoRetorno;
@@ -104,6 +109,7 @@ namespace BancoDeDados.Cadastro
             pCliente.numero = rd["numero"].ToString();
             pCliente.bairro = rd["bairro"].ToString();
             pCliente.uf = rd["uf"].ToString();
+            //pCliente.data_Cadastro = DateTime.Parse(rd["data_Cadastro"].ToString());
             pCliente.cod_Cidade = Int32.Parse(rd["cod_Cidade"].ToString());
             pCliente.nome_Cidade = rd["nome_Cidade"].ToString();
             pCliente.cod_Contato = Int32.Parse(rd["cod_Contato"].ToString());
