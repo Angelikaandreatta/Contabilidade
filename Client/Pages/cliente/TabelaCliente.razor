@@ -10,11 +10,6 @@
 
     protected override void OnInitialized()
     {
-        addLine();
-    }
-
-    public void addLine() 
-    {
         cliente.Nome_Cliente = "Senhoria Seu Carlos";
         cliente.Cnpj = "81.489.456/0001-77";
         cliente.Data_Cadastro = DateTime.Now;
@@ -22,13 +17,6 @@
         clientes.Add(cliente);
         clientes.Add(cliente);
         clientes.Add(cliente);
-    }
-
-
-    public class TableModel
-    {
-        
-        public string[] tableData = { "Senhoria seu Carlos", "R$ 300.000.00", "04/12/2001" };
     }
 
 }

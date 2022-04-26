@@ -58,9 +58,6 @@
         color: #ACACAC;
     }
 
-    .table__data:nth-child(3) {
-        text-align: end;
-    }
 
 
 tbody .table__line:hover {

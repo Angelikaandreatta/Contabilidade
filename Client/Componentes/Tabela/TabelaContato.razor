@@ -1,4 +1,5 @@
-﻿@inject NavigationManager NavigationManager
+﻿@using Projeto_Contabilidade.Client.Pages.Contato
+@inject NavigationManager NavigationManager
 
 <div class="table__header--title">
     <h2 class="table__title">Contatos Cadastrados</h2>
@@ -8,7 +9,29 @@
     </div>
 </div>
 <table class="table">
+    @foreach (ContatoViewModel contato in contatos)
+    {
+        <tr @onclick=@(() => NavigationManager.NavigateTo("InformacaoContato")) class="table__line">
+            <td class="table__data">
+                @contato.Nome_Contato
+            </td>
+            <td class="table__data">
+                @contato.Email
+            </td>
+            <td class="table__data">
+                <button @onclick=@(() => NavigationManager.NavigateTo("CadastroContato")) class="button button--small button--edit">Editar</button>
+                <button class="button button--small button--delete">Deletar</button>
+            </td>
+        </tr>
+    }
     <tr class="table__line">
+        <td colspan=3 class="table__data">
+            <button @onclick=@(() => NavigationManager.NavigateTo("CadastroContato")) class="button button--action">
+                Novo Contato
+            </button>
+        </td>
+    </tr>
+    @*<tr @onclick=@(() => NavigationManager.NavigateTo("InformacaoContato")) class="table__line">
         @foreach (string data in tableData)
         {
             <td class="table__data">
@@ -16,7 +39,7 @@
             </td>
         }
         <td class="table__data">
-            <button @onclick=@(() => NavigationManager.NavigateTo("InformacaoContato")) class="button button--small button--edit">Editar</button>
+            <button @onclick=@(() => NavigationManager.NavigateTo("CadastroContato")) class="button button--small button--edit">Editar</button>
             <button class="button button--small button--delete">Deletar</button>
         </td>
     </tr>
@@ -26,10 +49,11 @@
                 Novo Contato
             </button>
         </td>
-    </tr>
+    </tr>*@
 </table>
 
 @code {
+    [Parameter] public List<ContatoViewModel> contatos { get; set; }
     [Parameter] public string[] tableData { get; set; }
     [Parameter] public string tableLink { get; set; }
 }

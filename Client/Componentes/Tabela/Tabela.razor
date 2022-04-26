@@ -23,7 +23,7 @@
     <tbody>
         @foreach (ClienteViewModel cliente in clientes)
         {
-            <tr class="table__tr">
+            <tr class="table__tr" @onclick=@(() => NavigationManager.NavigateTo("InformacaoCliente"))>
                 <td class="table__td">
                     @cliente.Nome_Cliente
                 </td>
@@ -35,19 +35,23 @@
                 </td>
                 <td class="table__td">
                     <div>
-                        <button type="button" class="button button--small button--edit" @onclick=@(() => NavigationManager.NavigateTo("InformacaoCliente"))>Editar</button>
+                        <button type="button" class="button button--small button--edit"
+                            @onclick=@(() => NavigationManager.NavigateTo("CadastroCliente"))>
+                            Editar
+                        </button>
                         <button type="button" class="button button--small button--delete">Deletar</button>
                     </div>
                 </td>
             </tr>
         }
         <tr class="table__tr ">
-                <td colspan=4 class="table__td ">
-                    <button class="button button--action" @onclick=@(() => NavigationManager.NavigateTo("CadastroCliente"))>
-                        Adicionar Cliente
-                    </button>
-                </td>
-            </tr>
+            <td colspan=4 class="table__td ">
+                <button class="button button--action"
+                        @onclick=@(() => NavigationManager.NavigateTo("CadastroCliente"))>
+                    Adicionar Cliente
+                </button>
+            </td>
+        </tr>
     </tbody>
 </table>
 

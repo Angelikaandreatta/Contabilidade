@@ -1,6 +1,8 @@
 ﻿@page "/InformacaoCliente"
 @using Projeto_Contabilidade.Client.Componentes.Tabela
 @using Projeto_Contabilidade.Client.Componentes.Input
+@using Projeto_Contabilidade.Client.Pages.Contato
+@inject NavigationManager NavigationManager
 
 <div class="info">
     <h3>Senhoria Seu Carlos</h3>
@@ -10,15 +12,23 @@
         <Input readOnly="true" value="Master" label="Plano Contratado" id="info_planoContratado"></Input>
         <Input readOnly="true" value="84" label="Total de Empregados" id="info_totalEmpregados"></Input>
     </div>
-    <TabelaContato tableLink="CadastroContato" tableData="@tableData"></TabelaContato>
+    <TabelaContato tableLink="CadastroContato" contatos="contatos"></TabelaContato>
     <div class="info__buttons">
-        <button class="button button--normal button--edit">Editar</button>
+        <button @onclick=@(() => NavigationManager.NavigateTo("CadastroCliente")) class="button button--normal button--edit">Editar</button>
         <button class="button button--normal button--delete">Deletar</button>
     </div>
 </div>
 
 @code {
-    [Parameter] public string[] formInputs { get; set; }
-
-    string[] tableData = { "Jurislei Armando", "Diretor Marketing"};
+    List<ContatoViewModel> contatos = new List<ContatoViewModel>();
+    protected override void OnInitialized()
+    {
+        ContatoViewModel contato = new ContatoViewModel();
+        contato.Nome_Contato = "Jurislei Armando";
+        contato.Email = "jurislei.armando@senhoriacarlos.com";
+        contatos.Add(contato);
+        contatos.Add(contato);
+        contatos.Add(contato);
+        base.OnInitialized();
+    }
 }
