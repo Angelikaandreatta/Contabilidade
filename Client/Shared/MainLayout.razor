@@ -12,24 +12,6 @@
             <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
         </div>
 
-        <div class="content px-4">
-            @if (NavigationManager.Uri != "https://localhost:44388/")
-            {
-                <button @onclick="VoltarPagina" class="button button--action button--back">
-                    Voltar
-                </button>
-            }
-            @Body
-        </div>
     </div>
 </div>
-<script suppress-error="BL9992" src="historico.js"></script>
 
-@code {
-
-    public async void VoltarPagina()
-    {
-        await JSRuntime.InvokeAsync<string>(
-        "voltar", null);
-    }
-}
