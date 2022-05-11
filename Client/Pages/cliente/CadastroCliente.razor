@@ -79,18 +79,18 @@
                 <button @onclick="LimparTelaCliente" class="button button--normal button--action">
                     Limpar
                 </button>
-                @if (string.IsNullOrWhiteSpace(vmCliente.Cod_Cliente) == true)
-                {
-                    <button @onclick="CadastrarCliente" class="button button--normal button--action">
-                        Gravar
-                    </button>
-                }
-                else
-                {
-                    <button @onclick="EditarCliente" class="button button--normal button--action">
-                        Editar
-                    </button>
-                }
+
+                <button @onclick="Gravar" class="button button--normal button--action">
+                    @if (string.IsNullOrWhiteSpace(vmCliente.Cod_Cliente) == false)
+                    {
+                        <div>Editar</div>
+                    }
+                    else
+                    {
+                        <div>Gravar</div>
+                    }
+                </button>
+
             </div>
         </EditForm>
     </div>
@@ -114,30 +114,22 @@
         // await CadastrarCliente();
     }
 
-    public Cliente Editar
+    public async Task Gravar()
     {
-        get
+        if (string.IsNullOrWhiteSpace(vmCliente.Cod_Cliente) == true)
         {
-            return editarCliente;
+            await CadastrarCliente();
         }
-        set
+        else
         {
-            vmCliente.Nome_Cliente = editarCliente.nome_Cliente;
-            vmCliente.Cnpj = editarCliente.cnpj;
-            vmCliente.Email = editarCliente.email;
-            vmCliente.Ie = editarCliente.ie;
-            vmCliente.Cep = editarCliente.cep;
-            vmCliente.Uf = editarCliente.uf;
-            vmCliente.Bairro = editarCliente.bairro;
-            vmCliente.Rua = editarCliente.rua;
-            vmCliente.Numero = editarCliente.numero;
-            vmCliente.Nome_Cidade = editarCliente.nome_Cidade;
+            await EditarCliente();
         }
     }
 
     private async Task EditarCliente()
     {
         Cliente clienteEditar = new Cliente();
+        clienteEditar.cod_Cliente = int.Parse(vmCliente.Cod_Cliente);
         clienteEditar.nome_Cliente = vmCliente.Nome_Cliente;
         clienteEditar.cnpj = vmCliente.Cnpj;
         clienteEditar.email = vmCliente.Email;
@@ -153,7 +145,7 @@
 
         try
         {
-            string url = $"https://localhost:44388/Cliente/Editar";
+            string url = $"https://localhost:44388/Cliente/Atualizar";
 
             var response = await httpClient.PostAsJsonAsync(url, clienteEditar);
 
@@ -174,8 +166,10 @@
                 vmCliente.Cod_Contato = clienteEditar.cod_Contato.ToString();
 
                 //Verificar no blazor como usar o retorno de mensagem sem usando requestMessage
+                StateHasChanged();
                 throw new HttpRequestException($"Cliente editado com sucesso");
                 //Console.WriteLine("Cliente gravado com sucesso");
+
             }
             else
             {
@@ -226,6 +220,7 @@
                 vmCliente.Nome_Cidade = clienteGravar.nome_Cidade;
                 vmCliente.Cod_Contato = clienteGravar.cod_Contato.ToString();
 
+                StateHasChanged();
                 //Verificar no blazor como usar o retorno de mensagem sem usando requestMessage
                 throw new HttpRequestException($"Cliente gravado com sucesso");
                 //Console.WriteLine("Cliente gravado com sucesso");
