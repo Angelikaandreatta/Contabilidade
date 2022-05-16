@@ -7,6 +7,7 @@
 @using Projeto_Contabilidade.Client.Pages.cliente
 @using Projeto_Contabilidade.Client.Componentes.Steper
 @using Projeto_Contabilidade.Client.Componentes.Input
+@using Projeto_Contabilidade.Client.Componentes.Modal
 
 <div class="card">
     <h4 class="card-header">Cadastro de Cliente</h4>
@@ -94,9 +95,14 @@
             </div>
         </EditForm>
     </div>
+
+    <Modal @ref="modal"></Modal>
+    
 </div>
 
 @code {
+
+    private Modal modal {get;set;}
 
     public bool IsEnabled = true;
 
@@ -222,12 +228,14 @@
 
                 StateHasChanged();
                 //Verificar no blazor como usar o retorno de mensagem sem usando requestMessage
-                throw new HttpRequestException($"Cliente gravado com sucesso");
+                //throw new HttpRequestException($"Cliente gravado com sucesso");
+                modal.Open("Cliente gravado com sucesso");
                 //Console.WriteLine("Cliente gravado com sucesso");
             }
             else
             {
-                throw new InvalidOperationException("Erro ao gravar o Cliente.");
+                modal.Open("Erro ao gravar o Cliente");
+                //throw new InvalidOperationException("Erro ao gravar o Cliente.");
             }
         }
         catch (InvalidOperationException ex)
@@ -246,9 +254,9 @@
 
             if (response.IsSuccessStatusCode)
             {
-                throw new HttpRequestException($"Cliente excluído com sucesso");
                 LimparTelaCliente();
                 StateHasChanged();
+                modal.Open("Cliente excluído com sucesso");
             }
         }
         catch (InvalidOperationException ex)
