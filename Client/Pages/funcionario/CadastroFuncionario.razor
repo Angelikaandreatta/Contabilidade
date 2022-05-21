@@ -1,0 +1,103 @@
+﻿@page "/CadastroFuncionario"
+@page "/CadastroFuncionario/{codFuncionario}"
+@inject HttpClient httpClient
+@inject IJSRuntime jsRuntime
+@using System.Text
+@using Negocio.Cadastro
+@using Projeto_Contabilidade.Client.Pages.funcionario
+@using Projeto_Contabilidade.Client.Componentes.Steper
+@using Projeto_Contabilidade.Client.Componentes.Input
+@using Projeto_Contabilidade.Client.Componentes.Modal
+
+<div class="card">
+    <h4 class="card-header">Cadastro de Cliente</h4>
+    <div class="card-body">
+        <EditForm Model="vmFuncionario">
+            <Steper>
+                <Step Text="Informações Gerais" Icon="oi-info" Value="Step1" Enabled="@IsEnabled">
+                    <div class="form__div">
+                        <h3 class="form__title">
+                            Informações Gerais
+                        </h3>
+                        <div class="form__inputs">
+                            <div class="field__control">
+                                <label>Nome</label>
+                                <InputText class="field__input field__input--active" @bind-Value="vmFuncionario.Nome"></InputText>
+                            </div>
+                            <div class="field__control">
+                                <label>CNPJ</label>
+                                <InputText class="field__input field__input--active" @bind-Value="vmFuncionario.Cpf"></InputText>
+                            </div>
+                            <div class="field__control">
+                                <label>E-Mail</label>
+                                <InputText class="field__input field__input--active" @bind-Value="vmFuncionario.Email"></InputText>
+                            </div>
+                            <div class="field__control">
+                                <label>IE</label>
+                                <InputText class="field__input field__input--active" @bind-Value="vmFuncionario.DataNascimento"></InputText>
+                            </div>
+                        </div>
+                    </div>
+                </Step>
+                <Step Text="Informações de Endereço" Icon="oi-location" Value="Step2" Enabled="@IsEnabled">
+                    <div class="form__div">
+                        <h3 class="form__title">
+                            Informações De Endereço
+                        </h3>
+                        <div class="form__inputs">
+                            <div class="field__control">
+                                <label>Rua</label>
+                                <InputText class="field__input field__input--active" @bind-Value="vmFuncionario.Rua"></InputText>
+                            </div>
+                            <div class="field__control">
+                                <label>Número</label>
+                                <InputText class="field__input field__input--active" @bind-Value="vmFuncionario.Numero"></InputText>
+                            </div>
+                            <div class="field__control">
+                                <label>Bairro</label>
+                                <InputText class="field__input field__input--active" @bind-Value="vmFuncionario.Bairro"></InputText>
+                            </div>
+                            <div class="field__control">
+                                <label>Cidade</label>
+                                <InputText class="field__input field__input--active" @bind-Value="vmFuncionario.NomeCidade"></InputText>
+                            </div>
+                        </div>
+                    </div>
+                </Step>
+            </Steper>
+            <div class="form__buttons">
+                <button class="button button--normal button--delete">
+                    Excluir
+                </button>
+                <button class="button button--normal button--action">
+                    Limpar
+                </button>
+
+                <button class="button button--normal button--action">
+                    @if (string.IsNullOrWhiteSpace(vmFuncionario.CodFuncionario) == false)
+                    {
+                        <div>Editar</div>
+                    }
+                    else
+                    {
+                        <div>Gravar</div>
+                    }
+                </button>
+
+            </div>
+        </EditForm>
+    </div>
+
+    <Modal @ref="modal"></Modal>
+    
+</div>
+@code {
+
+    [Parameter]
+    public string codFuncionario { get; set; }
+    FuncionarioViewModel vmFuncionario = new FuncionarioViewModel();
+    private Modal modal {get;set;}
+    public bool IsEnabled = true;
+
+
+}

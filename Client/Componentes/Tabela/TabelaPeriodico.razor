@@ -1,0 +1,50 @@
+﻿@using Projeto_Contabilidade.Client.Pages.periodico
+@using Projeto_Contabilidade.Client.Componentes.SVG
+@inject NavigationManager NavigationManager
+
+<div style="max-width:600px" class="flex-fill">
+    <div class="d-flex justify-content-between align-items-center mb-3 ">
+        <h5 class="title_montserrat font-weight-bold ">@Title</h5>
+        <a class="text-primary" @onclick=@(() => NavigationManager.NavigateTo(AddLink))>@AddText.Insert(0,"+ ")</a>
+    </div>
+    <div style="height:250px" class="border bg-white @(Periodicos == null ? "d-flex align-items-center justify-content-center p-5" : "")">
+        @if (Periodicos == null)
+        {
+            
+            <BotFeedbackEmpty></BotFeedbackEmpty>
+            <div class="d-flex flex-column pl-3">
+                <span class="font-weight-bold text-secondary">Parece que ninguém gosta de ler!</span>
+                <p>Convide um amigo(a) para pegar uma "revistinha e ganhe um bis</p>
+            </div>
+        }
+
+        else
+        {
+            <table class="table table-hover">
+                @foreach (PeriodicoViewModel periodico in Periodicos)
+                {
+                    <tr>
+                        <td>@periodico.Nome</td>
+                        <td class="text-primary">Editar</td>
+                    </tr>
+                }
+            </table>
+        }
+    </div>
+</div>
+
+@code {
+
+    #region Parâmetros
+    [Parameter] public string Title { get; set; }
+    /// <summary>
+    /// texto a ser exibido no link de adicionar um item a tabela
+    /// </summary>
+    [Parameter] public string AddText { get; set; }
+    /// <summary>
+    /// Link para onde o usuário será redirecionado ao tentar adicionar um item a tabela
+    /// </summary>
+    [Parameter] public string AddLink { get; set; }
+    [Parameter] public List<PeriodicoViewModel> Periodicos { get; set; }
+    #endregion
+}

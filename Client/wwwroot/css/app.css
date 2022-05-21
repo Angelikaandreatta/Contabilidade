@@ -4,12 +4,20 @@
     box-sizing: border-box;
 }
 
+html{
+    font-size: 14px;
+}
+
 html, body {
     font-family: 'Poppins', sans-serif;
 }
 
 a, .btn-link {
     color: #0366d6;
+}
+
+.title_montserrat {
+    font-family: 'Montserrat', sans-serif;
 }
 
 .btn-primary {

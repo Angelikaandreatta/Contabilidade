@@ -1,0 +1,22 @@
+﻿@page "/TabelaFuncionario"
+@using Projeto_Contabilidade.Client.Componentes.Tabela
+<Tabela tableLink="CadastroFuncionario" tableTitle="Funcionarios Cadastrados" funcionarios="@funcionarios" tableHeaders="@tableHeaders"></Tabela>
+
+@code {
+
+    public FuncionarioViewModel funcionario = new FuncionarioViewModel();
+    List<FuncionarioViewModel> funcionarios = new List<FuncionarioViewModel>();
+    public string[] tableHeaders = { "Nome", "Cargo", "Data Nascimento" };
+
+    protected override void OnInitialized()
+    {
+        funcionario.Nome= "Carlos Montenez";
+        funcionario.Cargo = "Gerente de RH";
+        funcionario.DataNascimento = "04/12/2001";
+
+        funcionarios.Add(funcionario);
+        funcionarios.Add(funcionario);
+        funcionarios.Add(funcionario);
+    }
+
+}

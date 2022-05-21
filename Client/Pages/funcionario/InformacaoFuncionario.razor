@@ -1,0 +1,35 @@
+﻿@page "/InformacaoFuncionario"
+@using Projeto_Contabilidade.Client.Componentes.Tabela
+@using Projeto_Contabilidade.Client.Componentes.Input
+@using Projeto_Contabilidade.Client.Pages.Contato
+@inject NavigationManager NavigationManager
+
+<div class="info">
+    <h3>Carlos Montenez</h3>
+    <h4>Gerente de RH</h4>
+    <div class="info__controls">
+        <Input readOnly="true" value="111.111.111-83" label="CPF" id="info_cpf"></Input>
+        <Input readOnly="true" value="04/12/2001" label="Data de Nascimento" id="info_dataNascimento"></Input>
+        <Input readOnly="true" value="Celular" label="(41)99999-3333" id="info_celular"></Input>
+        <Input readOnly="true" value="carlosMontenez@gmail.com" label="Email" id="info_email"></Input>
+    </div>
+    <div class="info__buttons">
+        <button @onclick=@(() => NavigationManager.NavigateTo("CadastroFuncionario")) class="button button--normal button--edit">Editar</button>
+        <button class="button button--normal button--delete">Deletar</button>
+    </div>
+</div>
+
+@code {
+    List<FuncionarioViewModel> funcionarios = new List<FuncionarioViewModel>();
+    protected override void OnInitialized()
+    {
+        FuncionarioViewModel funcionario = new FuncionarioViewModel();
+        funcionario.Nome = "Carlos Montenez";
+        funcionario.Cargo = "Gerente de RH";
+        funcionario.DataNascimento = "04/12/2001";
+        funcionarios.Add(funcionario);
+        funcionarios.Add(funcionario);
+        funcionarios.Add(funcionario);
+        base.OnInitialized();
+    }
+}

@@ -1,0 +1,60 @@
+﻿@page "/TabelaPeriodico"
+@using Projeto_Contabilidade.Client.Componentes.Tabela
+
+<div class="d-flex flex-column pl-5 pr-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-white pl-0">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Periódicos</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex justify-content-start flex-column">
+        <h3 class="font-weight-bold title_montserrat">Periódicos</h3>
+
+        <p class="text-secondary">
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the
+            1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+        </p>
+    </div>
+
+    <button class="btn btn-secondary align-self-end">
+        <span class="oi oi-data-transfer-download" aria-hidden="true"></span> Baixar relatório
+    </button>
+
+    <div class="d-flex justify-content-between mt-5 mb-5 flex-wrap">
+        <TabelaPeriodico 
+            AddLink="CadastroPeriodico" 
+            AddText="Adicionar Revista" 
+            Periodicos="@periodicos" 
+            Title="Revistas">
+        </TabelaPeriodico>
+
+        <TabelaPeriodico 
+            AddLink="CadastroPeriodico" 
+            AddText="Fazer Reserva" 
+            Title="Reservas">
+        </TabelaPeriodico>
+    </div>
+
+</div>
+
+@code {
+    public List<PeriodicoViewModel> periodicos = new List<PeriodicoViewModel>();
+    public PeriodicoViewModel periodico1 = new PeriodicoViewModel();
+    public PeriodicoViewModel periodico2 = new PeriodicoViewModel();
+
+
+    protected override void OnInitialized()
+    {
+        periodico1.Codigo = "1";
+        periodico1.Nome = "Revista 01 - Lorem Ipsum is simply dummy text of the...";
+
+        periodico2.Codigo = "2";
+        periodico2.Nome = "Revista 02 - Lorem Ipsum is simply dummy text of the...";
+
+        periodicos.Add(periodico1);
+        periodicos.Add(periodico2);
+    }
+
+}
