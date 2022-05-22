@@ -22,13 +22,13 @@
         {
             <tr class="table__tr" @onclick=@(() => NavigationManager.NavigateTo("InformacaoCliente"))>
                 <td class="table__td">
-                    @cliente.Nome_Cliente
+                    @cliente.Razao_Social
                 </td>
                 <td class="table__td">
                     @cliente.Cnpj
                 </td>
                 <td class="table__td">
-                    @cliente.Email
+                    @cliente.Cnpj
                 </td>
                 <td class="table__td">
                     <div>
@@ -60,9 +60,9 @@
 
     protected override void OnInitialized()
     {
-        cliente.Nome_Cliente = "Senhoria Seu Carlos";
-        cliente.Cnpj = "81.489.456/0001-77";
-        cliente.Data_Cadastro = DateTime.Now;
+        //cliente.Razao_Social = "Senhoria Seu Carlos";
+        //cliente.Cnpj = "81.489.456/0001-77";
+        //cliente.Data_Cadastro = DateTime.Now;
 
         clientes.Add(cliente);
         clientes.Add(cliente);

@@ -8,6 +8,7 @@
 @using Projeto_Contabilidade.Client.Componentes.Steper
 @using Projeto_Contabilidade.Client.Componentes.Input
 @using Projeto_Contabilidade.Client.Componentes.Modal
+@using Projeto_Contabilidade.Client.Pages.endereco
 
 <div class="card">
     <h4 class="card-header">Cadastro de Cliente</h4>
@@ -21,20 +22,16 @@
                         </h3>
                         <div class="form__inputs">
                             <div class="field__control">
-                                <label>Nome</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Nome_Cliente"></InputText>
+                                <label>Razão Social</label>
+                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Razao_Social"></InputText>
                             </div>
                             <div class="field__control">
                                 <label>CNPJ</label>
                                 <InputText class="field__input field__input--active" @bind-Value="vmCliente.Cnpj"></InputText>
                             </div>
                             <div class="field__control">
-                                <label>E-Mail</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Email"></InputText>
-                            </div>
-                            <div class="field__control">
-                                <label>IE</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Ie"></InputText>
+                                <label>Qtd.Empregados</label>
+                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Qtd_Empregado"></InputText>
                             </div>
                         </div>
                     </div>
@@ -47,27 +44,23 @@
                         <div class="form__inputs">
                             <div class="field__control">
                                 <label>Rua</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Rua"></InputText>
+                                <InputText class="field__input field__input--active" @bind-Value="vmEndereco.Rua"></InputText>
                             </div>
                             <div class="field__control">
                                 <label>Número</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Numero"></InputText>
+                                <InputText class="field__input field__input--active" @bind-Value="vmEndereco.Numero"></InputText>
                             </div>
                             <div class="field__control">
                                 <label>Bairro</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Bairro"></InputText>
-                            </div>
-                            <div class="field__control">
-                                <label>CEP</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Cep"></InputText>
+                                <InputText class="field__input field__input--active" @bind-Value="vmEndereco.Bairro"></InputText>
                             </div>
                             <div class="field__control">
                                 <label>Cidade</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Nome_Cidade"></InputText>
+                                <InputText class="field__input field__input--active" @bind-Value="vmEndereco.Cidade"></InputText>
                             </div>
                             <div class="field__control">
-                                <label>UF</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Uf"></InputText>
+                                <label>Uf</label>
+                                <InputText class="field__input field__input--active" @bind-Value="vmEndereco.Uf"></InputText>
                             </div>
                         </div>
                     </div>
@@ -82,7 +75,7 @@
                 </button>
 
                 <button @onclick="Gravar" class="button button--normal button--action">
-                    @if (string.IsNullOrWhiteSpace(vmCliente.Cod_Cliente) == false)
+                    @if (string.IsNullOrWhiteSpace(vmCliente.Codigo_Cliente) == false)
                     {
                         <div>Editar</div>
                     }
@@ -103,13 +96,11 @@
 @code {
     [Parameter] public string codCliente { get; set; }
     ClienteViewModel vmCliente = new ClienteViewModel();
+    EnderecoViewModel vmEndereco = new EnderecoViewModel();
     private Modal modal { get; set; }
     public bool IsEnabled = true;
     private bool loading;
     private string error;
-    private bool editando = false;
-    private Cliente editarCliente = null;
-
     protected override async Task OnInitializedAsync()
     {
 
@@ -117,7 +108,7 @@
 
     public async Task Gravar()
     {
-        if (string.IsNullOrWhiteSpace(vmCliente.Cod_Cliente) == true)
+        if (string.IsNullOrWhiteSpace(vmCliente.Codigo_Cliente) == true)
         {
             await CadastrarCliente();
         }
@@ -130,19 +121,13 @@
     private async Task EditarCliente()
     {
         Cliente clienteEditar = new Cliente();
-        clienteEditar.cod_Cliente = int.Parse(vmCliente.Cod_Cliente);
-        clienteEditar.nome_Cliente = vmCliente.Nome_Cliente;
+        clienteEditar.codigo_Cliente = int.Parse(vmCliente.Codigo_Cliente);
+        //empresa não edita
+        Endereco endereco = new Endereco();
+        clienteEditar.endereco.codigo_Endereco = 1;
         clienteEditar.cnpj = vmCliente.Cnpj;
-        clienteEditar.email = vmCliente.Email;
-        clienteEditar.ie = vmCliente.Ie;
-        clienteEditar.cep = vmCliente.Cep;
-        clienteEditar.uf = vmCliente.Uf;
-        clienteEditar.bairro = vmCliente.Bairro;
-        clienteEditar.rua = vmCliente.Rua;
-        clienteEditar.numero = vmCliente.Numero;
-        clienteEditar.cod_Cidade = 1;
-        clienteEditar.nome_Cidade = vmCliente.Nome_Cidade;
-        clienteEditar.cod_Contato = 1;
+        clienteEditar.qtd_Empregado = vmCliente.Qtd_Empregado;
+
 
         try
         {
@@ -153,19 +138,12 @@
 
             if (response.IsSuccessStatusCode == true)
             {
-                vmCliente.Cod_Cliente = clienteEditar.cod_Cliente.ToString();
-                vmCliente.Nome_Cliente = clienteEditar.nome_Cliente;
+                vmCliente.Codigo_Cliente = clienteEditar.codigo_Cliente.ToString();
+                vmCliente.Razao_Social = clienteEditar.razao_Social;
                 vmCliente.Cnpj = clienteEditar.cnpj;
-                vmCliente.Email = clienteEditar.email;
-                vmCliente.Ie = clienteEditar.ie;
-                vmCliente.Cep = clienteEditar.cep;
-                vmCliente.Uf = clienteEditar.uf;
-                vmCliente.Bairro = clienteEditar.bairro;
-                vmCliente.Rua = clienteEditar.rua;
-                vmCliente.Numero = clienteEditar.numero;
-                vmCliente.Cod_Cidade = clienteEditar.cod_Cidade.ToString();
-                vmCliente.Nome_Cidade = clienteEditar.nome_Cidade;
-                vmCliente.Cod_Contato = clienteEditar.cod_Contato.ToString();
+                vmCliente.Qtd_Empregado = clienteEditar.qtd_Empregado;
+                //carregar empresa
+                vmCliente.Endereco.codigo_Endereco = clienteEditar.endereco.codigo_Endereco;
 
                 StateHasChanged();
                 modal.Open("Cliente editado com sucesso");
@@ -185,41 +163,27 @@
     private async Task CadastrarCliente()
     {
         Cliente clienteGravar = new Cliente();
-        clienteGravar.nome_Cliente = vmCliente.Nome_Cliente;
+        clienteGravar.razao_Social = vmCliente.Razao_Social;
+        Empresa empresa = new Empresa();
+        clienteGravar.empresa.codigo_Empresa = 1;
+        Endereco endereco = new Endereco();
+        clienteGravar.endereco.codigo_Endereco = 1;
         clienteGravar.cnpj = vmCliente.Cnpj;
-        clienteGravar.email = vmCliente.Email;
-        clienteGravar.ie = vmCliente.Ie;
-        clienteGravar.cep = vmCliente.Cep;
-        clienteGravar.uf = vmCliente.Uf;
-        clienteGravar.bairro = vmCliente.Bairro;
-        clienteGravar.rua = vmCliente.Rua;
-        clienteGravar.numero = vmCliente.Numero;
-        clienteGravar.cod_Cidade = 1;
-        clienteGravar.nome_Cidade = vmCliente.Nome_Cidade;
-        clienteGravar.cod_Contato = 1;
+        clienteGravar.qtd_Empregado = vmCliente.Qtd_Empregado;
 
         try
         {
             string url = $"https://localhost:44388/Cliente/Gravar";
 
             var response = await httpClient.PostAsJsonAsync(url, clienteGravar);
-          
+
 
             if (response.IsSuccessStatusCode == true)
             {
-                vmCliente.Cod_Cliente = clienteGravar.cod_Cliente.ToString();
-                vmCliente.Nome_Cliente = clienteGravar.nome_Cliente;
+                vmCliente.Codigo_Cliente = clienteGravar.codigo_Cliente.ToString();
+                vmCliente.Razao_Social = clienteGravar.razao_Social;
                 vmCliente.Cnpj = clienteGravar.cnpj;
-                vmCliente.Email = clienteGravar.email;
-                vmCliente.Ie = clienteGravar.ie;
-                vmCliente.Cep = clienteGravar.cep;
-                vmCliente.Uf = clienteGravar.uf;
-                vmCliente.Bairro = clienteGravar.bairro;
-                vmCliente.Rua = clienteGravar.rua;
-                vmCliente.Numero = clienteGravar.numero;
-                vmCliente.Cod_Cidade = clienteGravar.cod_Cidade.ToString();
-                vmCliente.Nome_Cidade = clienteGravar.nome_Cidade;
-                vmCliente.Cod_Contato = clienteGravar.cod_Contato.ToString();
+                vmCliente.Qtd_Empregado = clienteGravar.qtd_Empregado;
 
                 StateHasChanged();
                 modal.Open("Cliente gravado com sucesso");
@@ -263,15 +227,9 @@
 
     public void LimparTelaCliente()
     {
-        vmCliente.Nome_Cliente = "";
+        vmCliente.Codigo_Cliente = "";
+        vmCliente.Razao_Social = "";
         vmCliente.Cnpj = "";
-        vmCliente.Ie = "";
-        vmCliente.Email = "";
-        vmCliente.Rua = "";
-        vmCliente.Numero = "";
-        vmCliente.Bairro = "";
-        vmCliente.Cep = "";
-        vmCliente.Uf = "";
-        vmCliente.Nome_Cidade = "";
+        vmCliente.Razao_Social = "";
     }
 }

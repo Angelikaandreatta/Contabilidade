@@ -28,13 +28,14 @@
             {
                 <tr class="table__tr" @onclick=@(() => NavigationManager.NavigateTo("InformacaoCliente"))>
                     <td class="table__td">
-                        @cliente.Nome_Cliente
+                        @cliente.Razao_Social
+
                     </td>
                     <td class="table__td">
                         @cliente.Cnpj
                     </td>
                     <td class="table__td">
-                        @cliente.Data_Cadastro
+                        @cliente.Cnpj
                     </td>
                     <td class="table__td">
                         <div>

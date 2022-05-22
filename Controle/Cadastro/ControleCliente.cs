@@ -128,7 +128,7 @@ namespace Controle.Cadastro
         {
             Cliente clienteRetorno = null;
 
-            if (pCliente.cod_Cliente <= 0)
+            if (pCliente.codigo_Cliente <= 0)
             {
                 throw new InvalidOperationException("Informe o código do cliente para carrega-lo.");
             }
