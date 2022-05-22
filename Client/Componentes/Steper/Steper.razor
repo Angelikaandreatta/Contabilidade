@@ -23,14 +23,14 @@
                 {
                     @if (ActiveStep != Steps[0])
                     {
-                        <button @onclick=@(() => PreviousStep()) class="button button--normal button--action">
+                        <button @onclick=@(() => PreviousStep()) class="btn btn-lg btn-outline-info">
                             Voltar
                         </button>
                     }
                     else
                     {
 
-                        <button @onclick=@(() => NextStep()) class="button button--normal button--action">
+                        <button @onclick=@(() => NextStep()) class="btn btn-lg btn-outline-info">
                             Proximo
                         </button>
 

@@ -35,6 +35,10 @@
                             </div>
                         </div>
                     </div>
+                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Ie"></InputText>
+                            </div>
+                        </div>
+                    </div>
                 </Step>
                 <Step Text="Informações de Endereço" Icon="oi-location" Value="Step2" Enabled="@IsEnabled">
                     <div class="form__div">
@@ -67,15 +71,15 @@
                 </Step>
             </Steper>
             <div class="form__buttons">
-                <button @onclick="Excluir" class="button button--normal button--delete">
+                <button @onclick="Excluir" class="btn btn-lg btn-outline-danger ">
                     Excluir
                 </button>
-                <button @onclick="LimparTelaCliente" class="button button--normal button--action">
+                <button @onclick="LimparTelaCliente" class="btn btn-lg btn-outline-info">
                     Limpar
                 </button>
 
-                <button @onclick="Gravar" class="button button--normal button--action">
-                    @if (string.IsNullOrWhiteSpace(vmCliente.Codigo_Cliente) == false)
+                <button @onclick="Gravar" class="btn btn-lg btn-outline-info">
+                    @if (string.IsNullOrWhiteSpace(vmCliente.Cod_Cliente) == false)
                     {
                         <div>Editar</div>
                     }

@@ -19,14 +19,14 @@
                 @contato.Email
             </td>
             <td class="table__data">
-                <button @onclick=@(() => NavigationManager.NavigateTo("CadastroContato")) class="button button--small button--edit">Editar</button>
-                <button class="button button--small button--delete">Deletar</button>
+                <button @onclick=@(() => NavigationManager.NavigateTo("CadastroContato")) class="btn btn-outline-success">Editar</button>
+                <button class="btn btn-outline-danger">Deletar</button>
             </td>
         </tr>
     }
     <tr class="table__line">
         <td colspan=3 class="table__data">
-            <button @onclick=@(() => NavigationManager.NavigateTo("CadastroContato")) class="button button--action">
+            <button @onclick=@(() => NavigationManager.NavigateTo("CadastroContato")) class="btn btn-outline-info">
                 Novo Contato
             </button>
         </td>

@@ -45,21 +45,21 @@
                 </Step>
             </Steper>
             <div class="form__buttons">
-                <button class="button button--normal button--delete">
+                <button class="btn btn-lg btn-outline-danger">
                     Excluir
                 </button>
-                <button class="button button--normal button--action">
+                <button class="btn btn-lg btn-outline-info">
                     Limpar
                 </button>
                 @if (string.IsNullOrWhiteSpace(vmContato.Cod_Contato) == true)
                 {
-                    <button class="button button--normal button--action">
+                    <button class="btn btn-lg btn-outline-info">
                         Gravar
                     </button>
                 }
                 else
                 {
-                    <button class="button button--normal button--action">
+                    <button class="btn btn-lg btn-outline-info">
                         Editar
                     </button>
                 }

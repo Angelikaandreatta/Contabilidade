@@ -53,6 +53,7 @@
                             unknown printer took a galley of type and scrambled it to make a type specimen book.
                         </p>
                     </div>
+<<<<<<< HEAD
 
                 </div>
             </Step>
@@ -89,6 +90,28 @@
 
     protected override async Task OnInitializedAsync()
     {
+=======
+                </Step>
+            </Steper>
+            <div class="form__buttons">
+                <button class="btn btn-lg btn-outline-danger">
+                    Excluir
+                </button>
+                <button class="btn btn-lg btn-outline-info">
+                    Limpar
+                </button>
+
+                <button class="btn btn-lg btn-outline-info">
+                    @if (string.IsNullOrWhiteSpace(vmPeriodico.Codigo) == false)
+                    {
+                        <div>Editar</div>
+                    }
+                    else
+                    {
+                        <div>Gravar</div>
+                    }
+                </button>
+>>>>>>> c659bd29fae739e2965e65a56e2e017ef37f614b
 
     }
 
