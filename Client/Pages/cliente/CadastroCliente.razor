@@ -13,7 +13,7 @@
 <div class="card">
     <h4 class="card-header">Cadastro de Cliente</h4>
     <div class="card-body">
-  <EditForm Model="vmCliente">
+        <EditForm Model="vmCliente">
             <Steper>
                 <Step Text="Informações Gerais" Icon="oi-info" Value="Step1" Enabled="@IsEnabled">
                     <div class="form__div">
@@ -23,15 +23,15 @@
                         <div class="form__inputs">
                             <div class="field__control">
                                 <label>Nome</label>
-                                <InputText class="field_input field_input--active" @bind-Value="vmCliente.Nome_Cliente"></InputText>
+                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Razao_Social"></InputText>
                             </div>
                             <div class="field__control">
                                 <label>CNPJ</label>
-                                <InputText class="field_input field_input--active" @bind-Value="vmCliente.Cnpj"></InputText>
+                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Cnpj"></InputText>
                             </div>
                             <div class="field__control">
                                 <label>Quantidade de Empregado</label>
-                                <InputText class="field_input field_input--active" @bind-Value="vmCliente.Email"></InputText>
+                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Qtd_Empregado"></InputText>
                             </div>
                         </div>
                     </div>
@@ -44,23 +44,23 @@
                         <div class="form__inputs">
                             <div class="field__control">
                                 <label>Rua</label>
-                                <InputText class="field_input field_input--active" @bind-Value="vmCliente.Rua"></InputText>
+                                <InputText class="field__input field__input--active" @bind-Value="vmEndereco.Rua"></InputText>
                             </div>
                             <div class="field__control">
                                 <label>Número</label>
-                                <InputText class="field_input field_input--active" @bind-Value="vmCliente.Numero"></InputText>
+                                <InputText class="field__input field__input--active" @bind-Value="vmEndereco.Numero"></InputText>
                             </div>
                             <div class="field__control">
                                 <label>Bairro</label>
-                                <InputText class="field_input field_input--active" @bind-Value="vmCliente.Bairro"></InputText>
+                                <InputText class="field__input field__input--active" @bind-Value="vmEndereco.Bairro"></InputText>
                             </div>
                             <div class="field__control">
                                 <label>Cidade</label>
-                                <InputText class="field_input field_input--active" @bind-Value="vmCliente.Nome_Cidade"></InputText>
+                                <InputText class="field__input field__input--active" @bind-Value="vmEndereco.Cidade"></InputText>
                             </div>
                             <div class="field__control">
                                 <label>UF</label>
-                                <InputText class="field_input field_input--active" @bind-Value="vmCliente.Uf"></InputText>
+                                <InputText class="field__input field__input--active" @bind-Value="vmEndereco.Uf"></InputText>
                             </div>
                         </div>
                     </div>
@@ -75,7 +75,7 @@
                 </button>
 
                 <button @onclick="Gravar" class="btn btn-lg btn-outline-info">
-                    @if (string.IsNullOrWhiteSpace(vmCliente.Cod_Cliente) == false)
+                    @if (string.IsNullOrWhiteSpace(vmCliente.Codigo_Cliente) == false)
                     {
                         <div>Editar</div>
                     }
@@ -84,11 +84,10 @@
                         <div>Gravar</div>
                     }
                 </button>
-
             </div>
-  </EditForm>
- </div>
-     
+        </EditForm>
+    </div>
+
     <Modal @ref="modal"></Modal>
 
 </div>

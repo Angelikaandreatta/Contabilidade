@@ -6,8 +6,6 @@
 <div class="card">
     <h4 class="card-header">Cadastro de Periódico</h4>
     <div class="card-body"></div>
-
-
     <EditForm Model="vmPeriodico">
         <Steper>
             <Step Text="Informações Cadastrais" Icon="oi-info" Value="Step1" Enabled="@IsEnabled">
@@ -54,29 +52,28 @@
                         </p>
                     </div>
 
-                    </div>
-                </Step>
-            </Steper>
-            <div class="form__buttons">
-                <button class="btn btn-lg btn-outline-danger">
-                    Excluir
-                </button>
-                <button class="btn btn-lg btn-outline-info">
-                    Limpar
-                </button>
+                </div>
+            </Step>
+        </Steper>
+        <div class="form__buttons">
+            <button class="btn btn-lg btn-outline-danger">
+                Excluir
+            </button>
+            <button class="btn btn-lg btn-outline-info">
+                Limpar
+            </button>
 
-                <button class="btn btn-lg btn-outline-info">
-                    @if (string.IsNullOrWhiteSpace(vmPeriodico.Codigo) == false)
-                    {
-                        <div>Editar</div>
-                    }
-                    else
-                    {
-                        <div>Gravar</div>
-                    }
-                </button>
-
-        </div>*@
+            <button class="btn btn-lg btn-outline-info">
+                @if (string.IsNullOrWhiteSpace(vmPeriodico.Codigo_Periodico) == false)
+                {
+                    <div>Editar</div>
+                }
+                else
+                {
+                    <div>Gravar</div>
+                }
+            </button>
+        </div>
     </EditForm>
 </div>
 
