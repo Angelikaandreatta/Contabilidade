@@ -13,7 +13,7 @@
 <div class="card">
     <h4 class="card-header">Cadastro de Cliente</h4>
     <div class="card-body">
-        <EditForm Model="vmCliente">
+  <EditForm Model="vmCliente">
             <Steper>
                 <Step Text="Informações Gerais" Icon="oi-info" Value="Step1" Enabled="@IsEnabled">
                     <div class="form__div">
@@ -22,20 +22,16 @@
                         </h3>
                         <div class="form__inputs">
                             <div class="field__control">
-                                <label>Razão Social</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Razao_Social"></InputText>
+                                <label>Nome</label>
+                                <InputText class="field_input field_input--active" @bind-Value="vmCliente.Nome_Cliente"></InputText>
                             </div>
                             <div class="field__control">
                                 <label>CNPJ</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Cnpj"></InputText>
+                                <InputText class="field_input field_input--active" @bind-Value="vmCliente.Cnpj"></InputText>
                             </div>
                             <div class="field__control">
-                                <label>Qtd.Empregados</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Qtd_Empregado"></InputText>
-                            </div>
-                        </div>
-                    </div>
-                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Ie"></InputText>
+                                <label>Quantidade de Empregado</label>
+                                <InputText class="field_input field_input--active" @bind-Value="vmCliente.Email"></InputText>
                             </div>
                         </div>
                     </div>
@@ -48,23 +44,23 @@
                         <div class="form__inputs">
                             <div class="field__control">
                                 <label>Rua</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmEndereco.Rua"></InputText>
+                                <InputText class="field_input field_input--active" @bind-Value="vmCliente.Rua"></InputText>
                             </div>
                             <div class="field__control">
                                 <label>Número</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmEndereco.Numero"></InputText>
+                                <InputText class="field_input field_input--active" @bind-Value="vmCliente.Numero"></InputText>
                             </div>
                             <div class="field__control">
                                 <label>Bairro</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmEndereco.Bairro"></InputText>
+                                <InputText class="field_input field_input--active" @bind-Value="vmCliente.Bairro"></InputText>
                             </div>
                             <div class="field__control">
                                 <label>Cidade</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmEndereco.Cidade"></InputText>
+                                <InputText class="field_input field_input--active" @bind-Value="vmCliente.Nome_Cidade"></InputText>
                             </div>
                             <div class="field__control">
-                                <label>Uf</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmEndereco.Uf"></InputText>
+                                <label>UF</label>
+                                <InputText class="field_input field_input--active" @bind-Value="vmCliente.Uf"></InputText>
                             </div>
                         </div>
                     </div>
@@ -90,9 +86,9 @@
                 </button>
 
             </div>
-        </EditForm>
-    </div>
-
+  </EditForm>
+ </div>
+     
     <Modal @ref="modal"></Modal>
 
 </div>

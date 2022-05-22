@@ -53,44 +53,8 @@
                             unknown printer took a galley of type and scrambled it to make a type specimen book.
                         </p>
                     </div>
-<<<<<<< HEAD
 
-                </div>
-            </Step>
-        </Steper>
-       @* <div class="form__buttons">
-            <button @onclick="Excluir" class="button button--normal button--delete">
-                Excluir
-            </button>
-            <button @onclick="LimparTelaPeriodico" class="button button--normal button--action">
-                Limpar
-            </button>
-
-            <button @onclick="Gravar" class="button button--normal button--action">
-                @if (string.IsNullOrWhiteSpace(vmPeriodico.Codigo_Periodico) == false)
-                {
-                    <div>Editar</div>
-                }
-                else
-                {
-                    <div>Gravar</div>
-                }
-            </button>
-
-        </div>*@
-    </EditForm>
-</div>
-
-@code {
-    [Parameter] public string codPeriodico { get; set; }
-    PeriodicoViewModel vmPeriodico = new PeriodicoViewModel();
-    public bool IsEnabled = true;
-    private bool loading;
-    private string error;
-
-    protected override async Task OnInitializedAsync()
-    {
-=======
+                    </div>
                 </Step>
             </Steper>
             <div class="form__buttons">
@@ -111,7 +75,20 @@
                         <div>Gravar</div>
                     }
                 </button>
->>>>>>> c659bd29fae739e2965e65a56e2e017ef37f614b
+
+        </div>*@
+    </EditForm>
+</div>
+
+@code {
+    [Parameter] public string codPeriodico { get; set; }
+    PeriodicoViewModel vmPeriodico = new PeriodicoViewModel();
+    public bool IsEnabled = true;
+    private bool loading;
+    private string error;
+
+    protected override async Task OnInitializedAsync()
+    {
 
     }
 
