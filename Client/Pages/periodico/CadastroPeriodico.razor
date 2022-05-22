@@ -1,0 +1,84 @@
+﻿@page "/CadastroPeriodico";
+@using Projeto_Contabilidade.Client.Componentes.Input
+@using Projeto_Contabilidade.Client.Componentes.Steper
+
+<div class="card">
+    <h4 class="card-header">Cadastro de Periódico</h4>
+    <div class="card-body"></div>
+
+
+        <EditForm Model="vmPeriodico">
+            <Steper>
+                <Step Text="Informações Cadastrais" Icon="oi-info" Value="Step1" Enabled="@IsEnabled">
+                    <div class="d-flex flex-column p-5">
+                        <h3 class="form__title">
+                            Informações Cadastrais
+                        </h3>
+
+                        <div class="form__inputs">
+                            <div class="field__control">
+                                <label>Nome da revista</label>
+                                <InputText class="field__input field__input--active" @bind-Value="vmPeriodico.Nome"></InputText>
+                            </div>
+                            <div class="field__control">
+                                <label>Categoria</label>
+                                <InputSelect class="field__input" @bind-Value="vmPeriodico.Categoria"></InputSelect>
+                            </div>
+                            <div class="field__control">
+                                <label>Descrição(opcional)</label>
+                                <InputText class="field__input field__input--active" @bind-Value="vmPeriodico.Categoria"></InputText>
+                            </div>
+                        </div>
+                    </div>
+                </Step>
+                <Step Text="Confirmar informações" Icon="oi-location" Value="Step2" Enabled="@IsEnabled">
+                    <div class="d-flex flex-column p-5">
+                        <h4 class="form__title mb-4">
+                            Confirme as informações a seguir:
+                        </h4>
+                        <div class="d-flex flex-column">
+                            <span class="font-weight-bold">Nome da revista</span>
+                            <p>Lorem Ipsum is simply dummy text of the printing</p>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <span class="font-weight-bold">Categoria</span>
+                            <p>Ficção científica</p>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <span class="font-weight-bold">Descrição</span>
+                            <p>
+                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
+                                Ipsum has been the industry's standard dummy text ever since the 1500s, when an
+                                unknown printer took a galley of type and scrambled it to make a type specimen book.
+                            </p>
+                        </div>
+
+                    </div>
+                </Step>
+            </Steper>
+            <div class="form__buttons">
+                <button class="button button--normal button--delete">
+                    Excluir
+                </button>
+                <button class="button button--normal button--action">
+                    Limpar
+                </button>
+
+                <button class="button button--normal button--action">
+                    @if (string.IsNullOrWhiteSpace(vmPeriodico.Codigo) == false)
+                    {
+                        <div>Editar</div>
+                    }
+                    else
+                    {
+                        <div>Gravar</div>
+                    }
+                </button>
+
+            </div>
+        </EditForm>
+    </div>
+    @code {
+        public bool IsEnabled = true;
+        PeriodicoViewModel vmPeriodico = new PeriodicoViewModel();
+    }

@@ -36,25 +36,25 @@
                     </div>
                 </Step>
             </Steper>
-             <div class="form__buttons">
+            <div class="form__buttons">
                 <button class="button button--normal button--delete">
                     Excluir
                 </button>
-                <button  class="button button--normal button--action">
+                <button class="button button--normal button--action">
                     Limpar
                 </button>
-                @*@if (string.IsNullOrWhiteSpace(vmCliente.Cod_Cliente) == true)
+                @if (string.IsNullOrWhiteSpace(vmContato.Cod_Contato) == true)
                 {
                     <button class="button button--normal button--action">
-                        Gravar
+                        gravar
                     </button>
                 }
                 else
                 {
                     <button class="button button--normal button--action">
-                        Editar
+                        editar
                     </button>
-                }*@
+                }
             </div>
         </EditForm>
     </div>
