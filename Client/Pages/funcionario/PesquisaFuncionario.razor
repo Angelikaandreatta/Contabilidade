@@ -1,0 +1,72 @@
+﻿@page "/PesquisaFuncionario"
+@using Projeto_Contabilidade.Client.Componentes.Tabela;
+@inject NavigationManager NavigationManager;
+
+<div class="table__header--title">
+    <h2 class="table__title">Funcionarios Cadastrados</h2>
+    <div class="table__search">
+        <span class="oi oi-magnifying-glass"></span>
+        <input placeholder="Pesquisa" class="table__search--input" />
+    </div>
+</div>
+<table class="table">
+    <tr class="table__tr table__header">
+        <th class="table__th">Nome</th>
+        <th class="table__th">Cargo</th>
+        <th class="table__th">Data Nascimento</th>
+        <th class="table__th">
+            Ações
+        </th>
+    </tr>
+    <tbody>
+        @foreach (FuncionarioViewModel funcionario in funcionarios)
+        {
+            <tr class="table__tr" @onclick=@(() => NavigationManager.NavigateTo("InformacaoFuncionario"))>
+                <td class="table__td">
+                    @funcionario.Nome
+                </td>
+                <td class="table__td">
+                    @funcionario.Cargo
+                </td>
+                <td class="table__td">
+                    @funcionario.DataNascimento
+                </td>
+                <td class="table__td">
+                    <div>
+                        <button type="button" class="button button--small button--edit"
+                            @onclick=@(() => NavigationManager.NavigateTo("CadastroFuncionario"))>
+                            Editar
+                        </button>
+                        <button type="button" class="button button--small button--delete">Deletar</button>
+                    </div>
+                </td>
+            </tr>
+        }
+        <tr class="table__tr ">
+            <td colspan=4 class="table__td ">
+                <button class="button button--action"
+                        @onclick=@(() => NavigationManager.NavigateTo("CadastroFuncionario"))>
+                    Adicionar Funcionario
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+@code {
+
+    public FuncionarioViewModel funcionario = new FuncionarioViewModel();
+    List<FuncionarioViewModel> funcionarios = new List<FuncionarioViewModel>();
+    public string[] tableHeaders = { "Nome", "Cargo", "Data Nascimento" };
+
+    protected override void OnInitialized()
+    {
+        funcionario.Nome = "Carlos Montenez";
+        funcionario.Cargo = "Gerente de RH";
+        funcionario.DataNascimento = "04/12/2001";
+
+        funcionarios.Add(funcionario);
+        funcionarios.Add(funcionario);
+        funcionarios.Add(funcionario);
+    }
+
+}

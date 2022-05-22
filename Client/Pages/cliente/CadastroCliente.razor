@@ -74,9 +74,12 @@
                 </Step>
             </Steper>
             <div class="form__buttons">
-                <button @onclick="Excluir" class="button button--normal button--delete">
-                    Excluir
-                </button>
+                @if (string.IsNullOrWhiteSpace(vmCliente.Cod_Cliente) == false)
+                {
+                    <button @onclick="Excluir" class="button button--normal button--delete">
+                        Excluir
+                    </button>
+                }
                 <button @onclick="LimparTelaCliente" class="button button--normal button--action">
                     Limpar
                 </button>
@@ -91,25 +94,22 @@
                         <div>Gravar</div>
                     }
                 </button>
-
             </div>
         </EditForm>
     </div>
 
     <Modal @ref="modal"></Modal>
-    
+
 </div>
 
 @code {
 
-    private Modal modal {get;set;}
+    private Modal modal { get; set; }
 
     public bool IsEnabled = true;
 
     [Parameter] public string codCliente { get; set; }
     ClienteViewModel vmCliente = new ClienteViewModel();
-    //Não é necessário instânciar  a vmCidade pois a cidade está dentro da vmCliente, instânciada.
-    // VmCidade vmCidade = new VmCidade();
     private bool loading;
     private string error;
     private bool editando = false;
@@ -227,15 +227,11 @@
                 vmCliente.Cod_Contato = clienteGravar.cod_Contato.ToString();
 
                 StateHasChanged();
-                //Verificar no blazor como usar o retorno de mensagem sem usando requestMessage
-                //throw new HttpRequestException($"Cliente gravado com sucesso");
                 modal.Open("Cliente gravado com sucesso");
-                //Console.WriteLine("Cliente gravado com sucesso");
             }
             else
             {
                 modal.Open("Erro ao gravar o Cliente");
-                //throw new InvalidOperationException("Erro ao gravar o Cliente.");
             }
         }
         catch (InvalidOperationException ex)
