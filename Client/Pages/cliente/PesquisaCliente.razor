@@ -11,8 +11,8 @@
 <table class="table">
     <tr class="table__tr table__header">
         <th class="table__th">Nome</th>
-        <th class="table__th">Cargo</th>
-        <th class="table__th">Data Nascimento</th>
+        <th class="table__th">CNPJ</th>
+        <th class="table__th">Data Cadastro</th>
         <th class="table__th">
             Ações
         </th>
@@ -28,22 +28,22 @@
                     @cliente.Cnpj
                 </td>
                 <td class="table__td">
-                    @cliente.Email
+                    @cliente.Data_Cadastro
                 </td>
                 <td class="table__td">
                     <div>
-                        <button type="button" class="button button--small button--edit"
+                        <button type="button" class="btn btn-outline-success"
                             @onclick=@(() => NavigationManager.NavigateTo("CadastroCliente"))>
                             Editar
                         </button>
-                        <button type="button" class="button button--small button--delete">Deletar</button>
+                        <button type="button" class="btn btn-outline-danger">Deletar</button>
                     </div>
                 </td>
             </tr>
         }
         <tr class="table__tr ">
             <td colspan=4 class="table__td ">
-                <button class="button button--action"
+                <button class="btn btn-outline-info"
                         @onclick=@(() => NavigationManager.NavigateTo("CadastroCliente"))>
                     Adicionar Cliente
                 </button>

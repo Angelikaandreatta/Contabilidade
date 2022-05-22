@@ -33,18 +33,18 @@
                 </td>
                 <td class="table__td">
                     <div>
-                        <button type="button" class="button button--small button--edit"
+                        <button type="button" class="btn btn-outline-success"
                             @onclick=@(() => NavigationManager.NavigateTo("CadastroFuncionario"))>
                             Editar
                         </button>
-                        <button type="button" class="button button--small button--delete">Deletar</button>
+                        <button type="button" class="btn btn-outline-danger">Deletar</button>
                     </div>
                 </td>
             </tr>
         }
         <tr class="table__tr ">
             <td colspan=4 class="table__td ">
-                <button class="button button--action"
+                <button class="btn btn-outline-primary"
                         @onclick=@(() => NavigationManager.NavigateTo("CadastroFuncionario"))>
                     Adicionar Funcionario
                 </button>

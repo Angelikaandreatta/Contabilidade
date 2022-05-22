@@ -29,12 +29,8 @@
                                 <InputText class="field__input field__input--active" @bind-Value="vmCliente.Cnpj"></InputText>
                             </div>
                             <div class="field__control">
-                                <label>E-Mail</label>
+                                <label>Quantidade de Empregado</label>
                                 <InputText class="field__input field__input--active" @bind-Value="vmCliente.Email"></InputText>
-                            </div>
-                            <div class="field__control">
-                                <label>IE</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Ie"></InputText>
                             </div>
                         </div>
                     </div>
@@ -58,10 +54,6 @@
                                 <InputText class="field__input field__input--active" @bind-Value="vmCliente.Bairro"></InputText>
                             </div>
                             <div class="field__control">
-                                <label>CEP</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Cep"></InputText>
-                            </div>
-                            <div class="field__control">
                                 <label>Cidade</label>
                                 <InputText class="field__input field__input--active" @bind-Value="vmCliente.Nome_Cidade"></InputText>
                             </div>
@@ -74,14 +66,14 @@
                 </Step>
             </Steper>
             <div class="form__buttons">
-                <button @onclick="Excluir" class="button button--normal button--delete">
+                <button @onclick="Excluir" class="btn btn-lg btn-outline-danger ">
                     Excluir
                 </button>
-                <button @onclick="LimparTelaCliente" class="button button--normal button--action">
+                <button @onclick="LimparTelaCliente" class="btn btn-lg btn-outline-info">
                     Limpar
                 </button>
 
-                <button @onclick="Gravar" class="button button--normal button--action">
+                <button @onclick="Gravar" class="btn btn-lg btn-outline-info">
                     @if (string.IsNullOrWhiteSpace(vmCliente.Cod_Cliente) == false)
                     {
                         <div>Editar</div>
