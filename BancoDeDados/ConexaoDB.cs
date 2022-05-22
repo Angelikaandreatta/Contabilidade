@@ -13,7 +13,7 @@ namespace BancoDeDados
 
         public ConexaoDB()
         {
-            con.ConnectionString = @"Server=DESKTOP-G6SU7RQ\SQLSEVER;Database=bancoContabilidade;Trusted_Connection=True;";
+            con.ConnectionString = @"Server=LAPTOP-8SHQ4PFR;Database=bancoContabilidade;Trusted_Connection=True;";
         }
 
         public SqlConnection Conectar()

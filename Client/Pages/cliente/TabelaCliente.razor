@@ -1,0 +1,21 @@
+﻿@page "/TabelaCliente"
+@using Projeto_Contabilidade.Client.Componentes.Tabela
+<Tabela tableLink="CadastroCliente" tableTitle="Clientes Cadastrados" clientes="@clientes" tableHeaders="@tableHeaders"></Tabela>
+
+@code {
+
+    public ClienteViewModel cliente = new ClienteViewModel();
+    List<ClienteViewModel> clientes = new List<ClienteViewModel>();
+    public string[] tableHeaders = { "Nome", "CNPJ", "Cliente Desde de Quando" };
+
+    protected override void OnInitialized()
+    {
+        cliente.Nome_Cliente = "Senhoria Seu Carlos";
+        cliente.Cnpj = "81.489.456/0001-77";
+        cliente.Data_Cadastro = DateTime.Now;
+
+        clientes.Add(cliente);
+        clientes.Add(cliente);
+        clientes.Add(cliente);
+    }
+}

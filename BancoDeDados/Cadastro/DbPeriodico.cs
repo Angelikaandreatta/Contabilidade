@@ -40,7 +40,7 @@ namespace BancoDeDados.Cadastro
             comando.UpdateSqlObj("editora", $"'{pPeriodico.editora}'");
             comando.UpdateSqlObj("autor", $"'{pPeriodico.autor}'");
             comando.UpdateSqlObj("exemplar", $"'{pPeriodico.exemplar}'");
-            
+
 
             if (comando.ExecutarComandoUpdateSql() > 0)
             {
@@ -130,7 +130,6 @@ namespace BancoDeDados.Cadastro
 
                 return periodicoCarregar;
             }
-
         }
     }
 }

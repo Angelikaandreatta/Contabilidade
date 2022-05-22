@@ -19,14 +19,22 @@
                                 <label>Cliente</label>
                                 <InputSelect class="field__input" @bind-Value="vmContato.Cod_Contato"></InputSelect>
                             </div>
+
                             <div class="field__control">
                                 <label>Nome</label>
                                 <InputText class="field__input field__input--active" @bind-Value="vmContato.Nome_Contato"></InputText>
                             </div>
+
+                            <div class="field__control">
+                                <label>Cpf</label>
+                                <InputText class="field__input field__input--active" @bind-Value="vmContato.CPF"></InputText>
+                            </div>
+
                             <div class="field__control">
                                 <label>Celular</label>
                                 <InputText class="field__input field__input--active" @bind-Value="vmContato.Celular"></InputText>
                             </div>
+
                             <div class="field__control">
                                 <label>E-mail</label>
                                 <InputText class="field__input field__input--active" @bind-Value="vmContato.Email"></InputText>
@@ -46,13 +54,13 @@
                 @if (string.IsNullOrWhiteSpace(vmContato.Cod_Contato) == true)
                 {
                     <button class="button button--normal button--action">
-                        gravar
+                        Gravar
                     </button>
                 }
                 else
                 {
                     <button class="button button--normal button--action">
-                        editar
+                        Editar
                     </button>
                 }
             </div>
@@ -64,5 +72,7 @@
     [Parameter] public string codContato { get; set; }
     ContatoViewModel vmContato = new ContatoViewModel();
     public bool IsEnabled = true;
+
+
 
 }

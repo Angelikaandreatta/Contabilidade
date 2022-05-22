@@ -74,12 +74,9 @@
                 </Step>
             </Steper>
             <div class="form__buttons">
-                @if (string.IsNullOrWhiteSpace(vmCliente.Cod_Cliente) == false)
-                {
-                    <button @onclick="Excluir" class="button button--normal button--delete">
-                        Excluir
-                    </button>
-                }
+                <button @onclick="Excluir" class="button button--normal button--delete">
+                    Excluir
+                </button>
                 <button @onclick="LimparTelaCliente" class="button button--normal button--action">
                     Limpar
                 </button>
@@ -94,6 +91,7 @@
                         <div>Gravar</div>
                     }
                 </button>
+
             </div>
         </EditForm>
     </div>
@@ -103,13 +101,10 @@
 </div>
 
 @code {
-
-    private Modal modal { get; set; }
-
-    public bool IsEnabled = true;
-
     [Parameter] public string codCliente { get; set; }
     ClienteViewModel vmCliente = new ClienteViewModel();
+    private Modal modal { get; set; }
+    public bool IsEnabled = true;
     private bool loading;
     private string error;
     private bool editando = false;
@@ -117,7 +112,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // await CadastrarCliente();
+
     }
 
     public async Task Gravar()
@@ -155,6 +150,7 @@
 
             var response = await httpClient.PostAsJsonAsync(url, clienteEditar);
 
+
             if (response.IsSuccessStatusCode == true)
             {
                 vmCliente.Cod_Cliente = clienteEditar.cod_Cliente.ToString();
@@ -171,15 +167,13 @@
                 vmCliente.Nome_Cidade = clienteEditar.nome_Cidade;
                 vmCliente.Cod_Contato = clienteEditar.cod_Contato.ToString();
 
-                //Verificar no blazor como usar o retorno de mensagem sem usando requestMessage
                 StateHasChanged();
-                throw new HttpRequestException($"Cliente editado com sucesso");
-                //Console.WriteLine("Cliente gravado com sucesso");
+                modal.Open("Cliente editado com sucesso");
 
             }
             else
             {
-                throw new InvalidOperationException("Erro ao editar o Cliente.");
+                modal.Open("Erro ao editar o Cliente");
             }
         }
         catch (InvalidOperationException ex)
@@ -209,6 +203,7 @@
             string url = $"https://localhost:44388/Cliente/Gravar";
 
             var response = await httpClient.PostAsJsonAsync(url, clienteGravar);
+          
 
             if (response.IsSuccessStatusCode == true)
             {
@@ -228,6 +223,7 @@
 
                 StateHasChanged();
                 modal.Open("Cliente gravado com sucesso");
+
             }
             else
             {
@@ -248,11 +244,15 @@
             string url = $"https://localhost:44388/Cliente/Excluir";
             var response = await httpClient.PostAsJsonAsync(url, clienteExcluir);
 
-            if (response.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode == true)
             {
                 LimparTelaCliente();
                 StateHasChanged();
                 modal.Open("Cliente excluído com sucesso");
+            }
+            else
+            {
+                modal.Open("Erro ao excluir o cliente.");
             }
         }
         catch (InvalidOperationException ex)
@@ -274,5 +274,4 @@
         vmCliente.Uf = "";
         vmCliente.Nome_Cidade = "";
     }
-
 }
