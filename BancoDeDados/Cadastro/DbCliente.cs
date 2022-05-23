@@ -39,7 +39,6 @@ namespace BancoDeDados.Cadastro
         {
             ComandoSQL comando = new ComandoSQL();
             comando.UpdateTabela("Cliente");
-            comando.UpdateSqlObj("codigo_Empresa", $"{pCliente.empresa.codigo_Empresa}");
             comando.UpdateSqlObj("codigo_Endereco", $"{pCliente.endereco.codigo_Endereco}");
             comando.UpdateSqlObj("razao_Social", $"'{pCliente.razao_Social}'");
             comando.UpdateSqlObj("cnpj", $"'{pCliente.cnpj}'");

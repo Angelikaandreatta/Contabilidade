@@ -55,19 +55,19 @@ namespace Controle.Cadastro
 
         public async Task<Cliente> Atualizar(Cliente pCliente)
         {
-            List<string> lstMensagemNegocio = new List<string>();
-            lstMensagemNegocio = pCliente.validarObjeto(pCliente);
+            //List<string> lstMensagemNegocio = new List<string>();
+            //lstMensagemNegocio = pCliente.validarObjeto(pCliente);
 
-            if (lstMensagemNegocio != null)
-            {
-                Validacoes validacao = new Validacoes();
+            //if (lstMensagemNegocio != null)
+            //{
+            //    Validacoes validacao = new Validacoes();
 
-                foreach (string mensagem in lstMensagemNegocio)
-                {
-                    validacao.strMensagemLista.Add(mensagem);
-                }
-                validacao.RetornarMensagem();
-            }
+            //    foreach (string mensagem in lstMensagemNegocio)
+            //    {
+            //        validacao.strMensagemLista.Add(mensagem);
+            //    }
+            //    validacao.RetornarMensagem();
+            //}
 
             try
             {

@@ -206,7 +206,7 @@
         try
         {
             Cliente clienteExcluir = new Cliente();
-            string url = $"https://localhost:44388/Cliente/Excluir?pCodCliente=1";
+            string url = $"https://localhost:44388/Cliente/Excluir?pCodCliente={vmCliente.Codigo_Cliente}";
             var response = await httpClient.DeleteAsync(url);
             //HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Delete, url);
 
