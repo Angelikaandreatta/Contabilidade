@@ -36,8 +36,14 @@ namespace Negocio.Cadastro
             {
                 lstRetorno.Add("Informe a quantidade de empregados.");
             }
-
-            // Validar empresa e endereço
+            if(pCliente.empresa == null || pCliente.empresa.codigo_Empresa <= 0)
+            {
+                lstRetorno.Add("Selecione a empresa do cliente.");
+            }
+            if(pCliente.endereco == null || pCliente.endereco.codigo_Endereco <= 0)
+            {
+                lstRetorno.Add("Informe o endereço do Cliente");
+            }
 
             return lstRetorno;
         }

@@ -13,7 +13,7 @@ namespace BancoDeDados
 
         public ConexaoDB()
         {
-            con.ConnectionString = @"Server=tcp:uni-projects.database.windows.net,1433;Initial Catalog=Banco_contabilidade;Persist Security Info=False;User ID=banco_admin;Password=Contabilidade2021;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+            con.ConnectionString = @"Server=g-avila.database.windows.net;Database=SQL;User Id=g-avila;Password=Admin#1234;";
         }
 
         public SqlConnection Conectar()

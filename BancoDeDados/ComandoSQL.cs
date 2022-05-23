@@ -128,6 +128,17 @@ namespace BancoDeDados
             return dataRow.RecordsAffected;
         }
 
+        public int ExecutarReader(string strComando)
+        {
+            ConexaoDB db = new ConexaoDB();
+            
+            cmd.CommandText = strComando;
+            SqlDataReader dataRow = cmd.ExecuteReader();
+
+            this.SqlClear();
+            return dataRow.RecordsAffected;
+        }
+
         public void SqlClear()
         {
             Comando = "";

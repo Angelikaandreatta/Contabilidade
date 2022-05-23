@@ -74,9 +74,9 @@ namespace Projeto_Contabilidade.Server.Controllers.Cadastro
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("Carregar")]
-        public async Task<IActionResult> Carregar([FromBody] Periodico pPeriodico)
+        public async Task<IActionResult> Carregar(int pCodPeriodico)
         {
             Periodico periodicoRetorno = null;
             int retorno = 0;
@@ -84,7 +84,7 @@ namespace Projeto_Contabilidade.Server.Controllers.Cadastro
             try
             {
                 ControlePeriodico controlePeriodico = new ControlePeriodico();
-                periodicoRetorno = await controlePeriodico.Carregar(pPeriodico);
+                periodicoRetorno = await controlePeriodico.Carregar(pCodPeriodico);
                 if (periodicoRetorno != null)
                 {
                     return Ok(periodicoRetorno);
@@ -123,6 +123,37 @@ namespace Projeto_Contabilidade.Server.Controllers.Cadastro
                 else
                 {
                     throw new InvalidOperationException("Não foi possível Listar o periodico.");
+                }
+
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new InvalidOperationException(ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new Exception(ex.Message));
+            }
+        }
+
+        [HttpDelete]
+        [Route("Excluir")]
+        public async Task<IActionResult> Excluir(int pCodPeriodico)
+        {
+            int periodicoRetorno = 0;
+
+            try
+            {
+                ControlePeriodico controlePeriodico = new ControlePeriodico();
+                periodicoRetorno = await controlePeriodico.Excluir(pCodPeriodico);
+                
+                if (periodicoRetorno == 1)
+                {
+                    return Ok(periodicoRetorno);
+                }
+                else
+                {
+                    throw new InvalidOperationException("Não foi possível Listar o cliente.");
                 }
 
             }

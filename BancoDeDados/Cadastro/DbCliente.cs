@@ -10,7 +10,7 @@ using BancoDeDados.UtilDb;
 
 namespace BancoDeDados.Cadastro
 {
-    public class DbCliente
+    public class DbCliente:ComandoSQL
     {
         public Cliente Gravar(Cliente pCliente)
         {
@@ -19,12 +19,8 @@ namespace BancoDeDados.Cadastro
             ComandoSQL comando = new ComandoSQL();
             comando.InsertTabela("Cliente");
             comando.InsertSqlObj("codigo_Cliente", $"{pCliente.codigo_Cliente}");
-            //Empresa empresa = new Empresa();
-            //comando.InsertSqlObj("codigo_Empresa", $"'{empresa.codigo_Empresa}'");// Revisar
-            comando.InsertSqlObj("codigo_Empresa","1");// Revisar
-            //Endereco endereco = new Endereco();
-            //comando.InsertSqlObj("codigo_Endereco", $"'{endereco.codigo_Endereco}'");// Revisar
-             comando.InsertSqlObj("codigo_Endereco", "1");// Revisar
+            comando.InsertSqlObj("codigo_Empresa", "1");
+            comando.InsertSqlObj("codigo_Endereco", "1");
             comando.InsertSqlObj("razao_Social", $"'{pCliente.razao_Social}'");
             comando.InsertSqlObj("cnpj", $"'{pCliente.cnpj}'");
             comando.InsertSqlObj("qtd_Empregado", $"'{pCliente.qtd_Empregado}'", true);
@@ -43,13 +39,11 @@ namespace BancoDeDados.Cadastro
         {
             ComandoSQL comando = new ComandoSQL();
             comando.UpdateTabela("Cliente");
-            comando.UpdateSqlObj("codigo_Cliente", $"{pCliente.codigo_Cliente}");
-            //empresa n atualiza
-            Endereco endereco = new Endereco();
-            comando.UpdateSqlObj("codigo_Endereco", $"'{endereco.codigo_Endereco}'");// Revisar
+            comando.UpdateSqlObj("codigo_Empresa", $"{pCliente.empresa.codigo_Empresa}");
+            comando.UpdateSqlObj("codigo_Endereco", $"{pCliente.endereco.codigo_Endereco}");
             comando.UpdateSqlObj("razao_Social", $"'{pCliente.razao_Social}'");
             comando.UpdateSqlObj("cnpj", $"'{pCliente.cnpj}'");
-            comando.UpdateSqlObj("qtd_Empregado", $"'{pCliente.qtd_Empregado}'", true);
+            comando.UpdateSqlObj("qtd_Empregado", $"{pCliente.qtd_Empregado}", true);
             comando.strWhere = $" where codigo_Cliente = {pCliente.codigo_Cliente}";
 
             if (comando.ExecutarComandoUpdateSql() > 0)
@@ -90,8 +84,10 @@ namespace BancoDeDados.Cadastro
         private Cliente CarregarDado(Cliente pCliente, DataRow rd)
         {
             pCliente.codigo_Cliente = Int32.Parse(rd["codigo_Cliente"].ToString());
-            //empresa
-            //endereço
+            pCliente.empresa = new Empresa();
+            pCliente.empresa.codigo_Empresa = Int32.Parse(rd["codigo_Empresa"].ToString());
+            pCliente.endereco = new Endereco();
+            pCliente.endereco.codigo_Endereco = Int32.Parse(rd["codigo_Endereco"].ToString());
             pCliente.razao_Social = rd["razao_Social"].ToString();
             pCliente.cnpj = rd["cnpj"].ToString();
             pCliente.qtd_Empregado = rd["qtd_Empregado"].ToString();
@@ -127,11 +123,11 @@ namespace BancoDeDados.Cadastro
             }
         }
 
-        public Cliente CarregarCliente(Cliente pCliente)
+        public Cliente CarregarCliente(string pCliente)
         {
             SqlCommand sql = new SqlCommand("", new ConexaoDB().Conectar());
             sql.CommandText = "select * from Cliente";
-            sql.CommandText += $" where codigo_Cliente = '{pCliente.codigo_Cliente}'";
+            sql.CommandText += $" where codigo_Cliente = '{pCliente}'";
 
             using (SqlDataReader dt = sql.ExecuteReader())
             {
@@ -146,5 +142,27 @@ namespace BancoDeDados.Cadastro
                 return clienteCarregar;
             }
         }
+
+        public int Excluir(int pCodCliente)
+        {
+            int retorno = 0;
+
+            StringBuilder sql = new StringBuilder();
+            sql.Append("delete from Cliente");
+            sql.Append($" where codigo_Cliente = '{pCodCliente}'");
+
+
+            if (ExecutarReader(sql.ToString()) == 1)
+            {
+                retorno = 1;
+            }
+            else
+            {
+                retorno = -1;
+            }
+
+            return retorno;
+        }
+
     }
 }

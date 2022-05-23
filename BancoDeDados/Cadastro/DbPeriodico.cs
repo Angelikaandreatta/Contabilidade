@@ -10,17 +10,20 @@ using BancoDeDados.UtilDb;
 
 namespace BancoDeDados.Cadastro
 {
-    public class DbPeriodico
+    public class DbPeriodico:ComandoSQL
     {
         public Periodico Gravar(Periodico pPeriodico)
         {
+            pPeriodico.codigo_Periodico = this.ProximoCodigo();
+
             ComandoSQL comando = new ComandoSQL();
-            comando.InsertTabela("tb_Periodico");
-            comando.InsertSqlObj("cod_Periodico ", $"{this.ProximoCodigo()}");
-            comando.InsertSqlObj("nome_Periodico", $"'{pPeriodico.nome_Periodico}'");
-            comando.InsertSqlObj("editora", $"'{pPeriodico.editora}'");
-            comando.InsertSqlObj("autor", $"'{pPeriodico.autor}'");
-            comando.InsertSqlObj("exemplar", $"'{pPeriodico.exemplar}'");
+            comando.InsertTabela("Periodico");
+            comando.InsertSqlObj("codigo_Periodico ", $"{pPeriodico.codigo_Periodico}");
+            comando.InsertSqlObj("codigo_Empresa", $"'{pPeriodico.empresa.codigo_Empresa}'");
+            comando.InsertSqlObj("nome", $"'{pPeriodico.Nome}'");
+            comando.InsertSqlObj("autor", $"'{pPeriodico.Autor}'");
+            comando.InsertSqlObj("editora", $"'{pPeriodico.Editora}'");
+            comando.InsertSqlObj("status", $"'{pPeriodico.Status.descStatusPeriodico}'",true);
 
             if (comando.ExecutarComandoInsertSql() > 0)
             {
@@ -35,11 +38,13 @@ namespace BancoDeDados.Cadastro
         public Periodico Atualizar(Periodico pPeriodico)
         {
             ComandoSQL comando = new ComandoSQL();
-            comando.UpdateTabela("tb_Periodico");
-            comando.UpdateSqlObj("nome_Periodico", $"'{pPeriodico.nome_Periodico}'");
-            comando.UpdateSqlObj("editora", $"'{pPeriodico.editora}'");
-            comando.UpdateSqlObj("autor", $"'{pPeriodico.autor}'");
-            comando.UpdateSqlObj("exemplar", $"'{pPeriodico.exemplar}'");
+            comando.UpdateTabela("Periodico");
+            comando.UpdateSqlObj("codigo_Empresa", $"'{pPeriodico.empresa.codigo_Empresa}'");
+            comando.UpdateSqlObj("nome", $"'{pPeriodico.Nome}'");
+            comando.UpdateSqlObj("autor", $"'{pPeriodico.Autor}'");
+            comando.UpdateSqlObj("editora", $"'{pPeriodico.Editora}'");
+            comando.UpdateSqlObj("status", $"'{pPeriodico.Status.descStatusPeriodico}'",true);
+            comando.strWhere = $" where codigo_Periodico = {pPeriodico.codigo_Periodico}"; 
 
 
             if (comando.ExecutarComandoUpdateSql() > 0)
@@ -57,16 +62,20 @@ namespace BancoDeDados.Cadastro
             int codigoRetorno = 0;
 
             SqlCommand sql = new SqlCommand("", new ConexaoDB().Conectar());
-            sql.CommandText = "select max(cod_Periodico) as maiorCodigo from tb_Periodico";
+            sql.CommandText = "select max(codigo_Periodico) as maiorCodigo from Periodico";
 
             using (SqlDataReader dt = sql.ExecuteReader())
             {
-
                 DataTable dataTable = new DataTable();
                 dataTable.Load(dt);
                 DataRow rd = dataTable.Rows[0];
 
-                codigoRetorno = Int32.Parse(rd["maiorCodigo"].ToString());
+                string UltimoCod = rd["maiorCodigo"].ToString();
+
+                if (string.IsNullOrWhiteSpace(UltimoCod) == false)
+                {
+                    codigoRetorno = Int32.Parse(rd["maiorCodigo"].ToString());
+                }
                 codigoRetorno += 1;
 
                 return codigoRetorno;
@@ -75,11 +84,13 @@ namespace BancoDeDados.Cadastro
 
         private Periodico CarregarDado(Periodico pPeriodico, DataRow rd)
         {
-            pPeriodico.cod_Periodico = Int32.Parse(rd["cod_Periodico"].ToString());
-            pPeriodico.nome_Periodico = rd["nome_Periodico"].ToString();
-            pPeriodico.editora = rd["editora"].ToString();
-            pPeriodico.autor = rd["autor"].ToString();
-            pPeriodico.exemplar = rd["exemplar"].ToString();
+            pPeriodico.codigo_Periodico = Int32.Parse(rd["codigo_Periodico"].ToString());
+            pPeriodico.empresa = new Empresa();
+            pPeriodico.empresa.codigo_Empresa = Int32.Parse(rd["codigo_Empresa"].ToString());
+            pPeriodico.Nome = rd["nome"].ToString();
+            pPeriodico.Editora = rd["editora"].ToString();
+            pPeriodico.Autor = rd["autor"].ToString();
+            pPeriodico.Status = new StatusPeriodico().Carregar(rd["status"].ToString());
 
             return pPeriodico;
         }
@@ -89,7 +100,7 @@ namespace BancoDeDados.Cadastro
             List<Periodico> lstPeriodicos = null;
 
             SqlCommand sql = new SqlCommand("", new ConexaoDB().Conectar());
-            sql.CommandText = "select * from tb_Periodico";
+            sql.CommandText = "select * from Periodico";
 
             using (SqlDataReader dt = sql.ExecuteReader())
             {
@@ -112,11 +123,11 @@ namespace BancoDeDados.Cadastro
             }
         }
 
-        public Periodico CarregarPeriodico(Periodico pPeriodico)
+        public Periodico CarregarPeriodico(int pCodPeriodico)
         {
             SqlCommand sql = new SqlCommand("", new ConexaoDB().Conectar());
-            sql.CommandText = "select * from tb_Periodico";
-            sql.CommandText += $" where cod_Periodico = '{pPeriodico.cod_Periodico}'";
+            sql.CommandText = "select * from Periodico";
+            sql.CommandText += $" where codigo_Periodico = {pCodPeriodico}";
 
             using (SqlDataReader dt = sql.ExecuteReader())
             {
@@ -130,6 +141,27 @@ namespace BancoDeDados.Cadastro
 
                 return periodicoCarregar;
             }
+        }
+
+        public int Excluir(int pCodPeriodico)
+        {
+            int retorno = 0;
+
+            StringBuilder sql = new StringBuilder();
+            sql.Append("delete from Periodico");
+            sql.Append($" where codigo_Periodico = {pCodPeriodico}");
+
+
+            if (ExecutarReader(sql.ToString()) == 1)
+            {
+                retorno = 1;
+            }
+            else
+            {
+                retorno = -1;
+            }
+
+            return retorno;
         }
     }
 }

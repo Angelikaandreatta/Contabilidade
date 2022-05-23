@@ -124,11 +124,11 @@ namespace Controle.Cadastro
         }
 
 
-        public async Task<Periodico> Carregar(Periodico pPeriodico)
+        public async Task<Periodico> Carregar(int pCodPeriodico)
         {
             Periodico periodicoRetorno = null;
 
-            if (pPeriodico.cod_Periodico <= 0)
+            if (pCodPeriodico <= 0)
             {
                 throw new InvalidOperationException("Informe o código do periodico para carrega-lo.");
             }
@@ -136,7 +136,7 @@ namespace Controle.Cadastro
             try
             {
                 DbPeriodico dbPeriodico = new DbPeriodico();
-                periodicoRetorno = dbPeriodico.CarregarPeriodico(pPeriodico);
+                periodicoRetorno = dbPeriodico.CarregarPeriodico(pCodPeriodico);
 
                 if (periodicoRetorno != null)
                 {
@@ -145,6 +145,39 @@ namespace Controle.Cadastro
                 else
                 {
                     throw new InvalidOperationException("Erro ao carregar Periodico.");
+                }
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<int> Excluir(int pCodPeriodico)
+        {
+            int retorno = 0;
+
+            if (pCodPeriodico <= 0)
+            {
+                throw new InvalidOperationException("Informe o código do periódico para exclui-lo.");
+            }
+
+            try
+            {
+                DbPeriodico dbPeriodico = new DbPeriodico();
+                retorno = dbPeriodico.Excluir(pCodPeriodico);
+
+                if (retorno == 1)
+                {
+                    return retorno;
+                }
+                else
+                {
+                    throw new InvalidOperationException("Erro ao excluir periódico.");
                 }
             }
             catch (InvalidOperationException ex)

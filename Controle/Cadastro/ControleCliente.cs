@@ -12,7 +12,7 @@ namespace Controle.Cadastro
     public class ControleCliente
     {
         public async Task<Cliente> Gravar(Cliente pCliente)
-        {
+         {
             List<string> lstMensagemNegocio = new List<string>();
             lstMensagemNegocio = pCliente.validarObjeto(pCliente);
 
@@ -124,11 +124,11 @@ namespace Controle.Cadastro
         }
 
 
-        public async Task<Cliente> Carregar(Cliente pCliente)
+        public async Task<Cliente> Carregar(string pCodCliente)
         {
             Cliente clienteRetorno = null;
 
-            if (pCliente.codigo_Cliente <= 0)
+            if (string.IsNullOrWhiteSpace(pCodCliente) == true)
             {
                 throw new InvalidOperationException("Informe o código do cliente para carrega-lo.");
             }
@@ -136,7 +136,7 @@ namespace Controle.Cadastro
             try
             {
                 DbCliente dbCliente = new DbCliente();
-                clienteRetorno = dbCliente.CarregarCliente(pCliente);
+                clienteRetorno = dbCliente.CarregarCliente(pCodCliente);
 
                 if (clienteRetorno != null)
                 {
@@ -156,5 +156,39 @@ namespace Controle.Cadastro
                 throw new Exception(ex.Message);
             }
         }
+
+        public async Task<int> Excluir(int pCodCliente)
+        {
+            int retorno = 0;
+
+            if (pCodCliente <= 0)
+            {
+                throw new InvalidOperationException("Informe o código do cliente para exclui-lo.");
+            }
+
+            try
+            {
+                DbCliente dbCliente = new DbCliente();
+                retorno = dbCliente.Excluir(pCodCliente);
+
+                if (retorno == 1)
+                {
+                    return retorno;
+                }
+                else
+                {
+                    throw new InvalidOperationException("Erro ao excluir cliente.");
+                }
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
     }
 }
