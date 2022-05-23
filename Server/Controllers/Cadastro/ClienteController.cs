@@ -151,7 +151,7 @@ namespace Projeto_Contabilidade.Server.Controllers.Cadastro
                 }
                 else
                 {
-                    throw new InvalidOperationException("Não foi possível Listar o cliente.");
+                    throw new InvalidOperationException("Não foi possível Excluir o cliente.");
                 }
 
             }

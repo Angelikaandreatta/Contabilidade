@@ -122,7 +122,7 @@
         Cliente clienteEditar = new Cliente();
         clienteEditar.codigo_Cliente = int.Parse(vmCliente.Codigo_Cliente);
         //empresa não edita
-        Endereco endereco = new Endereco();
+        clienteEditar.endereco = new Endereco();
         clienteEditar.endereco.codigo_Endereco = 1;
         clienteEditar.cnpj = vmCliente.Cnpj;
         clienteEditar.qtd_Empregado = vmCliente.Qtd_Empregado;
@@ -163,9 +163,9 @@
     {
         Cliente clienteGravar = new Cliente();
         clienteGravar.razao_Social = vmCliente.Razao_Social;
-        Empresa empresa = new Empresa();
+        clienteGravar.empresa = new Empresa();
         clienteGravar.empresa.codigo_Empresa = 1;
-        Endereco endereco = new Endereco();
+        clienteGravar.endereco = new Endereco();
         clienteGravar.endereco.codigo_Endereco = 1;
         clienteGravar.cnpj = vmCliente.Cnpj;
         clienteGravar.qtd_Empregado = vmCliente.Qtd_Empregado;
@@ -204,8 +204,11 @@
         try
         {
             Cliente clienteExcluir = new Cliente();
-            string url = $"https://localhost:44388/Cliente/Excluir";
-            var response = await httpClient.PostAsJsonAsync(url, clienteExcluir);
+            string url = $"https://localhost:44388/Cliente/Excluir?pCodCliente=1";
+            var response = await httpClient.DeleteAsync(url);
+            //HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Delete, url);
+
+            //serializar e passar o cliente
 
             if (response.IsSuccessStatusCode == true)
             {
@@ -229,6 +232,6 @@
         vmCliente.Codigo_Cliente = "";
         vmCliente.Razao_Social = "";
         vmCliente.Cnpj = "";
-        vmCliente.Razao_Social = "";
+        vmCliente.Qtd_Empregado = "";
     }
 }
