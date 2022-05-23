@@ -122,9 +122,9 @@
     {
         Cliente clienteEditar = new Cliente();
         clienteEditar.codigo_Cliente = int.Parse(vmCliente.Codigo_Cliente);
-        //empresa não edita
         clienteEditar.endereco = new Endereco();
         clienteEditar.endereco.codigo_Endereco = 1;
+        clienteEditar.razao_Social = vmCliente.Razao_Social;
         clienteEditar.cnpj = vmCliente.Cnpj;
         clienteEditar.qtd_Empregado = vmCliente.Qtd_Empregado;
 
@@ -143,7 +143,7 @@
                 vmCliente.Razao_Social = clienteRetorno.razao_Social;
                 vmCliente.Cnpj = clienteRetorno.cnpj;
                 vmCliente.Qtd_Empregado = clienteRetorno.qtd_Empregado;
-                //carregar empresa
+                vmCliente.Endereco = new Endereco();
                 vmCliente.Endereco.codigo_Endereco = clienteRetorno.endereco.codigo_Endereco;
 
                 StateHasChanged();
@@ -208,9 +208,6 @@
             Cliente clienteExcluir = new Cliente();
             string url = $"https://localhost:44388/Cliente/Excluir?pCodCliente={vmCliente.Codigo_Cliente}";
             var response = await httpClient.DeleteAsync(url);
-            //HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Delete, url);
-
-            //serializar e passar o cliente
 
             if (response.IsSuccessStatusCode == true)
             {
