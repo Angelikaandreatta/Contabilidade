@@ -62,8 +62,8 @@ namespace Negocio.Cadastro
 
             lstStatusPeriodico = new List<StatusPeriodico>()
             {
-                new StatusPeriodico(){codStatusPeriodico = 1, descStatusPeriodico="Disponivel"},
-                new StatusPeriodico(){codStatusPeriodico = 2, descStatusPeriodico="Indisponivel"}
+                new StatusPeriodico(){codStatusPeriodico = 1, descStatusPeriodico="disponivel"},
+                new StatusPeriodico(){codStatusPeriodico = 2, descStatusPeriodico="indisponivel"}
             };
 
             return lstStatusPeriodico;

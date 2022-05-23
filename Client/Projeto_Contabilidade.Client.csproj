@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Negocio\Negocio.csproj" />
+    <ProjectReference Include="..\Controle\Controle.csproj" />
     <ProjectReference Include="..\Shared\Projeto_Contabilidade.Shared.csproj" />
   </ItemGroup>
 </Project>

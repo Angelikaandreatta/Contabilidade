@@ -1,10 +1,13 @@
 ﻿@page "/CadastroPeriodico";
 @page "/CadastroPeriodico/{CodPeriodico}"
+@inject HttpClient httpClient
+@inject IJSRuntime jsRuntime
+@using System.Text
 @using Negocio.Cadastro
 @using Projeto_Contabilidade.Client.Componentes.Modal
 @using Projeto_Contabilidade.Client.Componentes.Input
 @using Projeto_Contabilidade.Client.Componentes.Steper
-@using System.Text
+@using Newtonsoft.Json
 
 <div class="card">
     <h4 class="card-header">Cadastro de Periódico</h4>
@@ -24,7 +27,7 @@
                         </div>
                         <div class="field__control">
                             <label>Autor</label>
-                            <InputSelect class="field__input" @bind-Value="vmPeriodico.Autor"></InputSelect>
+                            <InputText class="field__input field__input--active" @bind-Value="vmPeriodico.Autor"></InputText>
                         </div>
                         <div class="field__control">
                             <label>Editora</label>
@@ -33,9 +36,9 @@
 
                         <div class="field__control">
                             <label>Status</label>
-                            <InputSelect class="field__input field__input--active" @bind-Value="vmPeriodico.Status">
-                                <option value="1">Disponivel</option>
-                                <option value="2">Indisponivel</option>
+                            <InputSelect class="field__input field__input--active" @bind-Value="vmPeriodico.Status.descStatusPeriodico">
+                                <option value="1">disponivel</option>
+                                <option value="2">indisponivel</option>
                             </InputSelect>
                         </div>
                     </div>
@@ -67,14 +70,14 @@
             </Step>
         </Steper>
         <div class="form__buttons">
-            <button class="btn btn-lg btn-outline-danger">
+            <button class="btn btn-lg btn-outline-danger" @onclick="Excluir">
                 Excluir
             </button>
-            <button class="btn btn-lg btn-outline-info">
+            <button class="btn btn-lg btn-outline-info" @onclick="LimparTelaPeriodico">
                 Limpar
             </button>
 
-            <button class="btn btn-lg btn-outline-info">
+            <button class="btn btn-lg btn-outline-info" @onclick="CadastrarPeriodico">
                 @if (string.IsNullOrWhiteSpace(vmPeriodico.Codigo_Periodico) == false)
                 {
                     <div>Editar</div>
@@ -101,95 +104,163 @@
 
     }
 
-    //public async Task Gravar()
-    //{
-    //    if (string.IsNullOrWhiteSpace(vmPeriodico.Codigo_Periodico) == true)
-    //    {
-    //        await CadastrarPeriodico();
-    //    }
-    //    else
-    //    {
-    //        await EditarPeriodico();
-    //    }
-    //}
+    public async Task Gravar()
+    {
+        if (string.IsNullOrWhiteSpace(vmPeriodico.Codigo_Periodico) == true)
+        {
+            await CadastrarPeriodico();
+        }
+        else
+        {
+            await EditarPeriodico();
+        }
+    }
 
-    //private async Task EditarPeriodico()
-    //{
-    //    Periodico periodicoEditar = new Periodico();
-    //    periodicoEditar.codigo_Periodico = int.Parse(vmPeriodico.Codigo_Periodico);
-    //    //empresa não edita
-    //    periodicoEditar.Nome = vmPeriodico.Nome;
-    //    periodicoEditar.Autor = vmPeriodico.Autor;
-    //    periodicoEditar.Editora = vmPeriodico.Editora;
-    //    periodicoEditar.Status = new StatusPeriodico();
-    //    periodicoEditar.Status.codStatusPeriodico = vmPeriodico.Status;
+    private async Task EditarPeriodico()
+    {
+        Periodico periodicoEditar = new Periodico();
+        periodicoEditar.codigo_Periodico = int.Parse(vmPeriodico.Codigo_Periodico);
+        //empresa não edita
+        periodicoEditar.Nome = vmPeriodico.Nome;
+        periodicoEditar.Autor = vmPeriodico.Autor;
+        periodicoEditar.Editora = vmPeriodico.Editora;
+        periodicoEditar.Status = new StatusPeriodico();
 
+        periodicoEditar.Status = new StatusPeriodico();
+        if (vmPeriodico.Status != null)
+        {
+            if (periodicoEditar.Status.descStatusPeriodico == "disponivel" || periodicoEditar.Status.descStatusPeriodico == "indisponivel")
+            {
+                periodicoEditar.Status.descStatusPeriodico = vmPeriodico.Status.descStatusPeriodico;
+            }
+        }
 
-    //    try
-    //    {
-    //        string url = $"https://localhost:44388/Periodico/Atualizar";
+        try
+        {
+            string url = $"https://localhost:44388/Periodico/Atualizar";
 
-    //        var response = await httpClient.PostAsJsonAsync(url, periodicoEditar);
-
-
-    //        if (response.IsSuccessStatusCode == true)
-    //        {
-    //            vmPeriodico.Codigo_Periodico = periodicoEditar.codigo_Periodico.ToString();
-    //            //carregar empresa
-    //            vmPeriodico.Nome = periodicoEditar.Nome;
-    //            vmPeriodico.Autor = periodicoEditar.Autor;
-    //            vmPeriodico.Editora = periodicoEditar.Editora;
-    //            vmPeriodico.Status = periodicoEditar.Status.codStatusPeriodico;
-
-    //            StateHasChanged();
-    //            modal.Open("Periodico editado com sucesso");
-
-    //        }
-    //        else
-    //        {
-    //            modal.Open("Erro ao editar o Periodico");
-    //        }
-    //    }
-    //    catch (InvalidOperationException ex)
-    //    {
-    //        throw new InvalidOperationException(ex.Message);
-    //    }
-    //}
-
-    //private async Task CadastrarPeriodico()
-    //{
-    //    Periodico periodicoGravar = new Periodico();
-    //    periodicoGravar.empresa = new Empresa();
-    //    periodicoGravar.empresa.codigo_Empresa = 1;
-    //    periodicoGravar.Nome = vmPeriodico.Nome;
-    //    periodicoGravar.Autor = vmPeriodico.Autor;
-    //    periodicoGravar.Editora = vmPeriodico.Editora;
-    //    periodicoGravar.Status.codStatusPeriodico = vmPeriodico.Status;
-
-    //    try
-    //    {
-    //        string url = $"https://localhost:44388/Cliente/Gravar";
-
-    //        var response = await httpClient.PostAsJsonAsync(url, periodicoGravar);
+            var response = await httpClient.PostAsJsonAsync(url, periodicoEditar);
 
 
-    //        if (response.IsSuccessStatusCode == true)
-    //        {
-    //           //retorno terminar
+            if (response.IsSuccessStatusCode == true)
+            {
+                Periodico periodicoRetorno = JsonConvert.DeserializeObject<Periodico>(await response.Content.ReadAsStringAsync());
+                vmPeriodico.Codigo_Periodico = periodicoRetorno.codigo_Periodico.ToString();
+                vmPeriodico.Nome = periodicoRetorno.Nome;
+                vmPeriodico.Autor = periodicoRetorno.Autor;
+                vmPeriodico.Editora = periodicoRetorno.Editora;
 
-    //            StateHasChanged();
-    //            modal.Open("Cliente gravado com sucesso");
+                vmPeriodico.Status = new vmStatusPeriodico();
+                if (vmPeriodico.Status != null)
+                {
+                    if (periodicoRetorno.Status.descStatusPeriodico == "disponivel" || periodicoRetorno.Status.descStatusPeriodico == "indisponivel")
+                    {
+                        vmPeriodico.Status.descStatusPeriodico = periodicoRetorno.Status.descStatusPeriodico;
+                    }
+                }
+                StateHasChanged();
+                modal.Open("Periodico editado com sucesso");
 
-    //        }
-    //        else
-    //        {
-    //            modal.Open("Erro ao gravar o Cliente");
-    //        }
-    //    }
-    //    catch (InvalidOperationException ex)
-    //    {
-    //        throw new InvalidOperationException(ex.Message);
-    //    }
-    //}
+            }
+            else
+            {
+                modal.Open("Erro ao editar o Periodico");
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+    }
 
+    private async Task CadastrarPeriodico()
+    {
+        Periodico periodicoGravar = new Periodico();
+        periodicoGravar.empresa = new Empresa();
+        periodicoGravar.empresa.codigo_Empresa = 1;
+        periodicoGravar.Nome = vmPeriodico.Nome;
+        periodicoGravar.Autor = vmPeriodico.Autor;
+        periodicoGravar.Editora = vmPeriodico.Editora;
+
+        periodicoGravar.Status = new StatusPeriodico();
+        if (vmPeriodico.Status != null)
+        {
+            if (periodicoGravar.Status.descStatusPeriodico == "disponivel" || periodicoGravar.Status.descStatusPeriodico == "indisponivel")
+            {
+                periodicoGravar.Status.descStatusPeriodico = vmPeriodico.Status.descStatusPeriodico;
+            }
+        }
+
+        try
+        {
+            string url = $"https://localhost:44388/Periodico/Gravar";
+
+            var response = await httpClient.PostAsJsonAsync(url, periodicoGravar);
+
+
+            if (response.IsSuccessStatusCode == true)
+            {
+                Periodico periodicoRetorno = JsonConvert.DeserializeObject<Periodico>(await response.Content.ReadAsStringAsync());
+                vmPeriodico.Codigo_Periodico = periodicoRetorno.codigo_Periodico.ToString();
+                vmPeriodico.Nome = periodicoRetorno.Nome;
+                vmPeriodico.Autor = periodicoRetorno.Autor;
+                vmPeriodico.Editora = periodicoRetorno.Editora;
+
+                vmPeriodico.Status = new vmStatusPeriodico();
+                if (vmPeriodico.Status != null)
+                {
+                    if (periodicoRetorno.Status.descStatusPeriodico == "disponivel" || periodicoRetorno.Status.descStatusPeriodico == "indisponivel")
+                    {
+                        vmPeriodico.Status.descStatusPeriodico = periodicoRetorno.Status.descStatusPeriodico;
+                    }
+                }
+
+                StateHasChanged();
+                modal.Open("Periodico gravado com sucesso");
+
+            }
+            else
+            {
+                modal.Open("Erro ao gravar o Periodico");
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+    }
+
+    private async Task Excluir()
+    {
+        try
+        {
+            Cliente clienteExcluir = new Cliente();
+            string url = $"https://localhost:44388/Periodico/Excluir?pCodPeriodico={vmPeriodico.Codigo_Periodico}";
+            var response = await httpClient.DeleteAsync(url);
+
+            if (response.IsSuccessStatusCode == true)
+            {
+                LimparTelaPeriodico();
+                StateHasChanged();
+                modal.Open("Periodico excluído com sucesso");
+            }
+            else
+            {
+                modal.Open("Erro ao excluir o Periodico.");
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+    }
+
+    public void LimparTelaPeriodico()
+    {
+        vmPeriodico.Codigo_Periodico = "";
+        vmPeriodico.Nome = "";
+        vmPeriodico.Autor = "";
+        vmPeriodico.Editora = "";
+        vmPeriodico.Status.descStatusPeriodico = "disponivel";
+    }
 }
