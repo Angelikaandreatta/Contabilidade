@@ -9,6 +9,7 @@
 @using Projeto_Contabilidade.Client.Componentes.Input
 @using Projeto_Contabilidade.Client.Componentes.Modal
 @using Projeto_Contabilidade.Client.Pages.endereco
+@using Newtonsoft.Json
 
 <div class="card">
     <h4 class="card-header">Cadastro de Cliente</h4>
@@ -137,12 +138,13 @@
 
             if (response.IsSuccessStatusCode == true)
             {
-                vmCliente.Codigo_Cliente = clienteEditar.codigo_Cliente.ToString();
-                vmCliente.Razao_Social = clienteEditar.razao_Social;
-                vmCliente.Cnpj = clienteEditar.cnpj;
-                vmCliente.Qtd_Empregado = clienteEditar.qtd_Empregado;
+                Cliente clienteRetorno = JsonConvert.DeserializeObject<Cliente>(await response.Content.ReadAsStringAsync());
+                vmCliente.Codigo_Cliente = clienteRetorno.codigo_Cliente.ToString();
+                vmCliente.Razao_Social = clienteRetorno.razao_Social;
+                vmCliente.Cnpj = clienteRetorno.cnpj;
+                vmCliente.Qtd_Empregado = clienteRetorno.qtd_Empregado;
                 //carregar empresa
-                vmCliente.Endereco.codigo_Endereco = clienteEditar.endereco.codigo_Endereco;
+                vmCliente.Endereco.codigo_Endereco = clienteRetorno.endereco.codigo_Endereco;
 
                 StateHasChanged();
                 modal.Open("Cliente editado com sucesso");
@@ -179,14 +181,14 @@
 
             if (response.IsSuccessStatusCode == true)
             {
-                vmCliente.Codigo_Cliente = clienteGravar.codigo_Cliente.ToString();
-                vmCliente.Razao_Social = clienteGravar.razao_Social;
-                vmCliente.Cnpj = clienteGravar.cnpj;
-                vmCliente.Qtd_Empregado = clienteGravar.qtd_Empregado;
+                Cliente clienteRetorno = JsonConvert.DeserializeObject<Cliente>(await response.Content.ReadAsStringAsync());
+                vmCliente.Codigo_Cliente = clienteRetorno.codigo_Cliente.ToString();
+                vmCliente.Razao_Social = clienteRetorno.razao_Social;
+                vmCliente.Cnpj = clienteRetorno.cnpj;
+                vmCliente.Qtd_Empregado = clienteRetorno.qtd_Empregado;
 
                 StateHasChanged();
                 modal.Open("Cliente gravado com sucesso");
-
             }
             else
             {
