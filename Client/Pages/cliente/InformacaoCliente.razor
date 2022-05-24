@@ -7,24 +7,67 @@
 @inject HttpClient httpClient
 @inject NavigationManager NavigationManager
 
-<div class="info">
-    <h3>@vmCliente.Razao_Social</h3>
-    <div class="info__controls">
-        <Input readOnly="true" value="@vmCliente.Cnpj" label="CNPJ" id="info_cnpj"></Input>
-        <Input readOnly="true" value="@vmCliente.Qtd_Empregado" label="Total de Empregados" id="info_totalEmpregados"></Input>
+@if (loading)
+{
+    <h3>CARREGANDO ...</h3>
+}
+else
+{
+    <div class="info">
+        <h3>@vmCliente.Razao_Social</h3>
+        <div class="info__controls">
+            <Input readOnly="true" value="@vmCliente.Cnpj" label="CNPJ" id="info_cnpj"></Input>
+            <Input readOnly="true" value="@vmCliente.Qtd_Empregado" label="Total de Empregados" id="info_totalEmpregados"></Input>
+        </div>
+        <div class="d-flex w-100 justify-content-between">
+            <h3 class="">Contatos Cadastrados</h3>
+            <div style="width:250px" class="d-flex form-control">
+                <span class="oi oi-magnifying-glass"></span>
+                <input style="outline:0" type="text" placeholder="Pesquisa" class="w-100 h-100 border-0" />
+            </div>
+        </div>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (ContatoViewModel contato in contatos)
+                {
+                    <tr>
+                        <td>@contato.Nome_Contato</td>
+                        <td>@contato.Email</td>
+                        <td class="table__data">
+                            <button @onclick=@(() => NavigationManager.NavigateTo("CadastroContato")) class="btn btn-outline-success">Editar</button>
+                            <button class="btn btn-outline-danger">Deletar</button>
+                        </td>
+                    </tr>
+                }
+                <tr>
+                    <td colspan=3 class="text-center">
+                        <button @onclick=@(() => NavigationManager.NavigateTo("CadastroContato")) class="btn btn-outline-primary">
+                            Novo Contato
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="info__buttons">
+            <button @onclick=@(() => NavigationManager.NavigateTo($"CadastroCliente/{vmCliente.Codigo_Cliente}")) class="btn btn-lg btn-outline-success">Editar</button>
+            <button class="btn btn-lg btn-outline-danger">Deletar</button>
+        </div>
     </div>
-    <TabelaContato tableLink="CadastroContato" contatos="contatos"></TabelaContato>
-    <div class="info__buttons">
-        <button @onclick=@(() => NavigationManager.NavigateTo($"CadastroCliente/{vmCliente.Codigo_Cliente}")) class="btn btn-lg btn-outline-info">Editar</button>
-        <button class="btn btn-lg btn-outline-danger">Deletar</button>
-    </div>
-</div>
+}
 
 @code {
 
     [Parameter] public string codCliente { get; set; }
     ClienteViewModel vmCliente = new ClienteViewModel();
     List<ContatoViewModel> contatos = new List<ContatoViewModel>();
+    public bool loading = false;
 
     protected override void OnInitialized()
     {
@@ -47,6 +90,7 @@
 
         try
         {
+            loading = true;
             string url = $"https://localhost:44388/Cliente/Carregar?pCodCliente={codCliente}";
             var response = await httpClient.GetAsync(url);
             if (response.IsSuccessStatusCode == true)
@@ -58,12 +102,17 @@
                 vmCliente.Cnpj = clienteRetorno.cnpj;
                 vmCliente.Qtd_Empregado = clienteRetorno.qtd_Empregado;
                 vmCliente.Endereco = clienteRetorno.endereco;
-                StateHasChanged();
+
             }
         }
         catch (InvalidOperationException ex)
         {
             throw new InvalidOperationException(ex.Message);
+        }
+        finally
+        {
+            loading = false;
+            StateHasChanged();
         }
     }
 }

@@ -13,7 +13,7 @@
                 <p>@message</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal" @onclick="() => Close()">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" @onclick="() => Close()">Fechar</button>
             </div>
         </div>
     </div>
@@ -37,7 +37,7 @@
     public bool ShowBackdrop = false;
     private string urlRedirect = "";
 
-    public void Open(string message, string urlRedirect = "")
+    public void Open(string message = "teste", string urlRedirect = "")
     {
         this.message = message;
         this.urlRedirect = urlRedirect;

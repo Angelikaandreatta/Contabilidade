@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\css\componentes\Tabela.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Pages\cliente\InformacaoCliente.razor.css" />
   </ItemGroup>
 

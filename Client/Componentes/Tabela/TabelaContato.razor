@@ -25,31 +25,12 @@
         </tr>
     }
     <tr class="table__line">
-        <td colspan=3 class="table__data">
-            <button @onclick=@(() => NavigationManager.NavigateTo("CadastroContato")) class="btn btn-outline-info">
+        <td colspan=3 class="justify-content-center">
+            <button @onclick=@(() => NavigationManager.NavigateTo("CadastroContato")) class="btn btn-outline-primary">
                 Novo Contato
             </button>
         </td>
     </tr>
-    @*<tr @onclick=@(() => NavigationManager.NavigateTo("InformacaoContato")) class="table__line">
-        @foreach (string data in tableData)
-        {
-            <td class="table__data">
-                @data
-            </td>
-        }
-        <td class="table__data">
-            <button @onclick=@(() => NavigationManager.NavigateTo("CadastroContato")) class="button button--small button--edit">Editar</button>
-            <button class="button button--small button--delete">Deletar</button>
-        </td>
-    </tr>
-    <tr class="table__line">
-        <td colspan=3 class="table__data">
-            <button @onclick=@(() => NavigationManager.NavigateTo("CadastroContato")) class="button button--action">
-                Novo Contato
-            </button>
-        </td>
-    </tr>*@
 </table>
 
 @code {

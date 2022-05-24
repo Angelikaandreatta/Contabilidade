@@ -59,18 +59,18 @@
                 <button class="btn btn-lg btn-outline-danger">
                     Excluir
                 </button>
-                <button class="btn btn-lg btn-outline-info">
+                <button class="btn btn-lg btn-outline-primary">
                     Limpar
                 </button>
                 @if (string.IsNullOrWhiteSpace(vmContato.Cod_Contato) == true)
                 {
-                    <button class="btn btn-lg btn-outline-info">
+                    <button class="btn btn-lg btn-outline-primary">
                         Gravar
                     </button>
                 }
                 else
                 {
-                    <button class="btn btn-lg btn-outline-info">
+                    <button class="btn btn-lg btn-outline-primary">
                         Editar
                     </button>
                 }
@@ -89,10 +89,10 @@
 
     async protected override Task OnInitializedAsync()
     {
-        await Listar();
+        await ListarCliente();
     }
 
-    protected async Task Listar()
+    protected async Task ListarCliente()
     {
         try
         {

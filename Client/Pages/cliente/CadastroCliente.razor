@@ -11,107 +11,116 @@
 @using Projeto_Contabilidade.Client.Pages.endereco
 @using Newtonsoft.Json
 
-<div class="card">
-    <h4 class="card-header">Cadastro de Cliente</h4>
-    <div class="card-body">
-        <EditForm Model="vmCliente">
-            <Steper>
-                <Step Text="Informações Gerais" Icon="oi-info" Value="Step1" Enabled="@IsEnabled">
-                    <div class="form__div">
-                        <h3 class="form__title">
-                            Informações Gerais
-                        </h3>
-                        <div class="form__inputs">
-                            <div class="field__control">
-                                <label>Nome</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Razao_Social"></InputText>
-                            </div>
-                            <div class="field__control">
-                                <label>CNPJ</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Cnpj"></InputText>
-                            </div>
-                            <div class="field__control">
-                                <label>Quantidade de Empregado</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmCliente.Qtd_Empregado"></InputText>
-                            </div>
-                        </div>
-                    </div>
-                </Step>
-                <Step Text="Informações de Endereço" Icon="oi-location" Value="Step2" Enabled="@IsEnabled">
-                    <div class="form__div">
-                        <h3 class="form__title">
-                            Informações De Endereço
-                        </h3>
-                        <div class="form__inputs">
-                            <div class="field__control">
-                                <label>Rua</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmEndereco.Rua"></InputText>
-                            </div>
-                            <div class="field__control">
-                                <label>Número</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmEndereco.Numero"></InputText>
-                            </div>
-                            <div class="field__control">
-                                <label>Bairro</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmEndereco.Bairro"></InputText>
-                            </div>
-                            <div class="field__control">
-                                <label>Cidade</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmEndereco.Cidade"></InputText>
-                            </div>
-                            <div class="field__control">
-                                <label>UF</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmEndereco.Uf"></InputText>
+@if (loading)
+{
+    <h3>CARREGANDO ...</h3>
+}
+else
+{
+    <div class="card">
+        <h4 class="card-header">@formTitle</h4>
+        <div class="card-body">
+            <EditForm Model="vmCliente">
+                <Steper>
+                    <Step Text="Informações Gerais" Icon="oi-info" Value="Step1" Enabled="@IsEnabled">
+                        <div class="form__div">
+                            <h3 class="form__title">
+                                Informações Gerais
+                            </h3>
+                            <div class="form__inputs">
+                                <div class="field__control">
+                                    <label>Nome</label>
+                                    <InputText class="field__input field__input--active" @bind-Value="vmCliente.Razao_Social"></InputText>
+                                </div>
+                                <div class="field__control">
+                                    <label>CNPJ</label>
+                                    <InputText class="field__input field__input--active" @bind-Value="vmCliente.Cnpj"></InputText>
+                                </div>
+                                <div class="field__control">
+                                    <label>Quantidade de Empregado</label>
+                                    <InputText class="field__input field__input--active" @bind-Value="vmCliente.Qtd_Empregado"></InputText>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </Step>
-            </Steper>
-            <div class="form__buttons">
-                <button @onclick="Excluir" class="btn btn-lg btn-outline-danger ">
-                    Excluir
-                </button>
-                <button @onclick="LimparTelaCliente" class="btn btn-lg btn-outline-info">
-                    Limpar
-                </button>
+                    </Step>
+                    <Step Text="Informações de Endereço" Icon="oi-location" Value="Step2" Enabled="@IsEnabled">
+                        <div class="form__div">
+                            <h3 class="form__title">
+                                Informações De Endereço
+                            </h3>
+                            <div class="form__inputs">
+                                <div class="field__control">
+                                    <label>Rua</label>
+                                    <InputText class="field__input field__input--active" @bind-Value="vmEndereco.Rua"></InputText>
+                                </div>
+                                <div class="field__control">
+                                    <label>Número</label>
+                                    <InputText class="field__input field__input--active" @bind-Value="vmEndereco.Numero"></InputText>
+                                </div>
+                                <div class="field__control">
+                                    <label>Bairro</label>
+                                    <InputText class="field__input field__input--active" @bind-Value="vmEndereco.Bairro"></InputText>
+                                </div>
+                                <div class="field__control">
+                                    <label>Cidade</label>
+                                    <InputText class="field__input field__input--active" @bind-Value="vmEndereco.Cidade"></InputText>
+                                </div>
+                                <div class="field__control">
+                                    <label>UF</label>
+                                    <InputText class="field__input field__input--active" @bind-Value="vmEndereco.Uf"></InputText>
+                                </div>
+                            </div>
+                        </div>
+                    </Step>
+                </Steper>
+                <div class="form__buttons">
+                    <button @onclick="Excluir" class="btn btn-lg btn-outline-danger ">
+                        Excluir
+                    </button>
+                    <button @onclick="LimparTelaCliente" class="btn btn-lg btn-outline-primary">
+                        Limpar
+                    </button>
 
-                <button @onclick="Gravar" class="btn btn-lg btn-outline-info">
-                    @if (string.IsNullOrWhiteSpace(vmCliente.Codigo_Cliente) == false)
-                    {
-                        <div>Editar</div>
-                    }
-                    else
-                    {
-                        <div>Gravar</div>
-                    }
-                </button>
-            </div>
-        </EditForm>
+                    <button @onclick="Gravar" class="btn btn-lg btn-outline-primary">
+                        @if (string.IsNullOrWhiteSpace(vmCliente.Codigo_Cliente) == false)
+                        {
+                            <div>Editar</div>
+                        }
+                        else
+                        {
+                            <div>Gravar</div>
+                        }
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+        <Modal @ref="modal"></Modal>
     </div>
-
-    <Modal @ref="modal"></Modal>
-
-</div>
+}
 
 @code {
     [Parameter] public string codCliente { get; set; }
     ClienteViewModel vmCliente = new ClienteViewModel();
     EnderecoViewModel vmEndereco = new EnderecoViewModel();
     private Modal modal = new Modal();
+    private string formTitle = "Cadastro de Cliente";
     public bool IsEnabled = true;
-    private bool loading;
+    public bool loading = false;
     private string error;
 
     protected override void OnInitialized()
     {
-
+        if (codCliente != null)
+        {
+            formTitle = "Editar Cliente";
+        }
     }
 
     protected override async void OnParametersSet()
     {
-        if(codCliente != null)
+        if (codCliente != null)
         {
-            await Carregar();
+            await CarregarCliente();
         }
     }
 
@@ -154,8 +163,6 @@
                 vmCliente.Qtd_Empregado = clienteRetorno.qtd_Empregado;
                 vmCliente.Endereco = new Endereco();
                 vmCliente.Endereco.codigo_Endereco = clienteRetorno.endereco.codigo_Endereco;
-
-                StateHasChanged();
                 modal.Open("Cliente editado com sucesso", "PesquisaCliente");
 
             }
@@ -167,6 +174,10 @@
         catch (InvalidOperationException ex)
         {
             throw new InvalidOperationException(ex.Message);
+        }
+        finally
+        {
+            StateHasChanged();
         }
     }
 
@@ -184,10 +195,7 @@
         try
         {
             string url = $"https://localhost:44388/Cliente/Gravar";
-
             var response = await httpClient.PostAsJsonAsync(url, clienteGravar);
-
-
             if (response.IsSuccessStatusCode == true)
             {
                 Cliente clienteRetorno = JsonConvert.DeserializeObject<Cliente>(await response.Content.ReadAsStringAsync());
@@ -195,9 +203,7 @@
                 vmCliente.Razao_Social = clienteRetorno.razao_Social;
                 vmCliente.Cnpj = clienteRetorno.cnpj;
                 vmCliente.Qtd_Empregado = clienteRetorno.qtd_Empregado;
-
-                StateHasChanged();
-                modal.Open("Cliente gravado com sucesso","PesquisaCliente");
+                modal.Open("Cliente gravado com sucesso", "PesquisaCliente");
 
             }
             else
@@ -208,6 +214,9 @@
         catch (InvalidOperationException ex)
         {
             throw new InvalidOperationException(ex.Message);
+        }
+        finally{
+            StateHasChanged();
         }
     }
 
@@ -222,8 +231,7 @@
             if (response.IsSuccessStatusCode == true)
             {
                 LimparTelaCliente();
-                StateHasChanged();
-                modal.Open("Cliente excluído com sucesso","PesquisaCliente");
+                modal.Open("Cliente excluído com sucesso", "PesquisaCliente");
 
             }
             else
@@ -235,13 +243,17 @@
         {
             throw new InvalidOperationException(ex.Message);
         }
+        finally
+        {
+            StateHasChanged();
+        }
     }
 
-    private async Task Carregar()
+    private async Task CarregarCliente()
     {
-
         try
         {
+            this.loading = true;
             string url = $"https://localhost:44388/Cliente/Carregar?pCodCliente={codCliente}";
             var response = await httpClient.GetAsync(url);
             if (response.IsSuccessStatusCode == true)
@@ -253,12 +265,16 @@
                 vmCliente.Cnpj = clienteRetorno.cnpj;
                 vmCliente.Qtd_Empregado = clienteRetorno.qtd_Empregado;
                 vmCliente.Endereco = clienteRetorno.endereco;
-                StateHasChanged();
             }
         }
         catch (InvalidOperationException ex)
         {
             throw new InvalidOperationException(ex.Message);
+        }
+        finally
+        {
+            this.loading = false;
+            StateHasChanged();
         }
     }
 
