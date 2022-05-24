@@ -24,20 +24,20 @@
     <tbody>
         @foreach (ClienteViewModel cliente in clientes)
         {
-<tr class="table__tr" @onclick=@(() => NavigationManager.NavigateTo("InformacaoCliente"))>
-    <td class="table__td">@cliente.Razao_Social</td>
-    <td class="table__td">@cliente.Cnpj</td>
-    <td class="table__td">@cliente.Qtd_Empregado</td>
-    <td class="table__td">
-        <div>
-            <button @onclick=@(() => NavigationManager.NavigateTo("CadastroCliente")) type="button" class="btn btn-outline-success">
-                Editar
-            </button>
-            <button type="button" class="btn btn-outline-danger">Deletar</button>
-        </div>
-    </td>
-</tr>
-}
+            <tr class="table__tr" >
+                <td @onclick=@(() => NavigationManager.NavigateTo($"InformacaoCliente/{cliente.Codigo_Cliente}")) class="table__td">@cliente.Razao_Social</td>
+                <td class="table__td">@cliente.Cnpj</td>
+                <td class="table__td">@cliente.Qtd_Empregado</td>
+                <td class="table__td">
+                    <div>
+                        <button @onclick=@(() => NavigationManager.NavigateTo($"CadastroCliente/{cliente.Codigo_Cliente}")) type="button" class="btn btn-outline-success">
+                            Editar
+                        </button>
+                        <button @onclick="@(() => Excluir(cliente.Codigo_Cliente))" type="button" class="btn btn-outline-danger">Deletar</button>
+                    </div>
+                </td>
+            </tr>
+        }
         <tr class="table__tr ">
             <td colspan=4 class="table__td ">
                 <button class="btn btn-outline-info"
@@ -49,48 +49,79 @@
     </tbody>
 </table>
 
-@code { public Cliente clientTemp = new Cliente();
-            List<ClienteViewModel> clientes = new List<ClienteViewModel>();
-            Modal modal = new Modal();
+<Modal @ref="modal"></Modal>
+
+@code {
+    public Cliente clientTemp = new Cliente();
+    List<ClienteViewModel> clientes = new List<ClienteViewModel>();
+    Modal modal = new Modal();
 
 
-            async protected override Task OnInitializedAsync()
+    async protected override Task OnInitializedAsync()
+    {
+        await Listar();
+        StateHasChanged();
+    }
+
+    protected async Task Listar()
+    {
+        try
+        {
+            string url = $"https://localhost:44388/Cliente/Listar";
+
+            var response = await httpClient.PostAsJsonAsync(url, clientTemp);
+
+
+            if (response.IsSuccessStatusCode == true)
             {
-                await Listar();
-                StateHasChanged();
+                List<Cliente> clientesRetorno = JsonConvert.DeserializeObject<List<Cliente>>(await response.Content.ReadAsStringAsync());
+
+                clientes.RemoveRange(0, clientes.Count);
+                foreach (Cliente clienteRetorno in clientesRetorno)
+                {
+                    ClienteViewModel cliente = new ClienteViewModel();
+                    cliente.Codigo_Cliente = clienteRetorno.codigo_Cliente.ToString();
+                    cliente.Razao_Social = clienteRetorno.razao_Social;
+                    cliente.Cnpj = clienteRetorno.cnpj;
+                    cliente.Qtd_Empregado = clienteRetorno.qtd_Empregado;
+                    cliente.Endereco = new Endereco();
+                    cliente.Endereco.codigo_Endereco = clienteRetorno.endereco.codigo_Endereco;
+
+                    clientes.Add(cliente);
+                }
+
             }
 
-            private async Task Listar()
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+    }
+
+    protected async Task Excluir(string codCliente)
+    {
+        try
+        {
+            Cliente clienteExcluir = new Cliente();
+            string url = $"https://localhost:44388/Cliente/Excluir?pCodCliente={codCliente}";
+            var response = await httpClient.DeleteAsync(url);
+
+            if (response.IsSuccessStatusCode == true)
             {
-                try
-                {
-                    string url = $"https://localhost:44388/Cliente/Listar";
+                await Listar();
+                modal.Open("Cliente excluído com sucesso","PesquisaCliente");
 
-                    var response = await httpClient.PostAsJsonAsync(url, clientTemp);
+            }
+            else
+            {
+                modal.Open("Erro ao excluir o cliente", "PesquisaCliente");
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+    }
 
-
-                    if (response.IsSuccessStatusCode == true)
-                    {
-                        List<Cliente> clientesRetorno = JsonConvert.DeserializeObject<List<Cliente>>(await response.Content.ReadAsStringAsync());
-
-                        foreach (Cliente clienteRetorno in clientesRetorno)
-                        {
-                            ClienteViewModel cliente = new ClienteViewModel();
-                            cliente.Codigo_Cliente = clienteRetorno.codigo_Cliente.ToString();
-                            cliente.Razao_Social = clienteRetorno.razao_Social;
-                            cliente.Cnpj = clienteRetorno.cnpj;
-                            cliente.Qtd_Empregado = clienteRetorno.qtd_Empregado;
-                            cliente.Endereco = new Endereco();
-                            cliente.Endereco.codigo_Endereco = clienteRetorno.endereco.codigo_Endereco;
-
-                            clientes.Add(cliente);
-                        }
-
-                    }
-
-                }
-                catch (InvalidOperationException ex)
-                {
-                    throw new InvalidOperationException(ex.Message);
-                }
-            } }
+    }

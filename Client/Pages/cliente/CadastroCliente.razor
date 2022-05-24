@@ -1,7 +1,7 @@
-﻿@page "/CadastroCliente"
-@page "/CadastroCliente/{codCliente}"
+﻿@page "/CadastroCliente/{codCliente?}"
 @inject HttpClient httpClient
 @inject IJSRuntime jsRuntime
+@inject NavigationManager NavigationManager;
 @using System.Text
 @using Negocio.Cadastro
 @using Projeto_Contabilidade.Client.Pages.cliente
@@ -97,13 +97,22 @@
     [Parameter] public string codCliente { get; set; }
     ClienteViewModel vmCliente = new ClienteViewModel();
     EnderecoViewModel vmEndereco = new EnderecoViewModel();
-    private Modal modal { get; set; }
+    private Modal modal = new Modal();
     public bool IsEnabled = true;
     private bool loading;
     private string error;
-    protected override async Task OnInitializedAsync()
+
+    protected override void OnInitialized()
     {
 
+    }
+
+    protected override async void OnParametersSet()
+    {
+        if(codCliente != null)
+        {
+            await Carregar();
+        }
     }
 
     public async Task Gravar()
@@ -147,12 +156,12 @@
                 vmCliente.Endereco.codigo_Endereco = clienteRetorno.endereco.codigo_Endereco;
 
                 StateHasChanged();
-                modal.Open("Cliente editado com sucesso");
+                modal.Open("Cliente editado com sucesso", "PesquisaCliente");
 
             }
             else
             {
-                modal.Open("Erro ao editar o Cliente");
+                modal.Open("Erro ao editar o Cliente", "PesquisaCliente");
             }
         }
         catch (InvalidOperationException ex)
@@ -188,11 +197,12 @@
                 vmCliente.Qtd_Empregado = clienteRetorno.qtd_Empregado;
 
                 StateHasChanged();
-                modal.Open("Cliente gravado com sucesso");
+                modal.Open("Cliente gravado com sucesso","PesquisaCliente");
+
             }
             else
             {
-                modal.Open("Erro ao gravar o Cliente");
+                modal.Open("Erro ao gravar o Cliente", "PesquisaCliente");
             }
         }
         catch (InvalidOperationException ex)
@@ -213,11 +223,37 @@
             {
                 LimparTelaCliente();
                 StateHasChanged();
-                modal.Open("Cliente excluído com sucesso");
+                modal.Open("Cliente excluído com sucesso","PesquisaCliente");
+
             }
             else
             {
-                modal.Open("Erro ao excluir o cliente.");
+                modal.Open("Erro ao excluir o cliente", "PesquisaCliente");
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+    }
+
+    private async Task Carregar()
+    {
+
+        try
+        {
+            string url = $"https://localhost:44388/Cliente/Carregar?pCodCliente={codCliente}";
+            var response = await httpClient.GetAsync(url);
+            if (response.IsSuccessStatusCode == true)
+            {
+                Cliente clienteRetorno = JsonConvert.DeserializeObject<Cliente>(await response.Content.ReadAsStringAsync());
+
+                vmCliente.Codigo_Cliente = clienteRetorno.codigo_Cliente.ToString();
+                vmCliente.Razao_Social = clienteRetorno.razao_Social;
+                vmCliente.Cnpj = clienteRetorno.cnpj;
+                vmCliente.Qtd_Empregado = clienteRetorno.qtd_Empregado;
+                vmCliente.Endereco = clienteRetorno.endereco;
+                StateHasChanged();
             }
         }
         catch (InvalidOperationException ex)

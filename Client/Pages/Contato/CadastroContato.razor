@@ -1,7 +1,10 @@
-﻿@page "/CadastroContato"
-@page "/CadastroContato/{codContato}"
+﻿@page "/CadastroContato/{codContato?}"
+@inject HttpClient httpClient
+@using Projeto_Contabilidade.Client.Pages.cliente
 @using Projeto_Contabilidade.Client.Pages.Contato
+@using Negocio.Cadastro
 @using Projeto_Contabilidade.Client.Componentes.Steper
+@using Newtonsoft.Json
 
 <div class="card">
     <h4 class="card-header">Cadastro de Contato</h4>
@@ -17,7 +20,15 @@
                         <div class="form__inputs">
                             <div class="field__control">
                                 <label>Cliente</label>
-                                <InputSelect class="field__input" @bind-Value="vmContato.Cod_Contato"></InputSelect>
+                                <InputSelect class="field__input" @bind-Value="vmContato.Cod_Contato">
+                                    @if(clientes.Count > 0)
+                                    {
+                                        @foreach(ClienteViewModel cliente in clientes)
+                                        {
+                                            <option>@($"{cliente.Codigo_Cliente} - {cliente.Razao_Social}")</option>
+                                        }
+                                    }
+                                </InputSelect>
                             </div>
 
                             <div class="field__control">
@@ -70,9 +81,45 @@
 
 @code {
     [Parameter] public string codContato { get; set; }
+    public Cliente clientTemp = new Cliente();
     ContatoViewModel vmContato = new ContatoViewModel();
+    List<ClienteViewModel> clientes = new List<ClienteViewModel>();
+
     public bool IsEnabled = true;
 
+    async protected override Task OnInitializedAsync()
+    {
+        await Listar();
+    }
 
+    protected async Task Listar()
+    {
+        try
+        {
+            string url = $"https://localhost:44388/Cliente/Listar";
+            var response = await httpClient.PostAsJsonAsync(url, clientTemp);
+            if (response.IsSuccessStatusCode == true)
+            {
+                List<Cliente> clientesRetorno = JsonConvert.DeserializeObject<List<Cliente>>(await response.Content.ReadAsStringAsync());
+                clientes.RemoveRange(0, clientes.Count);
+                foreach (Cliente clienteRetorno in clientesRetorno)
+                {
+                    ClienteViewModel cliente = new ClienteViewModel();
+                    cliente.Codigo_Cliente = clienteRetorno.codigo_Cliente.ToString();
+                    cliente.Razao_Social = clienteRetorno.razao_Social;
+                    cliente.Cnpj = clienteRetorno.cnpj;
+                    cliente.Qtd_Empregado = clienteRetorno.qtd_Empregado;
+                    cliente.Endereco = new Endereco();
+                    cliente.Endereco.codigo_Endereco = clienteRetorno.endereco.codigo_Endereco;
+
+                    clientes.Add(cliente);
+                }
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+    }
 
 }

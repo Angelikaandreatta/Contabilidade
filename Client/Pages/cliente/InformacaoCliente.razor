@@ -1,25 +1,31 @@
-﻿@page "/InformacaoCliente"
+﻿@page "/InformacaoCliente/{codCliente}"
 @using Projeto_Contabilidade.Client.Componentes.Tabela
 @using Projeto_Contabilidade.Client.Componentes.Input
 @using Projeto_Contabilidade.Client.Pages.Contato
+@using Negocio.Cadastro
+@using Newtonsoft.Json
+@inject HttpClient httpClient
 @inject NavigationManager NavigationManager
 
 <div class="info">
-    <h3>Senhoria Seu Carlos</h3>
+    <h3>@vmCliente.Razao_Social</h3>
     <div class="info__controls">
-        <Input readOnly="true" value="81.489.456/0001-77" label="CNPJ" id="info_cnpj"></Input>
-        <Input readOnly="true" value="04/12/2001" label="Data Cadastro" id="info_dataCadastro"></Input>
-        <Input readOnly="true" value="84" label="Total de Empregados" id="info_totalEmpregados"></Input>
+        <Input readOnly="true" value="@vmCliente.Cnpj" label="CNPJ" id="info_cnpj"></Input>
+        <Input readOnly="true" value="@vmCliente.Qtd_Empregado" label="Total de Empregados" id="info_totalEmpregados"></Input>
     </div>
     <TabelaContato tableLink="CadastroContato" contatos="contatos"></TabelaContato>
     <div class="info__buttons">
-        <button @onclick=@(() => NavigationManager.NavigateTo("CadastroCliente")) class="btn btn-lg btn-outline-info">Editar</button>
+        <button @onclick=@(() => NavigationManager.NavigateTo($"CadastroCliente/{vmCliente.Codigo_Cliente}")) class="btn btn-lg btn-outline-info">Editar</button>
         <button class="btn btn-lg btn-outline-danger">Deletar</button>
     </div>
 </div>
 
 @code {
+
+    [Parameter] public string codCliente { get; set; }
+    ClienteViewModel vmCliente = new ClienteViewModel();
     List<ContatoViewModel> contatos = new List<ContatoViewModel>();
+
     protected override void OnInitialized()
     {
         ContatoViewModel contato = new ContatoViewModel();
@@ -29,5 +35,35 @@
         contatos.Add(contato);
         contatos.Add(contato);
         base.OnInitialized();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Carregar();
+    }
+
+    public async Task Carregar()
+    {
+
+        try
+        {
+            string url = $"https://localhost:44388/Cliente/Carregar?pCodCliente={codCliente}";
+            var response = await httpClient.GetAsync(url);
+            if (response.IsSuccessStatusCode == true)
+            {
+                Cliente clienteRetorno = JsonConvert.DeserializeObject<Cliente>(await response.Content.ReadAsStringAsync());
+
+                vmCliente.Codigo_Cliente = clienteRetorno.codigo_Cliente.ToString();
+                vmCliente.Razao_Social = clienteRetorno.razao_Social;
+                vmCliente.Cnpj = clienteRetorno.cnpj;
+                vmCliente.Qtd_Empregado = clienteRetorno.qtd_Empregado;
+                vmCliente.Endereco = clienteRetorno.endereco;
+                StateHasChanged();
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
     }
 }

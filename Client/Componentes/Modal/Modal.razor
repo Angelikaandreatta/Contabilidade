@@ -1,4 +1,4 @@
-﻿
+﻿@inject NavigationManager NavigationManager;
 
 <div class="modal @ModalClass" tabindex="-1" role="dialog" style="display:@ModalDisplay">
     <div class="modal-dialog" role="document">
@@ -35,10 +35,12 @@
     public string ModalDisplay = "none;";
     public string ModalClass = "";
     public bool ShowBackdrop = false;
+    private string urlRedirect = "";
 
-    public void Open(string message)
+    public void Open(string message, string urlRedirect = "")
     {
         this.message = message;
+        this.urlRedirect = urlRedirect;
         ModalDisplay = "block;";
         ModalClass = "Show";
         ShowBackdrop = true;
@@ -50,6 +52,7 @@
         ModalDisplay = "none";
         ModalClass = "";
         ShowBackdrop = false;
+        NavigationManager.NavigateTo(urlRedirect);
         StateHasChanged();
     }
 }
