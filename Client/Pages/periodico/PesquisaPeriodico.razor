@@ -36,7 +36,7 @@ else
                     <td @onclick=@(() => NavigationManager.NavigateTo($"CadastroPeriodico/{periodico.Codigo_Periodico}")) class="table__td">@periodico.Nome</td>
                     <td>@periodico.Autor</td>
                     <td>@periodico.Editora</td>
-                    <td>@periodico.Status.descStatusPeriodico</td>
+                    <td>@periodico.Status</td>
                     <td>
                         <div>
                             <button @onclick=@(() => NavigationManager.NavigateTo($"CadastroPeriodico/{periodico.Codigo_Periodico}")) type="button" class="btn btn-outline-success">
@@ -93,9 +93,7 @@ else
                     periodico.Nome = periodicoRetorno.Nome;
                     periodico.Autor = periodicoRetorno.Autor;
                     periodico.Editora = periodicoRetorno.Editora;
-                    periodico.Status = new vmStatusPeriodico();
-                    periodico.Status.descStatusPeriodico = periodicoRetorno.Status.descStatusPeriodico;
-
+                    periodico.Status = periodicoRetorno.Status;
 
                     periodicos.Add(periodico);
                 }

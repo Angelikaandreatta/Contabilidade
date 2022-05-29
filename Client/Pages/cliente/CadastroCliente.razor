@@ -164,11 +164,10 @@ else
                 vmCliente.Endereco = new Endereco();
                 vmCliente.Endereco.codigo_Endereco = clienteRetorno.endereco.codigo_Endereco;
                 modal.Open("Cliente editado com sucesso", "PesquisaCliente");
-
             }
             else
             {
-                modal.Open("Erro ao editar o Cliente", "PesquisaCliente");
+                modal.Open("Erro ao editar o Cliente", "CadastroCliente");
             }
         }
         catch (InvalidOperationException ex)
@@ -215,7 +214,8 @@ else
         {
             throw new InvalidOperationException(ex.Message);
         }
-        finally{
+        finally
+        {
             StateHasChanged();
         }
     }

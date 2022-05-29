@@ -23,7 +23,7 @@ namespace BancoDeDados.Cadastro
             comando.InsertSqlObj("nome", $"'{pPeriodico.Nome}'");
             comando.InsertSqlObj("autor", $"'{pPeriodico.Autor}'");
             comando.InsertSqlObj("editora", $"'{pPeriodico.Editora}'");
-            comando.InsertSqlObj("status", $"'{pPeriodico.Status.descStatusPeriodico}'", true);
+            comando.InsertSqlObj("status", $"'{pPeriodico.Status}'", true);
 
             if (comando.ExecutarComandoInsertSql() > 0)
             {
@@ -43,7 +43,7 @@ namespace BancoDeDados.Cadastro
             comando.UpdateSqlObj("nome", $"'{pPeriodico.Nome}'");
             comando.UpdateSqlObj("autor", $"'{pPeriodico.Autor}'");
             comando.UpdateSqlObj("editora", $"'{pPeriodico.Editora}'");
-            comando.UpdateSqlObj("status", $"'{pPeriodico.Status.descStatusPeriodico}'", true);
+            comando.UpdateSqlObj("status", $"'{pPeriodico.Status}'", true);
             comando.strWhere = $" where codigo_Periodico = {pPeriodico.codigo_Periodico}";
 
 
@@ -90,8 +90,7 @@ namespace BancoDeDados.Cadastro
             pPeriodico.Nome = rd["nome"].ToString();
             pPeriodico.Editora = rd["editora"].ToString();
             pPeriodico.Autor = rd["autor"].ToString();
-            pPeriodico.Status = new StatusPeriodico().Carregar(rd["status"].ToString());
-
+            pPeriodico.Status = rd["status"].ToString();
             return pPeriodico;
         }
 

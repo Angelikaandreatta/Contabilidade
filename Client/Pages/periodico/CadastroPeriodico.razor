@@ -11,98 +11,105 @@
 @using Newtonsoft.Json
 
 <div class="card">
-    <h4 class="card-header">Cadastro de Periódico</h4>
-    <div class="card-body"></div>
-    <EditForm Model="vmPeriodico">
-        <Steper>
-            <Step Text="Informações Cadastrais" Icon="oi-info" Value="Step1" Enabled="@IsEnabled">
-                <div class="d-flex flex-column p-5">
-                    <h3 class="form__title">
-                        Informações Cadastrais
-                    </h3>
+    <h4 class="card-header">@formTitle</h4>
+    <div class="card-body">
+        <EditForm Model="vmPeriodico">
+            <Steper>
+                <Step Text="Informações Cadastrais" Icon="oi-info" Value="Step1" Enabled="@IsEnabled">
+                    <div class="d-flex flex-column p-5">
+                        <h3 class="form__title">
+                            Informações Cadastrais
+                        </h3>
 
-                    <div class="form__inputs">
-                        <div class="field__control">
-                            <label>Nome</label>
-                            <InputText class="field__input field__input--active" @bind-Value="vmPeriodico.Nome"></InputText>
-                        </div>
-                        <div class="field__control">
-                            <label>Autor</label>
-                            <InputText class="field__input field__input--active" @bind-Value="vmPeriodico.Autor"></InputText>
-                        </div>
-                        <div class="field__control">
-                            <label>Editora</label>
-                            <InputText class="field__input field__input--active" @bind-Value="vmPeriodico.Editora"></InputText>
-                        </div>
+                        <div class="form__inputs">
+                            <div class="field__control">
+                                <label>Nome</label>
+                                <InputText class="field__input field__input--active" @bind-Value="vmPeriodico.Nome"></InputText>
+                            </div>
+                            <div class="field__control">
+                                <label>Autor</label>
+                                <InputText class="field__input field__input--active" @bind-Value="vmPeriodico.Autor"></InputText>
+                            </div>
+                            <div class="field__control">
+                                <label>Editora</label>
+                                <InputText class="field__input field__input--active" @bind-Value="vmPeriodico.Editora"></InputText>
+                            </div>
 
-                        <div class="field__control">
-                            <label>Status</label>
-                            <InputSelect class="field__input field__input--active" @bind-Value="vmPeriodico.Status.descStatusPeriodico">
-                                <option value="disponivel">disponivel</option>
-                                <option value="indisponivel">indisponivel</option>
-                            </InputSelect>
+                            <div class="field__control">
+                                <label>Status</label>
+                                <InputSelect class="field__input field__input--active" @bind-Value="vmPeriodico.Status">
+                                    <option value="selecione">Selecione</option>
+                                    <option value="disponivel">Disponivel</option>
+                                    <option value="indisponivel">Indisponivel</option>
+                                </InputSelect>
+                            </div>
                         </div>
                     </div>
+                </Step>
+                @*       <Step Text="Confirmar informações" Icon="oi-location" Value="Step2" Enabled="@IsEnabled">
+                <div class="d-flex flex-column p-5">
+                <h4 class="form__title mb-4">
+                Confirme as informações a seguir:
+                </h4>
+                <div class="d-flex flex-column">
+                <span class="font-weight-bold">Nome da revista</span>
+                <p>Lorem Ipsum is simply dummy text of the printing</p>
                 </div>
-            </Step>
-            @*       <Step Text="Confirmar informações" Icon="oi-location" Value="Step2" Enabled="@IsEnabled">
-            <div class="d-flex flex-column p-5">
-            <h4 class="form__title mb-4">
-            Confirme as informações a seguir:
-            </h4>
-            <div class="d-flex flex-column">
-            <span class="font-weight-bold">Nome da revista</span>
-            <p>Lorem Ipsum is simply dummy text of the printing</p>
-            </div>
-            <div class="d-flex flex-column">
-            <span class="font-weight-bold">Categoria</span>
-            <p>Ficção científica</p>
-            </div>
-            <div class="d-flex flex-column">
-            <span class="font-weight-bold">Descrição</span>
-            <p>
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-            Ipsum has been the industry's standard dummy text ever since the 1500s, when an
-            unknown printer took a galley of type and scrambled it to make a type specimen book.
-            </p>
-            </div>
+                <div class="d-flex flex-column">
+                <span class="font-weight-bold">Categoria</span>
+                <p>Ficção científica</p>
+                </div>
+                <div class="d-flex flex-column">
+                <span class="font-weight-bold">Descrição</span>
+                <p>
+                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
+                Ipsum has been the industry's standard dummy text ever since the 1500s, when an
+                unknown printer took a galley of type and scrambled it to make a type specimen book.
+                </p>
+                </div>
 
-            </div>
-            </Step>*@
-        </Steper>
-        <div class="form__buttons">
-            <button class="btn btn-lg btn-outline-danger" @onclick="Excluir">
-                Excluir
-            </button>
-            <button class="btn btn-lg btn-outline-info" @onclick="LimparTelaPeriodico">
-                Limpar
-            </button>
+                </div>
+                </Step>*@
+            </Steper>
+            <div class="form__buttons">
+                <button class="btn btn-lg btn-outline-danger" @onclick="Excluir">
+                    Excluir
+                </button>
+                <button class="btn btn-lg btn-outline-info" @onclick="LimparTelaPeriodico">
+                    Limpar
+                </button>
 
-            <button class="btn btn-lg btn-outline-info" @onclick="CadastrarPeriodico">
-                @if (string.IsNullOrWhiteSpace(vmPeriodico.Codigo_Periodico) == false)
-                {
-                    <div>Editar</div>
-                }
-                else
-                {
-                    <div>Gravar</div>
-                }
-            </button>
-        </div>
-    </EditForm>
+                <button class="btn btn-lg btn-outline-info" @onclick="Gravar">
+                    @if (string.IsNullOrWhiteSpace(vmPeriodico.Codigo_Periodico) == false)
+                    {
+                        <div>Editar</div>
+                    }
+                    else
+                    {
+                        <div>Gravar</div>
+                    }
+                </button>
+            </div>
+        </EditForm>
+    </div>
+    <Modal @ref="modal"></Modal>
 </div>
 
 @code {
     [Parameter] public string CodPeriodico { get; set; }
     PeriodicoViewModel vmPeriodico = new PeriodicoViewModel();
-    private Modal modal { get; set; }
+    private Modal modal = new Modal();
+    private string formTitle = "Cadastro de Cliente";
     public bool IsEnabled = true;
     private bool loading;
     private string error;
 
     protected override async Task OnInitializedAsync()
     {
-
+        if (CodPeriodico != null)
+        {
+            formTitle = "Editar Periodico";
+        }
     }
 
     public async Task Gravar()
@@ -117,63 +124,63 @@
         }
     }
 
+    protected override async void OnParametersSet()
+    {
+        if (CodPeriodico != null)
+        {
+            await CarregarPeriodico();
+        }
+    }
+
     private async Task EditarPeriodico()
     {
         Periodico periodicoEditar = new Periodico();
         periodicoEditar.codigo_Periodico = int.Parse(vmPeriodico.Codigo_Periodico);
-        //empresa não edita
+        periodicoEditar.empresa = new Empresa();
+        periodicoEditar.empresa.codigo_Empresa = 1;
         periodicoEditar.Nome = vmPeriodico.Nome;
         periodicoEditar.Autor = vmPeriodico.Autor;
         periodicoEditar.Editora = vmPeriodico.Editora;
-        periodicoEditar.Status = new StatusPeriodico();
 
-        vmPeriodico.Status = new vmStatusPeriodico();
-
-        if (vmPeriodico.Status != null)
+        if (vmPeriodico.Status == "selecione")
         {
-            if (periodicoEditar.Status.descStatusPeriodico == "disponivel" || periodicoEditar.Status.descStatusPeriodico == "indisponivel")
-            {
-                periodicoEditar.Status = new StatusPeriodico();
-                periodicoEditar.Status.descStatusPeriodico = vmPeriodico.Status.descStatusPeriodico;
-            }
+            modal.Open("Selecione o status do periódico", "CadastroPeriodico");
         }
-
-        try
+        else
         {
-            string url = $"https://localhost:44388/Periodico/Atualizar";
+            periodicoEditar.Status = vmPeriodico.Status;
 
-            var response = await httpClient.PostAsJsonAsync(url, periodicoEditar);
-
-
-            if (response.IsSuccessStatusCode == true)
+            try
             {
-                Periodico periodicoRetorno = JsonConvert.DeserializeObject<Periodico>(await response.Content.ReadAsStringAsync());
-                vmPeriodico.Codigo_Periodico = periodicoRetorno.codigo_Periodico.ToString();
-                vmPeriodico.Nome = periodicoRetorno.Nome;
-                vmPeriodico.Autor = periodicoRetorno.Autor;
-                vmPeriodico.Editora = periodicoRetorno.Editora;
+                string url = $"https://localhost:44388/Periodico/Atualizar";
 
-                vmPeriodico.Status = new vmStatusPeriodico();
-                if (vmPeriodico.Status != null)
+                var response = await httpClient.PostAsJsonAsync(url, periodicoEditar);
+
+
+                if (response.IsSuccessStatusCode == true)
                 {
-                    if (vmPeriodico.Status.descStatusPeriodico == "disponivel" || vmPeriodico.Status.descStatusPeriodico == "indisponivel")
-                    {
-                        periodicoEditar.Status = new StatusPeriodico();
-                        vmPeriodico.Status.descStatusPeriodico = periodicoRetorno.Status.descStatusPeriodico;
-                    }
-                }
-                StateHasChanged();
-                modal.Open("Periodico editado com sucesso");
+                    Periodico periodicoRetorno = JsonConvert.DeserializeObject<Periodico>(await response.Content.ReadAsStringAsync());
+                    vmPeriodico.Codigo_Periodico = periodicoRetorno.codigo_Periodico.ToString();
+                    vmPeriodico.Nome = periodicoRetorno.Nome;
+                    vmPeriodico.Autor = periodicoRetorno.Autor;
+                    vmPeriodico.Editora = periodicoRetorno.Editora;
+                    vmPeriodico.Status = periodicoRetorno.Status;
 
+                    modal.Open("Periodico editado com sucesso", "PesquisaPeriodico");
+                }
+                else
+                {
+                    modal.Open("Periodico editado com sucesso", "CadastroPeriodico");
+                }
             }
-            else
+            catch (InvalidOperationException ex)
             {
-                modal.Open("Erro ao editar o Periodico");
+                throw new InvalidOperationException(ex.Message);
             }
-        }
-        catch (InvalidOperationException ex)
-        {
-            throw new InvalidOperationException(ex.Message);
+            finally
+            {
+                StateHasChanged();
+            }
         }
     }
 
@@ -186,50 +193,46 @@
         periodicoGravar.Autor = vmPeriodico.Autor;
         periodicoGravar.Editora = vmPeriodico.Editora;
 
-       
-        vmPeriodico.Status = new vmStatusPeriodico();
-        if (vmPeriodico.Status.descStatusPeriodico == "disponivel" || vmPeriodico.Status.descStatusPeriodico == "indisponivel")
+        if (vmPeriodico.Status == null || vmPeriodico.Status == "selecione")
         {
-            periodicoGravar.Status = new StatusPeriodico();
-            periodicoGravar.Status.descStatusPeriodico = vmPeriodico.Status.descStatusPeriodico;
+            modal.Open("Selecione o status do periódico", "CadastroPeriodico");
         }
-
-        try
+        else
         {
-            string url = $"https://localhost:44388/Periodico/Gravar";
-
-            var response = await httpClient.PostAsJsonAsync(url, periodicoGravar);
+            periodicoGravar.Status = vmPeriodico.Status;
 
 
-            if (response.IsSuccessStatusCode == true)
+            try
             {
-                Periodico periodicoRetorno = JsonConvert.DeserializeObject<Periodico>(await response.Content.ReadAsStringAsync());
-                vmPeriodico.Codigo_Periodico = periodicoRetorno.codigo_Periodico.ToString();
-                vmPeriodico.Nome = periodicoRetorno.Nome;
-                vmPeriodico.Autor = periodicoRetorno.Autor;
-                vmPeriodico.Editora = periodicoRetorno.Editora;
+                string url = $"https://localhost:44388/Periodico/Gravar";
 
-                vmPeriodico.Status = new vmStatusPeriodico();
-                if (vmPeriodico.Status != null)
+                var response = await httpClient.PostAsJsonAsync(url, periodicoGravar);
+
+                if (response.IsSuccessStatusCode == true)
                 {
-                    if (periodicoRetorno.Status.descStatusPeriodico == "disponivel" || periodicoRetorno.Status.descStatusPeriodico == "indisponivel")
-                    {
-                        vmPeriodico.Status.descStatusPeriodico = periodicoRetorno.Status.descStatusPeriodico;
-                    }
+                    Periodico periodicoRetorno = JsonConvert.DeserializeObject<Periodico>(await response.Content.ReadAsStringAsync());
+                    vmPeriodico.Codigo_Periodico = periodicoRetorno.codigo_Periodico.ToString();
+                    vmPeriodico.Nome = periodicoRetorno.Nome;
+                    vmPeriodico.Autor = periodicoRetorno.Autor;
+                    vmPeriodico.Editora = periodicoRetorno.Editora;
+                    vmPeriodico.Status = periodicoRetorno.Status;
+
+                    modal.Open("Periodico gravado com sucesso", "PesquisaPeriodico");
+
                 }
-
-                StateHasChanged();
-                modal.Open("Periodico gravado com sucesso");
-
+                else
+                {
+                    modal.Open("Periodico gravado com sucesso", "CadastroPeriodico");
+                }
             }
-            else
+            catch (InvalidOperationException ex)
             {
-                modal.Open("Erro ao gravar o Periodico");
+                throw new InvalidOperationException(ex.Message);
             }
-        }
-        catch (InvalidOperationException ex)
-        {
-            throw new InvalidOperationException(ex.Message);
+            finally
+            {
+                StateHasChanged();
+            }
         }
     }
 
@@ -244,17 +247,49 @@
             if (response.IsSuccessStatusCode == true)
             {
                 LimparTelaPeriodico();
-                StateHasChanged();
-                modal.Open("Periodico excluído com sucesso");
+                modal.Open("Periodico excluido com sucesso", "CadastroPeriodico");
             }
             else
             {
-                modal.Open("Erro ao excluir o Periodico.");
+               modal.Open("Erro ao excluir o periodico", "CadastroPeriodico");
             }
         }
         catch (InvalidOperationException ex)
         {
             throw new InvalidOperationException(ex.Message);
+        }
+        finally
+        {
+            StateHasChanged();
+        }
+    }
+
+    private async Task CarregarPeriodico()
+    {
+        try
+        {
+            this.loading = true;
+            string url = $"https://localhost:44388/Periodico/Carregar?pCodPeriodico={CodPeriodico}";
+            var response = await httpClient.GetAsync(url);
+            if (response.IsSuccessStatusCode == true)
+            {
+                Periodico periodicoRetorno = JsonConvert.DeserializeObject<Periodico>(await response.Content.ReadAsStringAsync());
+
+                vmPeriodico.Codigo_Periodico = periodicoRetorno.codigo_Periodico.ToString();
+                vmPeriodico.Nome = periodicoRetorno.Nome;
+                vmPeriodico.Autor = periodicoRetorno.Autor;
+                vmPeriodico.Editora = periodicoRetorno.Editora;
+                vmPeriodico.Status = periodicoRetorno.Status;
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+        finally
+        {
+            this.loading = false;
+            StateHasChanged();
         }
     }
 
@@ -264,6 +299,6 @@
         vmPeriodico.Nome = "";
         vmPeriodico.Autor = "";
         vmPeriodico.Editora = "";
-        vmPeriodico.Status.descStatusPeriodico = "disponivel";
+        vmPeriodico.Status = "selecione";
     }
 }
