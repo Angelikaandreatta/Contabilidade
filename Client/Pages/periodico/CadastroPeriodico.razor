@@ -2,6 +2,7 @@
 @page "/CadastroPeriodico/{CodPeriodico}"
 @inject HttpClient httpClient
 @inject IJSRuntime jsRuntime
+@inject NavigationManager NavigationManager
 @using System.Text
 @using Negocio.Cadastro
 @using Projeto_Contabilidade.Client.Componentes.Modal
@@ -37,37 +38,37 @@
                         <div class="field__control">
                             <label>Status</label>
                             <InputSelect class="field__input field__input--active" @bind-Value="vmPeriodico.Status.descStatusPeriodico">
-                                <option value="1">disponivel</option>
-                                <option value="2">indisponivel</option>
+                                <option value="disponivel">disponivel</option>
+                                <option value="indisponivel">indisponivel</option>
                             </InputSelect>
                         </div>
                     </div>
                 </div>
             </Step>
-            <Step Text="Confirmar informações" Icon="oi-location" Value="Step2" Enabled="@IsEnabled">
-                <div class="d-flex flex-column p-5">
-                    <h4 class="form__title mb-4">
-                        Confirme as informações a seguir:
-                    </h4>
-                    <div class="d-flex flex-column">
-                        <span class="font-weight-bold">Nome da revista</span>
-                        <p>Lorem Ipsum is simply dummy text of the printing</p>
-                    </div>
-                    <div class="d-flex flex-column">
-                        <span class="font-weight-bold">Categoria</span>
-                        <p>Ficção científica</p>
-                    </div>
-                    <div class="d-flex flex-column">
-                        <span class="font-weight-bold">Descrição</span>
-                        <p>
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                            Ipsum has been the industry's standard dummy text ever since the 1500s, when an
-                            unknown printer took a galley of type and scrambled it to make a type specimen book.
-                        </p>
-                    </div>
+            @*       <Step Text="Confirmar informações" Icon="oi-location" Value="Step2" Enabled="@IsEnabled">
+            <div class="d-flex flex-column p-5">
+            <h4 class="form__title mb-4">
+            Confirme as informações a seguir:
+            </h4>
+            <div class="d-flex flex-column">
+            <span class="font-weight-bold">Nome da revista</span>
+            <p>Lorem Ipsum is simply dummy text of the printing</p>
+            </div>
+            <div class="d-flex flex-column">
+            <span class="font-weight-bold">Categoria</span>
+            <p>Ficção científica</p>
+            </div>
+            <div class="d-flex flex-column">
+            <span class="font-weight-bold">Descrição</span>
+            <p>
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
+            Ipsum has been the industry's standard dummy text ever since the 1500s, when an
+            unknown printer took a galley of type and scrambled it to make a type specimen book.
+            </p>
+            </div>
 
-                </div>
-            </Step>
+            </div>
+            </Step>*@
         </Steper>
         <div class="form__buttons">
             <button class="btn btn-lg btn-outline-danger" @onclick="Excluir">
@@ -126,11 +127,13 @@
         periodicoEditar.Editora = vmPeriodico.Editora;
         periodicoEditar.Status = new StatusPeriodico();
 
-        periodicoEditar.Status = new StatusPeriodico();
+        vmPeriodico.Status = new vmStatusPeriodico();
+
         if (vmPeriodico.Status != null)
         {
             if (periodicoEditar.Status.descStatusPeriodico == "disponivel" || periodicoEditar.Status.descStatusPeriodico == "indisponivel")
             {
+                periodicoEditar.Status = new StatusPeriodico();
                 periodicoEditar.Status.descStatusPeriodico = vmPeriodico.Status.descStatusPeriodico;
             }
         }
@@ -153,8 +156,9 @@
                 vmPeriodico.Status = new vmStatusPeriodico();
                 if (vmPeriodico.Status != null)
                 {
-                    if (periodicoRetorno.Status.descStatusPeriodico == "disponivel" || periodicoRetorno.Status.descStatusPeriodico == "indisponivel")
+                    if (vmPeriodico.Status.descStatusPeriodico == "disponivel" || vmPeriodico.Status.descStatusPeriodico == "indisponivel")
                     {
+                        periodicoEditar.Status = new StatusPeriodico();
                         vmPeriodico.Status.descStatusPeriodico = periodicoRetorno.Status.descStatusPeriodico;
                     }
                 }
@@ -182,13 +186,12 @@
         periodicoGravar.Autor = vmPeriodico.Autor;
         periodicoGravar.Editora = vmPeriodico.Editora;
 
-        periodicoGravar.Status = new StatusPeriodico();
-        if (vmPeriodico.Status != null)
+       
+        vmPeriodico.Status = new vmStatusPeriodico();
+        if (vmPeriodico.Status.descStatusPeriodico == "disponivel" || vmPeriodico.Status.descStatusPeriodico == "indisponivel")
         {
-            if (periodicoGravar.Status.descStatusPeriodico == "disponivel" || periodicoGravar.Status.descStatusPeriodico == "indisponivel")
-            {
-                periodicoGravar.Status.descStatusPeriodico = vmPeriodico.Status.descStatusPeriodico;
-            }
+            periodicoGravar.Status = new StatusPeriodico();
+            periodicoGravar.Status.descStatusPeriodico = vmPeriodico.Status.descStatusPeriodico;
         }
 
         try

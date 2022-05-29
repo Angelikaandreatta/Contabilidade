@@ -20,10 +20,10 @@
                         <div class="form__inputs">
                             <div class="field__control">
                                 <label>Cliente</label>
-                                <InputSelect class="field__input" @bind-Value="vmContato.Cod_Contato">
-                                    @if(clientes.Count > 0)
+                                <InputSelect class="field__input" @bind-Value="vmContato.Cliente.Codigo_Cliente">
+                                    @if (clientes.Count > 0)
                                     {
-                                        @foreach(ClienteViewModel cliente in clientes)
+                                        @foreach (ClienteViewModel cliente in clientes)
                                         {
                                             <option>@($"{cliente.Codigo_Cliente} - {cliente.Razao_Social}")</option>
                                         }
@@ -37,18 +37,18 @@
                             </div>
 
                             <div class="field__control">
-                                <label>Cpf</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmContato.CPF"></InputText>
-                            </div>
-
-                            <div class="field__control">
-                                <label>Celular</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmContato.Celular"></InputText>
-                            </div>
-
-                            <div class="field__control">
-                                <label>E-mail</label>
+                                <label>Email</label>
                                 <InputText class="field__input field__input--active" @bind-Value="vmContato.Email"></InputText>
+                            </div>
+
+                            <div class="field__control">
+                                <label>Telefone</label>
+                                <InputText class="field__input field__input--active" @bind-Value="vmContato.Telefone"></InputText>
+                            </div>
+
+                            <div class="field__control">
+                                <label>Setor</label>
+                                <InputText class="field__input field__input--active" @bind-Value="vmContato.Setor"></InputText>
                             </div>
 
                         </div>
@@ -121,5 +121,4 @@
             throw new InvalidOperationException(ex.Message);
         }
     }
-
 }

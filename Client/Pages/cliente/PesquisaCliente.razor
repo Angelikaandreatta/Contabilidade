@@ -32,7 +32,6 @@ else
             @foreach (ClienteViewModel cliente in clientes)
             {
                 <tr>
-                    <td @onclick=@(() => NavigationManager.NavigateTo($"InformacaoCliente/{cliente.Codigo_Cliente}")) class="table__td">@cliente.Razao_Social</td>
                     <td>@cliente.Cnpj</td>
                     <td>@cliente.Qtd_Empregado</td>
                     <td>

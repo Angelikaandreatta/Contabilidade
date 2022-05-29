@@ -10,7 +10,7 @@ using BancoDeDados.UtilDb;
 
 namespace BancoDeDados.Cadastro
 {
-    public class DbPeriodico:ComandoSQL
+    public class DbPeriodico : ComandoSQL
     {
         public Periodico Gravar(Periodico pPeriodico)
         {
@@ -23,7 +23,7 @@ namespace BancoDeDados.Cadastro
             comando.InsertSqlObj("nome", $"'{pPeriodico.Nome}'");
             comando.InsertSqlObj("autor", $"'{pPeriodico.Autor}'");
             comando.InsertSqlObj("editora", $"'{pPeriodico.Editora}'");
-            comando.InsertSqlObj("status", $"'{pPeriodico.Status.descStatusPeriodico}'",true);
+            comando.InsertSqlObj("status", $"'{pPeriodico.Status.descStatusPeriodico}'", true);
 
             if (comando.ExecutarComandoInsertSql() > 0)
             {
@@ -43,8 +43,8 @@ namespace BancoDeDados.Cadastro
             comando.UpdateSqlObj("nome", $"'{pPeriodico.Nome}'");
             comando.UpdateSqlObj("autor", $"'{pPeriodico.Autor}'");
             comando.UpdateSqlObj("editora", $"'{pPeriodico.Editora}'");
-            comando.UpdateSqlObj("status", $"'{pPeriodico.Status.descStatusPeriodico}'",true);
-            comando.strWhere = $" where codigo_Periodico = {pPeriodico.codigo_Periodico}"; 
+            comando.UpdateSqlObj("status", $"'{pPeriodico.Status.descStatusPeriodico}'", true);
+            comando.strWhere = $" where codigo_Periodico = {pPeriodico.codigo_Periodico}";
 
 
             if (comando.ExecutarComandoUpdateSql() > 0)

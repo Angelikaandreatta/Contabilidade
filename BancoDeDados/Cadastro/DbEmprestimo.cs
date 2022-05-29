@@ -20,8 +20,8 @@ namespace BancoDeDados.Cadastro
             comando.InsertSqlObj("cod_Emprestimo", $"{this.ProximoCodigo()}");
             comando.InsertSqlObj("quantidade", $"'{pEmprestimo.quantidade}'");
             comando.InsertSqlObj("juros", $"'{pEmprestimo.juros}'");
-            comando.InsertSqlObj("data_Emprestimo", $"{ new FormatarValores().FormatarDataParaSQL(DateTime.Now.Date)}");
-            comando.InsertSqlObj("data_Devolucao", $"{ pEmprestimo.data_Devolucao}");
+            comando.InsertSqlObj("data_Emprestimo", $"{new FormatarValores().FormatarDataParaSQL(DateTime.Now.Date)}");
+            comando.InsertSqlObj("data_Devolucao", $"{pEmprestimo.data_Devolucao}");
             comando.InsertSqlObj("cod_Periodico", $"'{pEmprestimo.cod_Periodico}'");
 
             if (comando.ExecutarComandoInsertSql() > 0)
@@ -131,7 +131,6 @@ namespace BancoDeDados.Cadastro
 
                 return emprestimoCarregar;
             }
-
         }
     }
 }
