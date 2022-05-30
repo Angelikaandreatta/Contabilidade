@@ -23,6 +23,7 @@
                                 <InputSelect class="field__input" @bind-Value="vmContato.Cliente.Codigo_Cliente">
                                     @if (clientes.Count > 0)
                                     {
+                                        <option value="selecione">Selecione</option>
                                         @foreach (ClienteViewModel cliente in clientes)
                                         {
                                             <option>@($"{cliente.Codigo_Cliente} - {cliente.Razao_Social}")</option>
@@ -30,7 +31,6 @@
                                     }
                                 </InputSelect>
                             </div>
-
                             <div class="field__control">
                                 <label>Nome</label>
                                 <InputText class="field__input field__input--active" @bind-Value="vmContato.Nome_Contato"></InputText>
@@ -50,7 +50,6 @@
                                 <label>Setor</label>
                                 <InputText class="field__input field__input--active" @bind-Value="vmContato.Setor"></InputText>
                             </div>
-
                         </div>
                     </div>
                 </Step>
