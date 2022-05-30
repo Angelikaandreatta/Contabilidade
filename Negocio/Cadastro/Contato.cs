@@ -8,6 +8,8 @@ namespace Negocio.Cadastro
 {
     public class Contato
     {
+        public Cliente Cliente { get; set; }
+
         public int cod_Contato { get; set; }
 
         public Cliente cliente { get; set; }

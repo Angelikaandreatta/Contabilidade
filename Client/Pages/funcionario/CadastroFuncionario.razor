@@ -8,9 +8,10 @@
 @using Projeto_Contabilidade.Client.Componentes.Steper
 @using Projeto_Contabilidade.Client.Componentes.Input
 @using Projeto_Contabilidade.Client.Componentes.Modal
+@using Newtonsoft.Json
 
 <div class="card">
-    <h4 class="card-header">Cadastro de Funcionario</h4>
+    <h4 class="card-header">@formTitle</h4>
     <div class="card-body">
         <EditForm Model="vmFuncionario">
             <Steper>
@@ -25,7 +26,7 @@
                                 <InputText class="field__input field__input--active" @bind-Value="vmFuncionario.Nome"></InputText>
                             </div>
                             <div class="field__control">
-                                <label>CNPJ</label>
+                                <label>CPF</label>
                                 <InputText class="field__input field__input--active" @bind-Value="vmFuncionario.Cpf"></InputText>
                             </div>
                             <div class="field__control">
@@ -33,9 +34,27 @@
                                 <InputText class="field__input field__input--active" @bind-Value="vmFuncionario.Email"></InputText>
                             </div>
                             <div class="field__control">
-                                <label>IE</label>
+                                <label>Data Nascimento</label>
                                 <InputText class="field__input field__input--active" @bind-Value="vmFuncionario.DataNascimento"></InputText>
                             </div>
+                            <div class="field__control">
+                                <label>Tipo</label>
+                                <InputSelect class="field__input field__input--active" @bind-Value="tipoFuncionario">
+                                    <option value="efetivo">Efetivo</option>
+                                    <option value="estagiario">Estágiario</option>
+                                </InputSelect>
+                            </div>
+                            @if (tipoFuncionario == "estagiario")
+                            {
+                                <div class="field__control">
+                                    <label>Nome do curso</label>
+                                    <InputText class="field__input field__input--active" @bind-Value="vmEstagiario.nomeCurso"></InputText>
+                                </div>
+                                <div class="field__control">
+                                    <label>Data do inicio do curso</label>
+                                    <InputText class="field__input field__input--active" @bind-Value="vmEstagiario.dataInicioCurso"></InputText>
+                                </div>
+                            }
                         </div>
                     </div>
                 </Step>
@@ -89,15 +108,162 @@
     </div>
 
     <Modal @ref="modal"></Modal>
-    
+
 </div>
 @code {
 
     [Parameter]
     public string codFuncionario { get; set; }
     FuncionarioViewModel vmFuncionario = new FuncionarioViewModel();
-    private Modal modal {get;set;}
+    EstagionarioViewModel vmEstagiario = new EstagionarioViewModel();
+
+    private Modal modal { get; set; }
     public bool IsEnabled = true;
+    private string tipoFuncionario { get; set; }
+    private string formTitle = "Cadastro Funcionário";
+    private bool loading = false;
+
+    protected override void OnInitialized()
+    {
+        if (codFuncionario != null)
+        {
+            formTitle = "Editar Funcionário";
+        }
+    }
+
+    public async Task Gravar()
+    {
+        if (string.IsNullOrWhiteSpace(vmFuncionario.CodFuncionario) == true)
+        {
+            await CadastrarFuncionario();
+        }
+        else
+        {
+            await EditarFuncionario();
+        }
+    }
+
+    public async Task CadastrarFuncionario()
+    {
+        //Funcionario funcionarioGravar = new Funcionario();
+
+
+        //try
+        //{
+        //    string url = $"https://localhost:44388/Funcionario/Gravar";
+        //    var response = await httpClient.PostAsJsonAsync(url, funcionarioGravar);
+        //    if (response.IsSuccessStatusCode == true)
+        //    {
+        //        funcionario funcionarioRetorno = JsonConvert.DeserializeObject<Funcionario>(await response.Content.ReadAsStringAsync());
+        //        modal.Open("Funcionario gravado com sucesso", "CadastroFuncionario");
+        //    }
+        //    else
+        //    {
+        //        modal.Open("Erro ao gravar o Funcionario", "CadastroFuncionario");
+        //    }
+        //}
+        //catch (InvalidOperationException ex)
+        //{
+        //    throw new InvalidOperationException(ex.Message);
+        //}
+        //finally
+        //{
+        //    StateHasChanged();
+        //}
+
+    }
+
+    public async Task EditarFuncionario()
+    {
+        //Funcionario funcionarioEditar = new Funcionario();
+
+        //try
+        //{
+        //    string url = $"https://localhost:44388/Funcionario/Editar";
+        //    var response = await httpClient.PostAsJsonAsync(url, funcionarioEditar);
+
+        //    if (response.IsSuccessStatusCode == true)
+        //    {
+        //        funcionario funcionarioRetorno = JsonConvert.DeserializeObject<Funcionario>(await response.Content.ReadAsStringAsync());
+        //        modal.Open("Funcionario editado com sucesso", "PesquisaFuncionario");
+        //    }
+        //    else
+        //    {
+        //        modal.Open("Erro ao gravar o Funcionario", "CadastroFuncionario");
+        //    }
+        //}
+        //catch (InvalidOperationException ex)
+        //{
+        //    throw new InvalidOperationException(ex.Message);
+        //}
+        //finally
+        //{
+        //    StateHasChanged();
+        //}
+    }
+
+    private async Task CarregarFuncionario()
+    {
+
+        //try
+        //{
+        //    this.loading = true;
+        //    string url = $"https://localhost:44388/Funcionario/Carregar?pCodFuncionario={codFuncionario}";
+        //    var response = await httpClient.GetAsync(url);
+        //    if (response.IsSuccessStatusCode == true)
+        //    {
+        //        Funcionario funcionarioRetorno = JsonConvert.DeserializeObject<Funcionario>(await response.Content.ReadAsStringAsync());
+
+
+        //    }
+        //}
+        //catch (InvalidOperationException ex)
+        //{
+        //    throw new InvalidOperationException(ex.Message);
+        //}
+        //finally
+        //{
+        //    this.loading = false;
+        //    StateHasChanged();
+        //}
+    }
+
+
+    public async Task Excluir()
+    {
+
+        try
+        {
+            string url = $"https://localhost:44388/Funcionario/Excluir?pCodFuncionario={vmFuncionario.CodFuncionario}";
+            var response = await httpClient.DeleteAsync(url);
+
+            if (response.IsSuccessStatusCode == true)
+            {
+                modal.Open("Funcionário excluído com sucesso", "PesquisaFuncionario");
+            }
+            else
+            {
+                modal.Open("Erro ao excluir o funcionário", "PesquisaFuncionario");
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+        finally
+        {
+            StateHasChanged();
+        }
+    }
+
+
+    class EstagionarioViewModel
+    {
+        public string codEstagiario { get; set; }
+        public string nomeCurso { get; set; }
+        public string dataInicioCurso { get; set; }
+    }
+
 
 
 }

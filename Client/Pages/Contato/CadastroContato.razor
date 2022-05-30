@@ -1,5 +1,7 @@
-﻿@page "/CadastroContato/{codContato?}"
+﻿@page "/CadastroContato"
+@page "/CadastroContato/{codContato?}"
 @inject HttpClient httpClient
+@using Projeto_Contabilidade.Client.Componentes.Modal
 @using Projeto_Contabilidade.Client.Pages.cliente
 @using Projeto_Contabilidade.Client.Pages.Contato
 @using Negocio.Cadastro
@@ -7,9 +9,8 @@
 @using Newtonsoft.Json
 
 <div class="card">
-    <h4 class="card-header">Cadastro de Contato</h4>
+    <h4 class="card-header">@formTitle</h4>
     <div class="card-body">
-
         <EditForm Model="vmContato">
             <Steper>
                 <Step Icon="oi-info" Text="Informações Gerais" Value="Step1" Enabled="IsEnabled">
@@ -23,6 +24,7 @@
                                 <InputSelect class="field__input" @bind-Value="vmContato.Cliente.Codigo_Cliente">
                                     @if (clientes.Count > 0)
                                     {
+                                        <option value="1">Selecione</option>
                                         @foreach (ClienteViewModel cliente in clientes)
                                         {
                                             <option>@($"{cliente.Codigo_Cliente} - {cliente.Razao_Social}")</option>
@@ -30,7 +32,6 @@
                                     }
                                 </InputSelect>
                             </div>
-
                             <div class="field__control">
                                 <label>Nome</label>
                                 <InputText class="field__input field__input--active" @bind-Value="vmContato.Nome_Contato"></InputText>
@@ -50,33 +51,32 @@
                                 <label>Setor</label>
                                 <InputText class="field__input field__input--active" @bind-Value="vmContato.Setor"></InputText>
                             </div>
-
                         </div>
                     </div>
                 </Step>
             </Steper>
             <div class="form__buttons">
-                <button class="btn btn-lg btn-outline-danger">
+                <button @onclick="Excluir" class="btn btn-lg btn-outline-danger ">
                     Excluir
                 </button>
-                <button class="btn btn-lg btn-outline-primary">
+                <button @onclick="LimparTelaContato" class="btn btn-lg btn-outline-primary">
                     Limpar
                 </button>
-                @if (string.IsNullOrWhiteSpace(vmContato.Cod_Contato) == true)
-                {
-                    <button class="btn btn-lg btn-outline-primary">
-                        Gravar
-                    </button>
-                }
-                else
-                {
-                    <button class="btn btn-lg btn-outline-primary">
-                        Editar
-                    </button>
-                }
+
+                <button @onclick="Gravar" class="btn btn-lg btn-outline-primary">
+                    @if (string.IsNullOrWhiteSpace(vmContato.Cod_Contato) == false)
+                    {
+                        <div>Editar</div>
+                    }
+                    else
+                    {
+                        <div>Gravar</div>
+                    }
+                </button>
             </div>
         </EditForm>
     </div>
+    <Modal @ref="modal"></Modal>
 </div>
 
 @code {
@@ -84,12 +84,39 @@
     public Cliente clientTemp = new Cliente();
     ContatoViewModel vmContato = new ContatoViewModel();
     List<ClienteViewModel> clientes = new List<ClienteViewModel>();
-
+    private Modal modal = new Modal();
+    private string formTitle = "Cadastro de Contato";
+    public bool loading = false;
     public bool IsEnabled = true;
 
     async protected override Task OnInitializedAsync()
     {
         await ListarCliente();
+
+        if (codContato != null)
+        {
+            formTitle = "Editar Contato";
+        }
+    }
+
+    protected override async void OnParametersSet()
+    {
+        if (codContato != null)
+        {
+            await CarregarContato();
+        }
+    }
+
+    public async Task Gravar()
+    {
+        if (string.IsNullOrWhiteSpace(vmContato.Cod_Contato) == true)
+        {
+            await CadastrarContato();
+        }
+        else
+        {
+            await EditarContato();
+        }
     }
 
     protected async Task ListarCliente()
@@ -120,5 +147,180 @@
         {
             throw new InvalidOperationException(ex.Message);
         }
+    }
+
+    private async Task EditarContato()
+    {
+        Contato contatoEditar = new Contato();
+        contatoEditar.cod_Contato = int.Parse(vmContato.Cod_Contato);
+        contatoEditar.nome_Contato = vmContato.Nome_Contato;
+        contatoEditar.email = vmContato.Email;
+        contatoEditar.telefone = vmContato.Telefone;
+        contatoEditar.setor = vmContato.Setor;
+
+        vmContato.Cliente = new vmCliente();
+        if (vmContato.Cliente.Codigo_Cliente == 1)
+        {
+            modal.Open("Selecione o cliente", "CadastroPeriodico");
+        }
+        else
+        {
+            contatoEditar.Cliente = new Cliente();
+            contatoEditar.Cliente.codigo_Cliente = vmContato.Cliente.Codigo_Cliente;
+
+            try
+            {
+                string url = $"https://localhost:44388/Contato/Atualizar";
+
+                var response = await httpClient.PostAsJsonAsync(url, contatoEditar);
+
+
+                if (response.IsSuccessStatusCode == true)
+                {
+                    Contato contatoRetorno = JsonConvert.DeserializeObject<Contato>(await response.Content.ReadAsStringAsync());
+                    vmContato.Cod_Contato = contatoRetorno.cod_Contato.ToString();
+                    vmContato.Cliente = new vmCliente();
+                    vmContato.Cliente.Codigo_Cliente = contatoRetorno.Cliente.codigo_Cliente;
+                    vmContato.Nome_Contato = contatoRetorno.nome_Contato;
+                    vmContato.Email = contatoRetorno.email;
+                    vmContato.Telefone = contatoRetorno.telefone;
+                    vmContato.Setor = contatoRetorno.setor;
+
+                    modal.Open("Contato editado com sucesso", "PesquisaContato");
+                }
+                else
+                {
+                    modal.Open("Erro ao editar o Contato", "CadastroContato");
+                }
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException(ex.Message);
+            }
+            finally
+            {
+                StateHasChanged();
+            }
+        }
+    }
+
+    private async Task CadastrarContato()
+    {
+        Contato contatoGravar = new Contato();
+        contatoGravar.cod_Contato = int.Parse(vmContato.Cod_Contato);
+        contatoGravar.nome_Contato = vmContato.Nome_Contato;
+        contatoGravar.email = vmContato.Email;
+        contatoGravar.telefone = vmContato.Telefone;
+        contatoGravar.setor = vmContato.Setor;
+
+        vmContato.Cliente = new vmCliente();
+        if (vmContato.Cliente.Codigo_Cliente == 1)
+        {
+            modal.Open("Selecione o cliente", "CadastroPeriodico");
+        }
+        else
+        {
+            contatoGravar.Cliente = new Cliente();
+            contatoGravar.Cliente.codigo_Cliente = vmContato.Cliente.Codigo_Cliente;
+
+            try
+            {
+                string url = $"https://localhost:44388/Contato/Gravar";
+                var response = await httpClient.PostAsJsonAsync(url, contatoGravar);
+                if (response.IsSuccessStatusCode == true)
+                {
+                    Contato contatoRetorno = JsonConvert.DeserializeObject<Contato>(await response.Content.ReadAsStringAsync());
+                    vmContato.Cod_Contato = contatoRetorno.cod_Contato.ToString();
+                    vmContato.Cliente = new vmCliente();
+                    vmContato.Cliente.Codigo_Cliente = contatoRetorno.Cliente.codigo_Cliente;
+                    vmContato.Nome_Contato = contatoRetorno.nome_Contato;
+                    vmContato.Email = contatoRetorno.email;
+                    vmContato.Telefone = contatoRetorno.telefone;
+                    vmContato.Setor = contatoRetorno.setor;
+                    modal.Open("Contato gravado com sucesso", "PesquisaContato");
+
+                }
+                else
+                {
+                    modal.Open("Erro ao gravar o Contato", "CadastroContato");
+                }
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException(ex.Message);
+            }
+            finally
+            {
+                StateHasChanged();
+            }
+        }
+    }
+
+    private async Task Excluir()
+    {
+        try
+        {
+            Cliente clienteExcluir = new Cliente();
+            string url = $"https://localhost:44388/Cliente/Excluir?pCodContato={vmContato.Cod_Contato}";
+            var response = await httpClient.DeleteAsync(url);
+
+            if (response.IsSuccessStatusCode == true)
+            {
+                LimparTelaContato();
+                modal.Open("Contato excluído com sucesso", "PesquisaContato");
+
+            }
+            else
+            {
+                modal.Open("Erro ao excluir o contato", "PesquisaContato");
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+        finally
+        {
+            StateHasChanged();
+        }
+    }
+
+    private async Task CarregarContato()
+    {
+        try
+        {
+            this.loading = true;
+            string url = $"https://localhost:44388/Contato/Carregar?pCodContato={codContato}";
+            var response = await httpClient.GetAsync(url);
+            if (response.IsSuccessStatusCode == true)
+            {
+                Contato contatoRetorno = JsonConvert.DeserializeObject<Contato>(await response.Content.ReadAsStringAsync());
+                vmContato.Cod_Contato = contatoRetorno.cod_Contato.ToString();
+                vmContato.Cliente = new vmCliente();
+                vmContato.Cliente.Codigo_Cliente = contatoRetorno.Cliente.codigo_Cliente;
+                vmContato.Nome_Contato = contatoRetorno.nome_Contato;
+                vmContato.Email = contatoRetorno.email;
+                vmContato.Telefone = contatoRetorno.telefone;
+                vmContato.Setor = contatoRetorno.setor;
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+        finally
+        {
+            this.loading = false;
+            StateHasChanged();
+        }
+    }
+
+    public void LimparTelaContato()
+    {
+        vmContato.Cliente.Codigo_Cliente = 0;
+        vmContato.Nome_Contato = "";
+        vmContato.Email = "";
+        vmContato.Telefone = "";
+        vmContato.Setor = "";
     }
 }
