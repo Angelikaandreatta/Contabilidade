@@ -18,7 +18,7 @@ namespace Negocio.Cadastro
 
         public string email { get; set; }
 
-        public string teleone { get; set; }
+        public string telefone { get; set; }
 
         public string setor { get; set; }
 
@@ -39,7 +39,7 @@ namespace Negocio.Cadastro
             {
                 lstRetorno.Add("Informe o enmail do contato.");
             }
-            if (string.IsNullOrWhiteSpace(pContato.teleone))
+            if (string.IsNullOrWhiteSpace(pContato.telefone))
             {
                 lstRetorno.Add("Informe o telefone do contato.");
             }

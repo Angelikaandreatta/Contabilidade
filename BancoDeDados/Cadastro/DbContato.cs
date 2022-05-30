@@ -22,7 +22,7 @@ namespace BancoDeDados.Cadastro
             comando.InsertSqlObj("codigo_Cliente", $"{pContato.cliente.codigo_Cliente}");
             comando.InsertSqlObj("nome", $"'{pContato.nome}'");
             comando.InsertSqlObj("email", $"'{pContato.email}'");
-            comando.InsertSqlObj("telefone", $"'{pContato.teleone}'");
+            comando.InsertSqlObj("telefone", $"'{pContato.telefone}'");
             comando.InsertSqlObj("setor", $"'{pContato.setor}'",true);
 
             if (comando.ExecutarComandoInsertSql() > 0)
@@ -42,7 +42,7 @@ namespace BancoDeDados.Cadastro
             comando.UpdateSqlObj("codigo_Cliente", $"{pContato.cliente.codigo_Cliente}");
             comando.UpdateSqlObj("nome", $"'{pContato.nome}'");
             comando.UpdateSqlObj("email", $"'{pContato.email}'");
-            comando.UpdateSqlObj("telefone", $"'{pContato.teleone}'");
+            comando.UpdateSqlObj("telefone", $"'{pContato.telefone}'");
             comando.UpdateSqlObj("setor", $"'{pContato.setor}'", true);
             comando.strWhere = $" where codigo_Contato = {pContato.cod_Contato}";
 
@@ -84,7 +84,7 @@ namespace BancoDeDados.Cadastro
             pContato.cliente.codigo_Cliente = Int32.Parse(rd["codigo_Cliente"].ToString());
             pContato.nome = rd["nome"].ToString();
             pContato.email = rd["email"].ToString();
-            pContato.teleone = rd["telefone"].ToString();
+            pContato.telefone = rd["telefone"].ToString();
             pContato.setor = rd["setor"].ToString();
 
             return pContato;

@@ -153,7 +153,7 @@
     {
         Contato contatoEditar = new Contato();
         contatoEditar.cod_Contato = int.Parse(vmContato.Cod_Contato);
-        contatoEditar.nome_Contato = vmContato.Nome_Contato;
+        contatoEditar.nome = vmContato.Nome_Contato;
         contatoEditar.email = vmContato.Email;
         contatoEditar.telefone = vmContato.Telefone;
         contatoEditar.setor = vmContato.Setor;
@@ -181,7 +181,7 @@
                     vmContato.Cod_Contato = contatoRetorno.cod_Contato.ToString();
                     vmContato.Cliente = new vmCliente();
                     vmContato.Cliente.Codigo_Cliente = contatoRetorno.Cliente.codigo_Cliente;
-                    vmContato.Nome_Contato = contatoRetorno.nome_Contato;
+                    vmContato.Nome_Contato = contatoRetorno.nome;
                     vmContato.Email = contatoRetorno.email;
                     vmContato.Telefone = contatoRetorno.telefone;
                     vmContato.Setor = contatoRetorno.setor;
@@ -208,7 +208,7 @@
     {
         Contato contatoGravar = new Contato();
         contatoGravar.cod_Contato = int.Parse(vmContato.Cod_Contato);
-        contatoGravar.nome_Contato = vmContato.Nome_Contato;
+        contatoGravar.nome = vmContato.Nome_Contato;
         contatoGravar.email = vmContato.Email;
         contatoGravar.telefone = vmContato.Telefone;
         contatoGravar.setor = vmContato.Setor;
@@ -233,7 +233,7 @@
                     vmContato.Cod_Contato = contatoRetorno.cod_Contato.ToString();
                     vmContato.Cliente = new vmCliente();
                     vmContato.Cliente.Codigo_Cliente = contatoRetorno.Cliente.codigo_Cliente;
-                    vmContato.Nome_Contato = contatoRetorno.nome_Contato;
+                    vmContato.Nome_Contato = contatoRetorno.nome;
                     vmContato.Email = contatoRetorno.email;
                     vmContato.Telefone = contatoRetorno.telefone;
                     vmContato.Setor = contatoRetorno.setor;
@@ -298,7 +298,7 @@
                 vmContato.Cod_Contato = contatoRetorno.cod_Contato.ToString();
                 vmContato.Cliente = new vmCliente();
                 vmContato.Cliente.Codigo_Cliente = contatoRetorno.Cliente.codigo_Cliente;
-                vmContato.Nome_Contato = contatoRetorno.nome_Contato;
+                vmContato.Nome_Contato = contatoRetorno.nome;
                 vmContato.Email = contatoRetorno.email;
                 vmContato.Telefone = contatoRetorno.telefone;
                 vmContato.Setor = contatoRetorno.setor;
