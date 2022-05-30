@@ -18,8 +18,7 @@ namespace BancoDeDados.Cadastro
             comando.InsertTabela("tb_Contato");
             comando.InsertSqlObj("cod_Contato", $"{this.ProximoCodigo()}");
             comando.InsertSqlObj("nome_Contato", $"'{pContato.nome_Contato}'");
-            comando.InsertSqlObj("CPF", $"'{pContato.CPF}'");
-            comando.InsertSqlObj("celular", $"'{pContato.celular}'");
+            comando.InsertSqlObj("celular", $"'{pContato.telefone}'");
             comando.InsertSqlObj("email", $"'{pContato.email}'");
 
             if (comando.ExecutarComandoInsertSql() > 0)
@@ -37,8 +36,7 @@ namespace BancoDeDados.Cadastro
             ComandoSQL comando = new ComandoSQL();
             comando.UpdateTabela("tb_Contato");
             comando.UpdateSqlObj("nome_Contato", $"'{pContato.nome_Contato}'");
-            comando.UpdateSqlObj("CPF", $"'{pContato.CPF}'");
-            comando.UpdateSqlObj("celular", $"'{pContato.celular}'");
+            comando.UpdateSqlObj("celular", $"'{pContato.telefone}'");
             comando.UpdateSqlObj("email", $"'{pContato.email}'");
 
             if (comando.ExecutarComandoUpdateSql() > 0)
@@ -76,8 +74,7 @@ namespace BancoDeDados.Cadastro
         {
             pContato.cod_Contato = Int32.Parse(rd["cod_Contato"].ToString());
             pContato.nome_Contato = rd["nome_Contato"].ToString();
-            pContato.CPF = rd["CPF"].ToString();
-            pContato.celular = rd["celular"].ToString();
+            pContato.telefone = rd["celular"].ToString();
             pContato.email = rd["email"].ToString();
 
             return pContato;
