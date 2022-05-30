@@ -14,13 +14,16 @@ namespace BancoDeDados.Cadastro
     {
         public Contato Gravar(Contato pContato)
         {
+            pContato.cod_Contato = this.ProximoCodigo();
+
             ComandoSQL comando = new ComandoSQL();
-            comando.InsertTabela("tb_Contato");
-            comando.InsertSqlObj("cod_Contato", $"{this.ProximoCodigo()}");
-            comando.InsertSqlObj("nome_Contato", $"'{pContato.nome_Contato}'");
-            comando.InsertSqlObj("CPF", $"'{pContato.CPF}'");
-            comando.InsertSqlObj("celular", $"'{pContato.celular}'");
+            comando.InsertTabela("Contato");
+            comando.InsertSqlObj("codigo_Contato", $"{pContato.cod_Contato}");
+            comando.InsertSqlObj("codigo_Cliente", $"{pContato.cliente.codigo_Cliente}");
+            comando.InsertSqlObj("nome", $"'{pContato.nome}'");
             comando.InsertSqlObj("email", $"'{pContato.email}'");
+            comando.InsertSqlObj("telefone", $"'{pContato.teleone}'");
+            comando.InsertSqlObj("setor", $"'{pContato.setor}'",true);
 
             if (comando.ExecutarComandoInsertSql() > 0)
             {
@@ -35,11 +38,13 @@ namespace BancoDeDados.Cadastro
         public Contato Atualizar(Contato pContato)
         {
             ComandoSQL comando = new ComandoSQL();
-            comando.UpdateTabela("tb_Contato");
-            comando.UpdateSqlObj("nome_Contato", $"'{pContato.nome_Contato}'");
-            comando.UpdateSqlObj("CPF", $"'{pContato.CPF}'");
-            comando.UpdateSqlObj("celular", $"'{pContato.celular}'");
+            comando.UpdateTabela("Contato");
+            comando.UpdateSqlObj("codigo_Cliente", $"{pContato.cliente.codigo_Cliente}");
+            comando.UpdateSqlObj("nome", $"'{pContato.nome}'");
             comando.UpdateSqlObj("email", $"'{pContato.email}'");
+            comando.UpdateSqlObj("telefone", $"'{pContato.teleone}'");
+            comando.UpdateSqlObj("setor", $"'{pContato.setor}'", true);
+            comando.strWhere = $" where codigo_Contato = {pContato.cod_Contato}";
 
             if (comando.ExecutarComandoUpdateSql() > 0)
             {
@@ -56,7 +61,7 @@ namespace BancoDeDados.Cadastro
             int codigoRetorno = 0;
 
             SqlCommand sql = new SqlCommand("", new ConexaoDB().Conectar());
-            sql.CommandText = "select max(cod_Contato) as maiorCodigo from tb_Contato";
+            sql.CommandText = "select max(codigo_Contato) as maiorCodigo from Contato";
 
             using (SqlDataReader dt = sql.ExecuteReader())
             {
@@ -74,11 +79,13 @@ namespace BancoDeDados.Cadastro
 
         private Contato CarregarDado(Contato pContato, DataRow rd)
         {
-            pContato.cod_Contato = Int32.Parse(rd["cod_Contato"].ToString());
-            pContato.nome_Contato = rd["nome_Contato"].ToString();
-            pContato.CPF = rd["CPF"].ToString();
-            pContato.celular = rd["celular"].ToString();
+            pContato.cod_Contato = Int32.Parse(rd["codigo_Contato"].ToString());
+            pContato.cliente = new Cliente();
+            pContato.cliente.codigo_Cliente = Int32.Parse(rd["codigo_Cliente"].ToString());
+            pContato.nome = rd["nome"].ToString();
             pContato.email = rd["email"].ToString();
+            pContato.teleone = rd["telefone"].ToString();
+            pContato.setor = rd["setor"].ToString();
 
             return pContato;
         }
@@ -88,7 +95,7 @@ namespace BancoDeDados.Cadastro
             List<Contato> lstContatos = null;
 
             SqlCommand sql = new SqlCommand("", new ConexaoDB().Conectar());
-            sql.CommandText = "select * from tb_Contato";
+            sql.CommandText = "select * from Contato";
 
             using (SqlDataReader dt = sql.ExecuteReader())
             {
@@ -114,8 +121,8 @@ namespace BancoDeDados.Cadastro
         public Contato CarregarContato(Contato pContato)
         {
             SqlCommand sql = new SqlCommand("", new ConexaoDB().Conectar());
-            sql.CommandText = "select * from tb_Contato";
-            sql.CommandText += $" where cod_Contato = '{pContato.cod_Contato}'";
+            sql.CommandText = "select * from Contato";
+            sql.CommandText += $" where codigo_Contato = '{pContato.cod_Contato}'";
 
             using (SqlDataReader dt = sql.ExecuteReader())
             {

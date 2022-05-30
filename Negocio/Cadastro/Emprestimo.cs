@@ -9,36 +9,33 @@ namespace Negocio.Cadastro
     public class Emprestimo
     {
         public int cod_Emprestimo { get; set; }
-
-        public int quantidade { get; set; }
-
-        public int juros { get; set; }
+        public int codigo_efetivo { get; set; }
+        public Periodico periodico { get; set; }
 
         public DateTime? data_Emprestimo { get; set; }
 
         public DateTime? data_Devolucao { get; set; }
 
-        public string cod_Periodico { get; set; }
 
         public List<string> validarObjeto(Emprestimo pEmprestimo)
         {
             List<string> lstRetorno = new List<string>();
 
-            if (string.IsNullOrWhiteSpace(pEmprestimo.quantidade.ToString()))
+            if (pEmprestimo.codigo_efetivo <= 0)
             {
-                lstRetorno.Add("Informe a quantidade do empréstimo");
+                lstRetorno.Add("Informe o codigo do efetivo");
             }
-            if (string.IsNullOrWhiteSpace(pEmprestimo.juros.ToString()))
+            if (pEmprestimo.periodico == null && pEmprestimo.periodico.codigo_Periodico <= 0)
             {
-                lstRetorno.Add("Informe a quantidade de juros");
+                lstRetorno.Add("Informe o código do periódico");
+            }
+            if (string.IsNullOrWhiteSpace(pEmprestimo.data_Emprestimo.ToString()))
+            {
+                lstRetorno.Add("Informe a data que foi devolvido o empréstimo");
             }
             if (string.IsNullOrWhiteSpace(pEmprestimo.data_Devolucao.ToString()))
             {
                 lstRetorno.Add("Informe a data que foi devolvido o empréstimo");
-            }
-            if (string.IsNullOrWhiteSpace(pEmprestimo.cod_Periodico))
-            {
-                lstRetorno.Add("Informe o código do periódico");
             }
 
             return lstRetorno;

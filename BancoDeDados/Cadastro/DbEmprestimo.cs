@@ -15,14 +15,15 @@ namespace BancoDeDados.Cadastro
     {
         public Emprestimo Gravar(Emprestimo pEmprestimo)
         {
+            pEmprestimo.cod_Emprestimo = this.ProximoCodigo();
+
             ComandoSQL comando = new ComandoSQL();
-            comando.InsertTabela("tb_Emprestimo");
-            comando.InsertSqlObj("cod_Emprestimo", $"{this.ProximoCodigo()}");
-            comando.InsertSqlObj("quantidade", $"'{pEmprestimo.quantidade}'");
-            comando.InsertSqlObj("juros", $"'{pEmprestimo.juros}'");
+            comando.InsertTabela("Emprestimo");
+            comando.InsertSqlObj("codigo_Emprestimo", $"{pEmprestimo.cod_Emprestimo}");
+            comando.InsertSqlObj("codigo_Efetivo", $"{pEmprestimo.cod_Emprestimo}");
+            comando.InsertSqlObj("codigo_Periodico", $"'{pEmprestimo.periodico.codigo_Periodico}'");
             comando.InsertSqlObj("data_Emprestimo", $"{new FormatarValores().FormatarDataParaSQL(DateTime.Now.Date)}");
-            comando.InsertSqlObj("data_Devolucao", $"{pEmprestimo.data_Devolucao}");
-            comando.InsertSqlObj("cod_Periodico", $"'{pEmprestimo.cod_Periodico}'");
+            comando.InsertSqlObj("data_Devolucao", $"{new FormatarValores().FormatarDataParaSQL(pEmprestimo.data_Devolucao.Value)}", true);
 
             if (comando.ExecutarComandoInsertSql() > 0)
             {
@@ -37,12 +38,12 @@ namespace BancoDeDados.Cadastro
         public Emprestimo Atualizar(Emprestimo pEmprestimo)
         {
             ComandoSQL comando = new ComandoSQL();
-            comando.UpdateTabela("tb_Emprestimo");
-            comando.UpdateSqlObj("quantidade", $"'{pEmprestimo.quantidade}'");
-            comando.UpdateSqlObj("juros", $"'{pEmprestimo.juros}'");
-            comando.UpdateSqlObj("data_Emprestimo", $"{DateTime.Now.Date}");
-            comando.UpdateSqlObj("data_Devolucao", $"{DateTime.Now.Date}");
-            comando.UpdateSqlObj("cod_Periodico", $"'{pEmprestimo.cod_Periodico}'");
+            comando.UpdateTabela("Emprestimo");
+            comando.UpdateSqlObj("codigo_Efetivo", $"{pEmprestimo.cod_Emprestimo}");
+            comando.UpdateSqlObj("codigo_Periodico", $"'{pEmprestimo.periodico.codigo_Periodico}'");
+            comando.UpdateSqlObj("data_Emprestimo", $"{new FormatarValores().FormatarDataParaSQL(DateTime.Now.Date)}");
+            comando.UpdateSqlObj("data_Devolucao", $"{new FormatarValores().FormatarDataParaSQL(pEmprestimo.data_Devolucao.Value)}", true);
+            comando.strWhere = $" where codigo_Emprestimo = {pEmprestimo.cod_Emprestimo}";
 
             if (comando.ExecutarComandoUpdateSql() > 0)
             {
@@ -59,7 +60,7 @@ namespace BancoDeDados.Cadastro
             int codigoRetorno = 0;
 
             SqlCommand sql = new SqlCommand("", new ConexaoDB().Conectar());
-            sql.CommandText = "select max(cod_Emprestimo) as maiorCodigo from tb_Emprestimo";
+            sql.CommandText = "select max(codigo_Emprestimo) as maiorCodigo from Emprestimo";
 
             using (SqlDataReader dt = sql.ExecuteReader())
             {
@@ -77,10 +78,12 @@ namespace BancoDeDados.Cadastro
 
         private Emprestimo CarregarDado(Emprestimo pEmprestimo, DataRow rd)
         {
-            pEmprestimo.cod_Emprestimo = Int32.Parse(rd["cod_Emprestimo"].ToString());
-            pEmprestimo.quantidade = Int32.Parse(rd["quantidade"].ToString());
-            pEmprestimo.juros = Int32.Parse(rd["juros"].ToString());
-            pEmprestimo.cod_Periodico = rd["cod_Periodico"].ToString();
+            pEmprestimo.cod_Emprestimo = Int32.Parse(rd["codigo_Emprestimo"].ToString());
+            pEmprestimo.codigo_efetivo = Int32.Parse(rd["codigo_Efetivo"].ToString());
+            pEmprestimo.periodico = new Periodico();
+            pEmprestimo.periodico = new DbPeriodico().CarregarPeriodico(Int32.Parse(rd["cod_Periodico"].ToString()));
+            pEmprestimo.data_Emprestimo = DateTime.Parse(rd["data_Emprestimo"].ToString());
+            pEmprestimo.data_Devolucao = DateTime.Parse(rd["data_Devolucao"].ToString());
 
             return pEmprestimo;
         }
@@ -90,7 +93,7 @@ namespace BancoDeDados.Cadastro
             List<Emprestimo> lstEmprestimos = null;
 
             SqlCommand sql = new SqlCommand("", new ConexaoDB().Conectar());
-            sql.CommandText = "select * from tb_Emprestimo";
+            sql.CommandText = "select * from Emprestimo";
 
             using (SqlDataReader dt = sql.ExecuteReader())
             {
@@ -116,8 +119,8 @@ namespace BancoDeDados.Cadastro
         public Emprestimo CarregarEmprestimo(Emprestimo pEmprestimo)
         {
             SqlCommand sql = new SqlCommand("", new ConexaoDB().Conectar());
-            sql.CommandText = "select * from tb_Emprestimo";
-            sql.CommandText += $" where cod_Emprestimo = '{pEmprestimo.cod_Emprestimo}'";
+            sql.CommandText = "select * from Emprestimo";
+            sql.CommandText += $" where codigo_Emprestimo = '{pEmprestimo.cod_Emprestimo}'";
 
             using (SqlDataReader dt = sql.ExecuteReader())
             {

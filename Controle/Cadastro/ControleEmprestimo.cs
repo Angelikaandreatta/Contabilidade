@@ -36,7 +36,14 @@ namespace Controle.Cadastro
 
                 if (emprestimoGravado != null)
                 {
-                    return emprestimoGravado;
+                    if (new DbPeriodico().AtualizarStatusPeriodico("indisponivel", pEmprestimo.periodico.codigo_Periodico) == 1)
+                    {
+                        return emprestimoGravado;
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
                 else
                 {

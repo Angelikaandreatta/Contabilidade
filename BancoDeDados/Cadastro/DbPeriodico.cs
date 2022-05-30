@@ -57,6 +57,24 @@ namespace BancoDeDados.Cadastro
             }
         }
 
+        public int AtualizarStatusPeriodico(string statusPeriodico, int codigo_Periodico)
+        {
+            ComandoSQL comando = new ComandoSQL();
+            comando.UpdateTabela("Periodico");
+            comando.UpdateSqlObj("status", $"'{statusPeriodico}'", true);
+            comando.strWhere = $" where codigo_Periodico = {codigo_Periodico}";
+
+
+            if (comando.ExecutarComandoUpdateSql() > 0)
+            {
+                return 1;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
         public int ProximoCodigo()
         {
             int codigoRetorno = 0;
