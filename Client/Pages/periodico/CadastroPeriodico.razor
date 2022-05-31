@@ -99,7 +99,7 @@
     [Parameter] public string CodPeriodico { get; set; }
     PeriodicoViewModel vmPeriodico = new PeriodicoViewModel();
     private Modal modal = new Modal();
-    private string formTitle = "Cadastro de Cliente";
+    private string formTitle = "Cadastro de Periodico";
     public bool IsEnabled = true;
     private bool loading;
     private string error;
@@ -251,7 +251,7 @@
             }
             else
             {
-               modal.Open("Erro ao excluir o periodico", "CadastroPeriodico");
+                modal.Open("Erro ao excluir o periodico", "CadastroPeriodico");
             }
         }
         catch (InvalidOperationException ex)

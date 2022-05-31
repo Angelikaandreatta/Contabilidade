@@ -24,10 +24,10 @@
                                 <InputSelect class="field__input" @bind-Value="vmContato.Cliente.Codigo_Cliente">
                                     @if (clientes.Count > 0)
                                     {
-                                        <option value="1">Selecione</option>
+                                        <option value="">Selecione</option>
                                         @foreach (ClienteViewModel cliente in clientes)
                                         {
-                                            <option>@($"{cliente.Codigo_Cliente} - {cliente.Razao_Social}")</option>
+                                            <option value="@cliente.Codigo_Cliente">@($"{cliente.Codigo_Cliente} - {cliente.Razao_Social}")</option>
                                         }
                                     }
                                 </InputSelect>
@@ -159,14 +159,14 @@
         contatoEditar.setor = vmContato.Setor;
 
         vmContato.Cliente = new vmCliente();
-        if (vmContato.Cliente.Codigo_Cliente == 1)
+        if (vmContato.Cliente.Codigo_Cliente == 0)
         {
-            modal.Open("Selecione o cliente", "CadastroPeriodico");
+            modal.Open("Selecione o cliente", "CadastroContato");
         }
         else
         {
-            contatoEditar.Cliente = new Cliente();
-            contatoEditar.Cliente.codigo_Cliente = vmContato.Cliente.Codigo_Cliente;
+            contatoEditar.cliente = new Cliente();
+            contatoEditar.cliente.codigo_Cliente = vmContato.Cliente.Codigo_Cliente;
 
             try
             {
@@ -180,7 +180,7 @@
                     Contato contatoRetorno = JsonConvert.DeserializeObject<Contato>(await response.Content.ReadAsStringAsync());
                     vmContato.Cod_Contato = contatoRetorno.cod_Contato.ToString();
                     vmContato.Cliente = new vmCliente();
-                    vmContato.Cliente.Codigo_Cliente = contatoRetorno.Cliente.codigo_Cliente;
+                    vmContato.Cliente.Codigo_Cliente = contatoRetorno.cliente.codigo_Cliente;
                     vmContato.Nome_Contato = contatoRetorno.nome;
                     vmContato.Email = contatoRetorno.email;
                     vmContato.Telefone = contatoRetorno.telefone;
@@ -207,7 +207,6 @@
     private async Task CadastrarContato()
     {
         Contato contatoGravar = new Contato();
-        contatoGravar.cod_Contato = int.Parse(vmContato.Cod_Contato);
         contatoGravar.nome = vmContato.Nome_Contato;
         contatoGravar.email = vmContato.Email;
         contatoGravar.telefone = vmContato.Telefone;
@@ -216,12 +215,12 @@
         vmContato.Cliente = new vmCliente();
         if (vmContato.Cliente.Codigo_Cliente == 1)
         {
-            modal.Open("Selecione o cliente", "CadastroPeriodico");
+            modal.Open("Selecione o cliente", "CadastroContato");
         }
         else
         {
-            contatoGravar.Cliente = new Cliente();
-            contatoGravar.Cliente.codigo_Cliente = vmContato.Cliente.Codigo_Cliente;
+            contatoGravar.cliente = new Cliente();
+            contatoGravar.cliente.codigo_Cliente = vmContato.Cliente.Codigo_Cliente;
 
             try
             {
@@ -232,7 +231,7 @@
                     Contato contatoRetorno = JsonConvert.DeserializeObject<Contato>(await response.Content.ReadAsStringAsync());
                     vmContato.Cod_Contato = contatoRetorno.cod_Contato.ToString();
                     vmContato.Cliente = new vmCliente();
-                    vmContato.Cliente.Codigo_Cliente = contatoRetorno.Cliente.codigo_Cliente;
+                    vmContato.Cliente.Codigo_Cliente = contatoRetorno.cliente.codigo_Cliente;
                     vmContato.Nome_Contato = contatoRetorno.nome;
                     vmContato.Email = contatoRetorno.email;
                     vmContato.Telefone = contatoRetorno.telefone;
@@ -297,7 +296,7 @@
                 Contato contatoRetorno = JsonConvert.DeserializeObject<Contato>(await response.Content.ReadAsStringAsync());
                 vmContato.Cod_Contato = contatoRetorno.cod_Contato.ToString();
                 vmContato.Cliente = new vmCliente();
-                vmContato.Cliente.Codigo_Cliente = contatoRetorno.Cliente.codigo_Cliente;
+                vmContato.Cliente.Codigo_Cliente = contatoRetorno.cliente.codigo_Cliente;
                 vmContato.Nome_Contato = contatoRetorno.nome;
                 vmContato.Email = contatoRetorno.email;
                 vmContato.Telefone = contatoRetorno.telefone;
