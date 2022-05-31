@@ -1,10 +1,17 @@
 {
+  //"iisSettings": {
+  //  "windowsAuthentication": false,
+  //  "anonymousAuthentication": true,
+  //  "iisExpress": {
+  //    "applicationUrl": "http://localhost:63022/",
+  //    "sslPort": 44350
+  //  }
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:63022/",
-      "sslPort": 44350
+      "applicationUrl": "http://localhost:58674",
+      "sslPort": 44388
     }
   },
   "profiles": {
