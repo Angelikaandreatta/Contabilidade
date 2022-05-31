@@ -157,9 +157,9 @@ namespace Controle.Cadastro
             }
         }
 
-        public async Task<Login> Excluir(string pEmailLogin)
+        public async Task<int> Excluir(string pEmailLogin)
         {
-            Login loginRetorno = null;
+            int loginRetorno = 0;
 
             if (string.IsNullOrWhiteSpace(pEmailLogin) == true)
             {
@@ -171,7 +171,7 @@ namespace Controle.Cadastro
                 DbLogin dbLogin = new DbLogin();
                 loginRetorno = dbLogin.Excluir(pEmailLogin);
 
-                if (loginRetorno != null)
+                if (loginRetorno == 1)
                 {
                     return loginRetorno;
                 }
@@ -189,7 +189,6 @@ namespace Controle.Cadastro
                 throw new Exception(ex.Message);
             }
         }
-
     }
 }
 

@@ -107,7 +107,7 @@ namespace BancoDeDados.Cadastro
             }
         }
 
-        public Login Excluir(string pLogin)
+        public int Excluir(string pLogin)
         {
             int retorno = 0;
 
