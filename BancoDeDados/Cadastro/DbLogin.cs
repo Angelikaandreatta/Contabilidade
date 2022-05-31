@@ -16,7 +16,9 @@ namespace BancoDeDados.Cadastro
         {
             ComandoSQL comando = new ComandoSQL();
             comando.InsertTabela("Tb_Login");
+            comando.InsertSqlObj("email", $"{pLogin.nome}");
             comando.InsertSqlObj("email", $"{pLogin.email}");
+            comando.InsertSqlObj("email", $"{pLogin.cargo}");
             comando.InsertSqlObj("senha", $"{pLogin.senha}");
 
             if (comando.ExecutarComandoInsertSql() > 0)
@@ -33,7 +35,9 @@ namespace BancoDeDados.Cadastro
         {
             ComandoSQL comando = new ComandoSQL();
             comando.UpdateTabela("Tb_Login");
-            comando.UpdateSqlObj("email", $"'{pLogin.email}'");
+            comando.UpdateSqlObj("email", $"'{pLogin.nome}'");
+            comando.UpdateSqlObj("senha", $"'{pLogin.email}'");
+            comando.UpdateSqlObj("senha", $"'{pLogin.cargo}'");
             comando.UpdateSqlObj("senha", $"'{pLogin.senha}'");
 
             if (comando.ExecutarComandoUpdateSql() > 0)
@@ -48,7 +52,9 @@ namespace BancoDeDados.Cadastro
 
         private Login CarregarDado(Login pLogin, DataRow rd)
         {
+            pLogin.nome = rd["nome"].ToString();
             pLogin.email = rd["email"].ToString();
+            pLogin.cargo = rd["cargo"].ToString();
 
             return pLogin;
         }
@@ -58,7 +64,7 @@ namespace BancoDeDados.Cadastro
             List<Login> lstLogins = null;
 
             SqlCommand sql = new SqlCommand("", new ConexaoDB().Conectar());
-            sql.CommandText = "select email from Tb_Login";
+            sql.CommandText = "select nome, email, cargo  from Tb_Login";
 
             using (SqlDataReader dt = sql.ExecuteReader())
             {
@@ -81,11 +87,11 @@ namespace BancoDeDados.Cadastro
             }
         }
 
-        public Login CarregarLogin(Login pLogin)
+        public Login CarregarLogin(string pLogin)
         {
             SqlCommand sql = new SqlCommand("", new ConexaoDB().Conectar());
-            sql.CommandText = "select email from Tb_Login";
-            sql.CommandText += $" where email = '{pLogin.email}'";
+            sql.CommandText = "select  nome, email, cargo from Tb_Login";
+            sql.CommandText += $" where email = '{pLogin}'";
 
             using (SqlDataReader dt = sql.ExecuteReader())
             {
@@ -101,13 +107,13 @@ namespace BancoDeDados.Cadastro
             }
         }
 
-        public int Excluir(Login pLogin)
+        public Login Excluir(string pLogin)
         {
             int retorno = 0;
 
             StringBuilder sql = new StringBuilder();
             sql.Append("delete from Tb_Login");
-            sql.Append($" where email = '{pLogin.email}'");
+            sql.Append($" where email = '{pLogin}'");
 
 
             if (ExecutarReader(sql.ToString()) == 1)
@@ -131,10 +137,10 @@ namespace BancoDeDados.Cadastro
             {
                 DataTable dataTable = new DataTable();
                 dataTable.Load(dt);
-                DataRow rd = dataTable.Rows[0];
+                DataRow rde = dataTable.Rows[0];
                 DataRow rds = dataTable.Rows[1];
 
-                string email = rd["email"].ToString();
+                string email = rde["email"].ToString();
                 string senha = rds["senha"].ToString();
 
                 if (email == pLogin.email && senha == pLogin.senha)
