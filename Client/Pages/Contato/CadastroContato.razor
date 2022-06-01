@@ -21,10 +21,10 @@
                         <div class="form__inputs">
                             <div class="field__control">
                                 <label>Cliente</label>
-                                <InputSelect class="field__input" @bind-Value="vmContato.Cliente.Codigo_Cliente">
+                                <InputSelect @onclick =@(() => Console.WriteLine(@vmContato.Cliente.Codigo_Cliente)) class="field__input" @bind-Value="vmContato.Cliente.Codigo_Cliente">
                                     @if (clientes.Count > 0)
                                     {
-                                        <option value="">Selecione</option>
+                                        <option value="0">Selecione</option>
                                         @foreach (ClienteViewModel cliente in clientes)
                                         {
                                             <option value="@cliente.Codigo_Cliente">@($"{cliente.Codigo_Cliente} - {cliente.Razao_Social}")</option>
@@ -212,8 +212,7 @@
         contatoGravar.telefone = vmContato.Telefone;
         contatoGravar.setor = vmContato.Setor;
 
-        vmContato.Cliente = new vmCliente();
-        if (vmContato.Cliente.Codigo_Cliente == 1)
+        if (vmContato.Cliente.Codigo_Cliente == 0)
         {
             modal.Open("Selecione o cliente", "CadastroContato");
         }
