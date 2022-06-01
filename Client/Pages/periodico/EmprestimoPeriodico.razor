@@ -1,0 +1,105 @@
+﻿@page "/EmprestimoPeriodico"
+@using Negocio.Cadastro
+@using Projeto_Contabilidade.Client.Componentes.Modal
+@inject HttpClient httpClient
+@inject NavigationManager NavigationManager;
+@using Newtonsoft.Json
+
+@if (loading)
+{
+    <h3 class="text-center">CARREGANDO ...</h3>
+}
+else
+{
+    <div class="d-flex w-100 justify-content-between">
+        <h2 class="">Periodicos Emprestados</h2>
+        <div style="width:250px" class="d-flex form-control">
+            <span class="oi oi-magnifying-glass"></span>
+            <input style="outline:0" type="text" placeholder="Pesquisa" class="w-100 h-100 border-0" />
+        </div>
+    </div>
+
+    <table class="table table-hover">
+        <tr>
+            <th>Nome</th>
+            <th>Autor</th>
+            <th>Editora</th>
+            <th>Data de Empréstimo</th>
+
+        </tr>
+        <tbody>
+            @foreach (PeriodicoViewModel periodico in periodicos)
+            {
+                if (periodico.Status == "indisponivel")
+                {
+                    <tr>
+                        <td @onclick=@(() => NavigationManager.NavigateTo($"CadastroPeriodico/{periodico.Codigo_Periodico}")) class="table__td">@periodico.Nome</td>
+                        <td>@periodico.Autor</td>
+                        <td>@periodico.Editora</td>
+                        <td>@DateTime.Today</td>
+                    </tr>
+
+                }
+            }
+            <tr>
+                <td colspan=4 class="text-center">
+                    <button class="btn btn-outline-primary">
+                        Emprestar Periódico
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}
+
+<Modal @ref="modal"></Modal>
+
+@code {
+    public Periodico periodicoTemp = new Periodico();
+    public bool loading = false;
+    List<PeriodicoViewModel> periodicos = new List<PeriodicoViewModel>();
+    Modal modal = new Modal();
+
+    async protected override Task OnInitializedAsync()
+    {
+        await listarPeriodicos();
+        StateHasChanged();
+    }
+
+    protected async Task listarPeriodicos()
+    {
+        try
+        {
+            loading = true;
+            string url = $"https://localhost:44388/Periodico/Listar";
+            var response = await httpClient.PostAsJsonAsync(url, periodicoTemp);
+            if (response.IsSuccessStatusCode == true)
+            {
+                List<Periodico> periodicosRetorno = JsonConvert.DeserializeObject<List<Periodico>>(await response.Content.ReadAsStringAsync());
+
+                periodicos.RemoveRange(0, periodicos.Count);
+                foreach (Periodico periodicoRetorno in periodicosRetorno)
+                {
+                    PeriodicoViewModel periodico = new PeriodicoViewModel();
+                    periodico.Codigo_Periodico = periodicoRetorno.codigo_Periodico.ToString();
+                    periodico.Nome = periodicoRetorno.Nome;
+                    periodico.Autor = periodicoRetorno.Autor;
+                    periodico.Editora = periodicoRetorno.Editora;
+                    periodico.Status = periodicoRetorno.Status;
+
+                    periodicos.Add(periodico);
+                }
+
+            }
+
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
+}
