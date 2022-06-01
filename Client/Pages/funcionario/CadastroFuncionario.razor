@@ -13,7 +13,7 @@
 <div class="card">
     <h4 class="card-header">@formTitle</h4>
     <div class="card-body">
-        <EditForm Model="vmFuncionario">
+        <EditForm Model="vmEfetivo">
             <Steper>
                 <Step Text="Informações Gerais" Icon="oi-info" Value="Step1" Enabled="@IsEnabled">
                     <div class="form__div">
@@ -23,19 +23,19 @@
                         <div class="form__inputs">
                             <div class="field__control">
                                 <label>Nome</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmFuncionario.Nome"></InputText>
+                                <InputText class="field__input field__input--active" @bind-Value="vmEfetivo.Nome"></InputText>
                             </div>
                             <div class="field__control">
                                 <label>CPF</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmFuncionario.Cpf"></InputText>
+                                <InputText class="field__input field__input--active" @bind-Value="vmEfetivo.Cpf"></InputText>
                             </div>
                             <div class="field__control">
                                 <label>E-Mail</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmFuncionario.Email"></InputText>
+                                <InputText class="field__input field__input--active" @bind-Value="vmEfetivo.Email"></InputText>
                             </div>
                             <div class="field__control">
                                 <label>Data Nascimento</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmFuncionario.DataNascimento"></InputText>
+                                <InputText class="field__input field__input--active" @bind-Value="vmEfetivo.Data_Nascimento"></InputText>
                             </div>
                             <div class="field__control">
                                 <label>Tipo</label>
@@ -66,19 +66,19 @@
                         <div class="form__inputs">
                             <div class="field__control">
                                 <label>Rua</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmFuncionario.Rua"></InputText>
+                                <InputText class="field__input field__input--active" @bind-Value="vmEfetivo.Endereco.rua"></InputText>
                             </div>
                             <div class="field__control">
                                 <label>Número</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmFuncionario.Numero"></InputText>
+                                <InputText class="field__input field__input--active" @bind-Value="vmEfetivo.Endereco.numero"></InputText>
                             </div>
                             <div class="field__control">
                                 <label>Bairro</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmFuncionario.Bairro"></InputText>
+                                <InputText class="field__input field__input--active" @bind-Value="vmEfetivo.Endereco.bairro"></InputText>
                             </div>
                             <div class="field__control">
                                 <label>Cidade</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmFuncionario.NomeCidade"></InputText>
+                                <InputText class="field__input field__input--active" @bind-Value="vmEfetivo.Endereco.cidade"></InputText>
                             </div>
                         </div>
                     </div>
@@ -93,7 +93,7 @@
                 </button>
 
                 <button class="btn btn-lg btn-outline-primary">
-                    @if (string.IsNullOrWhiteSpace(vmFuncionario.CodFuncionario) == false)
+                    @if (string.IsNullOrWhiteSpace(vmEfetivo.Codigo_Efetivo) == false)
                     {
                         <div>Editar</div>
                     }
@@ -116,6 +116,7 @@
     public string codFuncionario { get; set; }
     FuncionarioViewModel vmFuncionario = new FuncionarioViewModel();
     EstagionarioViewModel vmEstagiario = new EstagionarioViewModel();
+    EfetivoViewModel vmEfetivo = new EfetivoViewModel();
 
     private Modal modal { get; set; }
     public bool IsEnabled = true;
@@ -133,7 +134,7 @@
 
     public async Task Gravar()
     {
-        if (string.IsNullOrWhiteSpace(vmFuncionario.CodFuncionario) == true)
+        if (string.IsNullOrWhiteSpace(vmEfetivo.Codigo_Efetivo) == true)
         {
             await CadastrarFuncionario();
         }
@@ -202,7 +203,7 @@
         //}
     }
 
-    private async Task CarregarFuncionario()
+    public async Task CarregarFuncionario()
     {
 
         //try
@@ -234,7 +235,7 @@
 
         try
         {
-            string url = $"https://localhost:44388/Funcionario/Excluir?pCodFuncionario={vmFuncionario.CodFuncionario}";
+            string url = $"https://localhost:44388/Funcionario/Excluir?pCodFuncionario={vmEfetivo.Codigo_Efetivo}";
             var response = await httpClient.DeleteAsync(url);
 
             if (response.IsSuccessStatusCode == true)

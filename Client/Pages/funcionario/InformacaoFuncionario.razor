@@ -21,15 +21,18 @@
 
 @code {
     List<FuncionarioViewModel> funcionarios = new List<FuncionarioViewModel>();
+    List<EfetivoViewModel> efetivos = new List<EfetivoViewModel>();
+    List<EstagiarioViewModel> estagiarios = new List<EstagiarioViewModel>();
+
     protected override void OnInitialized()
     {
-        FuncionarioViewModel funcionario = new FuncionarioViewModel();
-        funcionario.Nome = "Carlos Montenez";
-        funcionario.Cargo = "Gerente de RH";
-        funcionario.DataNascimento = "04/12/2001";
-        funcionarios.Add(funcionario);
-        funcionarios.Add(funcionario);
-        funcionarios.Add(funcionario);
+        EfetivoViewModel efetivo = new EfetivoViewModel();
+        efetivo.Nome = "Carlos Montenez";
+        efetivo.Cargo.nome = "Gerente de RH";
+        efetivo.Data_Nascimento = "04/12/2001";
+        efetivos.Add(efetivo);
+        efetivos.Add(efetivo);
+        efetivos.Add(efetivo);
         base.OnInitialized();
     }
 }

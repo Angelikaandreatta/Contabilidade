@@ -23,13 +23,13 @@
         {
             <tr @onclick=@(() => NavigationManager.NavigateTo("InformacaoFuncionario"))>
                 <td>
-                    @funcionario.Nome
+                    @efetivo.Nome
                 </td>
                 <td>
-                    @funcionario.Cargo
+                    @efetivo.Cargo.nome
                 </td>
                 <td>
-                    @funcionario.DataNascimento
+                    @efetivo.Data_Nascimento
                 </td>
                 <td>
                     <div>
@@ -55,14 +55,15 @@
 @code {
 
     public FuncionarioViewModel funcionario = new FuncionarioViewModel();
+    public EfetivoViewModel efetivo = new EfetivoViewModel();
     List<FuncionarioViewModel> funcionarios = new List<FuncionarioViewModel>();
     public string[] tableHeaders = { "Nome", "Cargo", "Data Nascimento" };
 
     protected override void OnInitialized()
     {
-        funcionario.Nome = "Carlos Montenez";
-        funcionario.Cargo = "Gerente de RH";
-        funcionario.DataNascimento = "04/12/2001";
+        efetivo.Nome = "Carlos Montenez";
+        efetivo.Cargo.nome = "Gerente de RH";
+        efetivo.Data_Nascimento = "04/12/2001";
 
         funcionarios.Add(funcionario);
         funcionarios.Add(funcionario);

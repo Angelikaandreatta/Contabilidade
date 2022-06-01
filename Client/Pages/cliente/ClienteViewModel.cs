@@ -11,6 +11,7 @@ namespace Projeto_Contabilidade.Client.Pages.cliente
         public ClienteViewModel()
         {
             this.Empresa = new vmEmpresa();
+            this.Endereco = new Endereco();
         }
 
         private string codigo_cliente = "";

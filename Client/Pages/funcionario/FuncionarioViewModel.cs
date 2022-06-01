@@ -1,4 +1,5 @@
 ﻿using System;
+using Negocio.Cadastro;
 
 namespace Projeto_Contabilidade.Client.Pages.funcionario
 {
@@ -6,19 +7,34 @@ namespace Projeto_Contabilidade.Client.Pages.funcionario
     {
 
         #region Pessoal
-        public string CodFuncionario { get; set; }
-        public string Nome { get; set; }
-        public string Cpf { get; set; }
-        public string Cargo { get; set; }
-        public string Email { get; set; }
-        public string DataNascimento { get; set; }
+        private string nome { get; set; }
+        public string Nome { get => nome; set => nome = value; }
+        private string cpf { get; set; }
+        public string Cpf { get => cpf; set => cpf = value; }
+        private string email { get; set; }
+        public string Email { get => email; set => email = value; }
+        private string data_nascimento { get; set; }
+        public string Data_Nascimento { get => data_nascimento; set => data_nascimento = value; }
+        #endregion
+
+        #region Empresa
+        public vmEmpresa Empresa { get; set; } = null;
+        public class vmEmpresa
+        {
+            public int codigo_Empresa { get; set; }
+
+            public string nome { get; set; }
+        }
         #endregion
 
         #region Endereço
-        public string Rua { get; set; }
-        public string Numero { get; set; }
-        public string Bairro { get; set; }
-        public string NomeCidade { get; set; }
+        public Endereco Endereco { get; set; } = null;
         #endregion
+
+        public FuncionarioViewModel()
+        {
+            this.Empresa = new vmEmpresa();
+            this.Endereco = new Endereco();
+        }
     }
 }
