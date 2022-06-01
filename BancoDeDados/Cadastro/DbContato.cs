@@ -10,7 +10,7 @@ using BancoDeDados.UtilDb;
 
 namespace BancoDeDados.Cadastro
 {
-    public class DbContato
+    public class DbContato:ComandoSQL
     {
         public Contato Gravar(Contato pContato)
         {
@@ -118,11 +118,11 @@ namespace BancoDeDados.Cadastro
             }
         }
 
-        public Contato CarregarContato(Contato pContato)
+        public Contato CarregarContato(int pCodContato)
         {
             SqlCommand sql = new SqlCommand("", new ConexaoDB().Conectar());
             sql.CommandText = "select * from Contato";
-            sql.CommandText += $" where codigo_Contato = '{pContato.cod_Contato}'";
+            sql.CommandText += $" where codigo_Contato = '{pCodContato}'";
 
             using (SqlDataReader dt = sql.ExecuteReader())
             {
@@ -137,6 +137,27 @@ namespace BancoDeDados.Cadastro
                 return contatoCarregar;
             }
 
+        }
+
+        public int Excluir(int pCodContato)
+        {
+            int retorno = 0;
+
+            StringBuilder sql = new StringBuilder();
+            sql.Append("delete from Contato");
+            sql.Append($" where codigo_Contato = {pCodContato}");
+
+
+            if (ExecutarReader(sql.ToString()) == 1)
+            {
+                retorno = 1;
+            }
+            else
+            {
+                retorno = -1;
+            }
+
+            return retorno;
         }
     }
 }

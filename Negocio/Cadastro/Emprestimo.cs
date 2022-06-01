@@ -9,7 +9,7 @@ namespace Negocio.Cadastro
     public class Emprestimo
     {
         public int cod_Emprestimo { get; set; }
-        public int codigo_efetivo { get; set; }
+        public Efetivo efetivo { get; set; }
         public Periodico periodico { get; set; }
 
         public DateTime? data_Emprestimo { get; set; }
@@ -21,7 +21,7 @@ namespace Negocio.Cadastro
         {
             List<string> lstRetorno = new List<string>();
 
-            if (pEmprestimo.codigo_efetivo <= 0)
+            if (pEmprestimo.efetivo.codigo_efetivo <= 0)
             {
                 lstRetorno.Add("Informe o codigo do efetivo");
             }

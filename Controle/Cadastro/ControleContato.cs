@@ -124,11 +124,11 @@ namespace Controle.Cadastro
         }
 
 
-        public async Task<Contato> Carregar(Contato pContato)
+        public async Task<Contato> Carregar(int pCodContato)
         {
             Contato contatoRetorno = null;
 
-            if (pContato.cod_Contato <= 0)
+            if (pCodContato <= 0)
             {
                 throw new InvalidOperationException("Informe o código do contato para carrega-lo.");
             }
@@ -136,7 +136,7 @@ namespace Controle.Cadastro
             try
             {
                 DbContato dbContato = new DbContato();
-                contatoRetorno = dbContato.CarregarContato(pContato);
+                contatoRetorno = dbContato.CarregarContato(pCodContato);
 
                 if (contatoRetorno != null)
                 {
@@ -145,6 +145,39 @@ namespace Controle.Cadastro
                 else
                 {
                     throw new InvalidOperationException("Erro ao carregar contato.");
+                }
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<int> Excluir(int pCodContato)
+        {
+            int retorno = 0;
+
+            if (pCodContato <= 0)
+            {
+                throw new InvalidOperationException("Informe o código do contato para exclui-lo.");
+            }
+
+            try
+            {
+                DbContato dbContato = new DbContato();
+                retorno = dbContato.Excluir(pCodContato);
+
+                if (retorno == 1)
+                {
+                    return retorno;
+                }
+                else
+                {
+                    throw new InvalidOperationException("Erro ao excluir contato.");
                 }
             }
             catch (InvalidOperationException ex)

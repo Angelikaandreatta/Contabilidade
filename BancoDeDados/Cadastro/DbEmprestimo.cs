@@ -20,7 +20,7 @@ namespace BancoDeDados.Cadastro
             ComandoSQL comando = new ComandoSQL();
             comando.InsertTabela("Emprestimo");
             comando.InsertSqlObj("codigo_Emprestimo", $"{pEmprestimo.cod_Emprestimo}");
-            comando.InsertSqlObj("codigo_Efetivo", $"{pEmprestimo.cod_Emprestimo}");
+            comando.InsertSqlObj("codigo_Efetivo", $"{pEmprestimo.efetivo.codigo_efetivo}");
             comando.InsertSqlObj("codigo_Periodico", $"'{pEmprestimo.periodico.codigo_Periodico}'");
             comando.InsertSqlObj("data_Emprestimo", $"{new FormatarValores().FormatarDataParaSQL(DateTime.Now.Date)}");
             comando.InsertSqlObj("data_Devolucao", $"{new FormatarValores().FormatarDataParaSQL(pEmprestimo.data_Devolucao.Value)}", true);
@@ -39,9 +39,8 @@ namespace BancoDeDados.Cadastro
         {
             ComandoSQL comando = new ComandoSQL();
             comando.UpdateTabela("Emprestimo");
-            comando.UpdateSqlObj("codigo_Efetivo", $"{pEmprestimo.cod_Emprestimo}");
+            comando.UpdateSqlObj("codigo_Efetivo", $"{pEmprestimo.efetivo.codigo_efetivo}");
             comando.UpdateSqlObj("codigo_Periodico", $"'{pEmprestimo.periodico.codigo_Periodico}'");
-            comando.UpdateSqlObj("data_Emprestimo", $"{new FormatarValores().FormatarDataParaSQL(DateTime.Now.Date)}");
             comando.UpdateSqlObj("data_Devolucao", $"{new FormatarValores().FormatarDataParaSQL(pEmprestimo.data_Devolucao.Value)}", true);
             comando.strWhere = $" where codigo_Emprestimo = {pEmprestimo.cod_Emprestimo}";
 
@@ -79,9 +78,10 @@ namespace BancoDeDados.Cadastro
         private Emprestimo CarregarDado(Emprestimo pEmprestimo, DataRow rd)
         {
             pEmprestimo.cod_Emprestimo = Int32.Parse(rd["codigo_Emprestimo"].ToString());
-            pEmprestimo.codigo_efetivo = Int32.Parse(rd["codigo_Efetivo"].ToString());
+            pEmprestimo.efetivo = new Efetivo();
+            pEmprestimo.efetivo.codigo_efetivo = Int32.Parse(rd["codigo_Efetivo"].ToString());
             pEmprestimo.periodico = new Periodico();
-            pEmprestimo.periodico = new DbPeriodico().CarregarPeriodico(Int32.Parse(rd["cod_Periodico"].ToString()));
+            pEmprestimo.periodico = new DbPeriodico().CarregarPeriodico(Int32.Parse(rd["codigo_Periodico"].ToString()));
             pEmprestimo.data_Emprestimo = DateTime.Parse(rd["data_Emprestimo"].ToString());
             pEmprestimo.data_Devolucao = DateTime.Parse(rd["data_Devolucao"].ToString());
 
@@ -93,7 +93,13 @@ namespace BancoDeDados.Cadastro
             List<Emprestimo> lstEmprestimos = null;
 
             SqlCommand sql = new SqlCommand("", new ConexaoDB().Conectar());
-            sql.CommandText = "select * from Emprestimo";
+            sql.CommandText = "SELECT e.*, p.status FROM Emprestimo as E";
+            sql.CommandText += " inner join Periodico as P";
+            sql.CommandText += " on E.codigo_Periodico = P.codigo_Periodico";
+            if (pEmprestimo.periodico.Status == "indisponivel")
+            {
+                sql.CommandText += " where status = 'indisponivel'";
+            }
 
             using (SqlDataReader dt = sql.ExecuteReader())
             {
@@ -135,5 +141,7 @@ namespace BancoDeDados.Cadastro
                 return emprestimoCarregar;
             }
         }
+
+
     }
 }
