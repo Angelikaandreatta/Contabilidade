@@ -44,15 +44,15 @@ namespace Negocio.Cadastro
             {
                 lstRetorno.Add("Informe o nome do efetivo");
             }
-            if(string.IsNullOrWhiteSpace(pEfetivo.cpf) == false)
+            if(string.IsNullOrWhiteSpace(pEfetivo.cpf) == true)
             {
                 lstRetorno.Add("Informe o cpf do efetivo");
             }
-            if (string.IsNullOrWhiteSpace(pEfetivo.email) == false)
+            if (string.IsNullOrWhiteSpace(pEfetivo.email) == true)
             {
                 lstRetorno.Add("Informe o email do efetivo");
             }
-            if (string.IsNullOrWhiteSpace(pEfetivo.data_Nascimento.ToString()) == false)
+            if (string.IsNullOrWhiteSpace(pEfetivo.data_Nascimento.ToString()) == true)
             {
                 lstRetorno.Add("Informe a data de nascimento do efetivo");
             }
