@@ -117,7 +117,7 @@ else
     {
         try
         {
-            Cliente clienteExcluir = new Cliente();
+            Contato contatoExcluir = new Contato();
             string url = $"https://localhost:44388/Contato/Excluir?pCodContato={codContato}";
             var response = await httpClient.DeleteAsync(url);
 
