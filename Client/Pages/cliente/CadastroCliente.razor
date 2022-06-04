@@ -163,11 +163,11 @@ else
                 vmCliente.Qtd_Empregado = clienteRetorno.qtd_Empregado;
                 vmCliente.Endereco = new Endereco();
                 vmCliente.Endereco.codigo_Endereco = clienteRetorno.endereco.codigo_Endereco;
-                modal.Open("Cliente editado com sucesso", "PesquisaCliente");
+                modal.Open("Cliente editado com sucesso","Editar Cliente","PesquisaCliente");
             }
             else
             {
-                modal.Open("Erro ao editar o Cliente", "CadastroCliente");
+                modal.Open("Erro ao editar o Cliente","Editar Cliente","CadastroCliente");
             }
         }
         catch (InvalidOperationException ex)
@@ -202,12 +202,12 @@ else
                 vmCliente.Razao_Social = clienteRetorno.razao_Social;
                 vmCliente.Cnpj = clienteRetorno.cnpj;
                 vmCliente.Qtd_Empregado = clienteRetorno.qtd_Empregado;
-                modal.Open("Cliente gravado com sucesso", "PesquisaCliente");
+                modal.Open("Cliente gravado com sucesso","Cadastrar Cliente","PesquisaCliente");
 
             }
             else
             {
-                modal.Open("Erro ao gravar o Cliente", "PesquisaCliente");
+                modal.Open("Erro ao gravar o Cliente","Cadastrar Cliente" ,"PesquisaCliente");
             }
         }
         catch (InvalidOperationException ex)
@@ -231,12 +231,12 @@ else
             if (response.IsSuccessStatusCode == true)
             {
                 LimparTelaCliente();
-                modal.Open("Cliente excluído com sucesso", "PesquisaCliente");
+                modal.Open("Cliente excluído com sucesso","Excluir Cliente","PesquisaCliente");
 
             }
             else
             {
-                modal.Open("Erro ao excluir o cliente", "PesquisaCliente");
+                modal.Open("Erro ao excluir o cliente","Excluir Cliente" ,"PesquisaCliente");
             }
         }
         catch (InvalidOperationException ex)

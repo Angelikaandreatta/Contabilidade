@@ -160,7 +160,7 @@
 
         if (vmContato.Cliente.Codigo_Cliente == 0)
         {
-            modal.Open("Selecione o contato", "CadastroContato");
+            modal.Open("Selecione o contato","Cadastrar Contato" ,"CadastroContato");
         }
         else
         {
@@ -185,11 +185,11 @@
                     vmContato.Telefone = contatoRetorno.telefone;
                     vmContato.Setor = contatoRetorno.setor;
 
-                    modal.Open("Contato editado com sucesso", "PesquisaContato");
+                    modal.Open("Contato editado com sucesso", "Editar Contato","PesquisaContato");
                 }
                 else
                 {
-                    modal.Open("Erro ao editar o Contato", "CadastroContato");
+                    modal.Open("Erro ao editar o Contato", "Editar Contato","CadastroContato");
                 }
             }
             catch (InvalidOperationException ex)
@@ -213,7 +213,7 @@
 
         if (vmContato.Cliente.Codigo_Cliente == 0)
         {
-            modal.Open("Selecione o cliente", "CadastroContato");
+            modal.Open("Selecione o cliente", "Cadastrar Contato","CadastroContato");
         }
         else
         {
@@ -234,12 +234,12 @@
                     vmContato.Email = contatoRetorno.email;
                     vmContato.Telefone = contatoRetorno.telefone;
                     vmContato.Setor = contatoRetorno.setor;
-                    modal.Open("Contato gravado com sucesso", "PesquisaContato");
+                    modal.Open("Contato gravado com sucesso", "Cadastrar Contato","PesquisaContato");
 
                 }
                 else
                 {
-                    modal.Open("Erro ao gravar o Contato", "CadastroContato");
+                    modal.Open("Erro ao gravar o Contato", "Cadastrar Contato","CadastroContato");
                 }
             }
             catch (InvalidOperationException ex)
@@ -264,12 +264,12 @@
             if (response.IsSuccessStatusCode == true)
             {
                 LimparTelaContato();
-                modal.Open("Contato excluído com sucesso", "PesquisaContato");
+                modal.Open("Contato excluído com sucesso", "Excluir Contato","PesquisaContato");
 
             }
             else
             {
-                modal.Open("Erro ao excluir o contato", "PesquisaContato");
+                modal.Open("Erro ao excluir o contato", "Excluir Contato","PesquisaContato");
             }
         }
         catch (InvalidOperationException ex)

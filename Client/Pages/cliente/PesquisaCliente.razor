@@ -121,12 +121,12 @@ else
             if (response.IsSuccessStatusCode == true)
             {
                 await ListarCliente();
-                modal.Open("Cliente excluído com sucesso", "PesquisaCliente");
+                modal.Open("Cliente excluído com sucesso","Excluir Cliente" ,"PesquisaCliente");
 
             }
             else
             {
-                modal.Open("Erro ao excluir o cliente", "PesquisaCliente");
+                modal.Open("Erro ao excluir o cliente", "Excluir Cliente","PesquisaCliente");
             }
         }
         catch (InvalidOperationException ex)
