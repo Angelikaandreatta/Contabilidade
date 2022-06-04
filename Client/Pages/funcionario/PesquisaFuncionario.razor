@@ -1,73 +1,126 @@
 ﻿@page "/PesquisaFuncionario"
 @using Projeto_Contabilidade.Client.Componentes.Tabela;
+@using Negocio.Cadastro;
+@using Newtonsoft.Json;
+@inject HttpClient httpCliente;
 @inject NavigationManager NavigationManager;
 
-<div class="d-flex w-100 justify-content-between">
-    <h2 class="">Funcionarios Cadastrados</h2>
-    <div style="width:250px" class="d-flex form-control">
-        <span class="oi oi-magnifying-glass"></span>
-        <input style="outline:0" type="text" placeholder="Pesquisa" class="w-100 h-100 border-0" />
+@if (loading)
+{
+    <h3 class="text-center">CARREGANDO ...</h3>
+}
+else
+{
+
+    <div class="d-flex w-100 justify-content-between">
+        <h2 class="">Funcionarios Cadastrados</h2>
+        <div style="width:250px" class="d-flex form-control">
+            <span class="oi oi-magnifying-glass"></span>
+            <input style="outline:0" type="text" placeholder="Pesquisa" class="w-100 h-100 border-0" />
+        </div>
     </div>
-</div>
-<table class="table table-hover">
-    <tr>
-        <th scope="col">Nome</th>
-        <th scope="col">Cargo</th>
-        <th scope="col">Data Nascimento</th>
-        <th scope="col">
-            Ações
-        </th>
-    </tr>
-    <tbody>
-        @foreach (FuncionarioViewModel funcionario in funcionarios)
-        {
-            <tr @onclick=@(() => NavigationManager.NavigateTo("InformacaoFuncionario"))>
-                <td>
-                    @efetivo.Nome
-                </td>
-                <td>
-                    @efetivo.Cargo.nome
-                </td>
-                <td>
-                    @efetivo.Data_Nascimento
-                </td>
-                <td>
-                    <div>
-                        <button type="button" class="btn btn-outline-success"
+    <table class="table table-hover">
+        <tr>
+            <th scope="col">Nome</th>
+            <th scope="col">Cargo</th>
+            <th scope="col">Data Nascimento</th>
+            <th scope="col">
+                Ações
+            </th>
+        </tr>
+        <tbody>
+            @foreach (EfetivoViewModel efetivo in efetivos)
+            {
+                <tr @onclick=@(() => NavigationManager.NavigateTo("InformacaoFuncionario"))>
+                    <td>
+                        @efetivo.Nome
+                    </td>
+                    <td>
+                        @efetivo.Cargo.nome
+                    </td>
+                    <td>
+                        @efetivo.Data_Nascimento
+                    </td>
+                    <td>
+                        <div>
+                            <button type="button" class="btn btn-outline-success"
                             @onclick=@(() => NavigationManager.NavigateTo("CadastroFuncionario"))>
-                            Editar
-                        </button>
-                        <button type="button" class="btn btn-outline-danger">Deletar</button>
-                    </div>
+                                Editar
+                            </button>
+                            <button type="button" class="btn btn-outline-danger">Deletar</button>
+                        </div>
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td colspan=4 class="text-center">
+                    <button class="btn btn-outline-primary"
+                        @onclick=@(() => NavigationManager.NavigateTo("CadastroFuncionario"))>
+                        Adicionar Funcionario
+                    </button>
                 </td>
             </tr>
-        }
-        <tr>
-            <td colspan=4 class="text-center">
-                <button class="btn btn-outline-primary"
-                        @onclick=@(() => NavigationManager.NavigateTo("CadastroFuncionario"))>
-                    Adicionar Funcionario
-                </button>
-            </td>
-        </tr>
-    </tbody>
-</table>
+        </tbody>
+    </table>
+}
 @code {
 
     public FuncionarioViewModel funcionario = new FuncionarioViewModel();
-    public EfetivoViewModel efetivo = new EfetivoViewModel();
     List<FuncionarioViewModel> funcionarios = new List<FuncionarioViewModel>();
+    List<EfetivoViewModel> efetivos = new List<EfetivoViewModel>();
     public string[] tableHeaders = { "Nome", "Cargo", "Data Nascimento" };
+    private bool loading = false;
 
     protected override void OnInitialized()
     {
-        efetivo.Nome = "Carlos Montenez";
-        efetivo.Cargo.nome = "Gerente de RH";
-        efetivo.Data_Nascimento = "04/12/2001";
 
-        funcionarios.Add(funcionario);
-        funcionarios.Add(funcionario);
-        funcionarios.Add(funcionario);
+    }
+
+    async protected override Task OnInitializedAsync()
+    {
+        await ListarFuncionario();
+        StateHasChanged();
+    }
+
+    async Task ListarFuncionario()
+    {
+        try
+        {
+            loading = true;
+            string url = $"https://localhost:44388/Efetivo/Listar";
+            var response = await httpCliente.GetAsync(url);
+
+            if (response.IsSuccessStatusCode == true)
+            {
+                List<Efetivo> efetivosRetorno = JsonConvert.DeserializeObject<List<Efetivo>>(await response.Content.ReadAsStringAsync());
+
+                efetivos.RemoveRange(0, efetivos.Count);
+
+                foreach (Efetivo efetivoRetorno in efetivosRetorno)
+                {
+                    EfetivoViewModel efetivo = new EfetivoViewModel();
+                    efetivo.Codigo_Efetivo = efetivoRetorno.codigo_efetivo.ToString();
+                    efetivo.Nome = efetivoRetorno.nome;
+                    efetivo.Cpf = efetivoRetorno.cpf;
+                    efetivo.Data_Nascimento = efetivoRetorno.data_Nascimento.ToString();
+                    efetivo.Email = efetivoRetorno.email;
+                    efetivo.Cargo = efetivoRetorno.cargo;
+                    efetivo.Empresa = efetivoRetorno.empresa;
+                    efetivo.Endereco = efetivoRetorno.endereco;
+
+                    efetivos.Add(efetivo);
+                }
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+        finally
+        {
+            loading = false;
+        }
+
     }
 
 }

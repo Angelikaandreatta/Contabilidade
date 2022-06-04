@@ -18,13 +18,8 @@ namespace Projeto_Contabilidade.Client.Pages.funcionario
         #endregion
 
         #region Empresa
-        public vmEmpresa Empresa { get; set; } = null;
-        public class vmEmpresa
-        {
-            public int codigo_Empresa { get; set; }
-
-            public string nome { get; set; }
-        }
+        public Empresa Empresa { get; set; } = null;
+        
         #endregion
 
         #region Endereço
@@ -33,7 +28,7 @@ namespace Projeto_Contabilidade.Client.Pages.funcionario
 
         public FuncionarioViewModel()
         {
-            this.Empresa = new vmEmpresa();
+            this.Empresa = new Empresa();
             this.Endereco = new Endereco();
         }
     }
