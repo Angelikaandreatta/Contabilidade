@@ -158,7 +158,6 @@
         contatoEditar.telefone = vmContato.Telefone;
         contatoEditar.setor = vmContato.Setor;
 
-        vmContato.Cliente = new vmCliente();
         if (vmContato.Cliente.Codigo_Cliente == 0)
         {
             modal.Open("Selecione o contato", "CadastroContato");
