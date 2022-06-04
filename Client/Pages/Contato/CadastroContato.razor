@@ -21,7 +21,7 @@
                         <div class="form__inputs">
                             <div class="field__control">
                                 <label>Cliente</label>
-                                <InputSelect @onclick =@(() => Console.WriteLine(@vmContato.Cliente.Codigo_Cliente)) class="field__input" @bind-Value="vmContato.Cliente.Codigo_Cliente">
+                                <InputSelect @onclick=@(() => Console.WriteLine(@vmContato.Cliente.Codigo_Cliente)) class="field__input" @bind-Value="vmContato.Cliente.Codigo_Cliente">
                                     @if (clientes.Count > 0)
                                     {
                                         <option value="0">Selecione</option>
@@ -161,7 +161,7 @@
         vmContato.Cliente = new vmCliente();
         if (vmContato.Cliente.Codigo_Cliente == 0)
         {
-            modal.Open("Selecione o cliente", "CadastroContato");
+            modal.Open("Selecione o contato", "CadastroContato");
         }
         else
         {
@@ -258,8 +258,8 @@
     {
         try
         {
-            Cliente clienteExcluir = new Cliente();
-            string url = $"https://localhost:44388/Cliente/Excluir?pCodContato={vmContato.Cod_Contato}";
+            Contato contatoExcluir = new Contato();
+            string url = $"https://localhost:44388/Contato/Excluir?pCodContato={vmContato.Cod_Contato}";
             var response = await httpClient.DeleteAsync(url);
 
             if (response.IsSuccessStatusCode == true)
