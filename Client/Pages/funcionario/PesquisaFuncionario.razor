@@ -1,8 +1,9 @@
 ﻿@page "/PesquisaFuncionario"
 @using Projeto_Contabilidade.Client.Componentes.Tabela;
+@using Projeto_Contabilidade.Client.Componentes.Modal;
 @using Negocio.Cadastro;
 @using Newtonsoft.Json;
-@inject HttpClient httpCliente;
+@inject HttpClient httpClient;
 @inject NavigationManager NavigationManager;
 
 @if (loading)
@@ -24,6 +25,8 @@ else
             <th scope="col">Nome</th>
             <th scope="col">Cargo</th>
             <th scope="col">Data Nascimento</th>
+            <th scope="col">CPF</th>
+            <th scope="col">Email</th>
             <th scope="col">
                 Ações
             </th>
@@ -31,7 +34,7 @@ else
         <tbody>
             @foreach (EfetivoViewModel efetivo in efetivos)
             {
-                <tr @onclick=@(() => NavigationManager.NavigateTo("InformacaoFuncionario"))>
+                <tr>
                     <td>
                         @efetivo.Nome
                     </td>
@@ -42,18 +45,24 @@ else
                         @efetivo.Data_Nascimento
                     </td>
                     <td>
+                        @efetivo.Cpf
+                    </td>
+                    <td>
+                        @efetivo.Email
+                    </td>
+                    <td>
                         <div>
                             <button type="button" class="btn btn-outline-success"
-                            @onclick=@(() => NavigationManager.NavigateTo("CadastroFuncionario"))>
+                            @onclick=@(() => NavigationManager.NavigateTo($"CadastroFuncionario/{efetivo.Codigo_Efetivo}/0"))>
                                 Editar
                             </button>
-                            <button type="button" class="btn btn-outline-danger">Deletar</button>
+                            <button @onclick=" () => ExcluirEfetivo(efetivo.Codigo_Efetivo)" type="button" class="btn btn-outline-danger">Deletar</button>
                         </div>
                     </td>
                 </tr>
             }
             <tr>
-                <td colspan=4 class="text-center">
+                <td colspan=6 class="text-center">
                     <button class="btn btn-outline-primary"
                         @onclick=@(() => NavigationManager.NavigateTo("CadastroFuncionario"))>
                         Adicionar Funcionario
@@ -63,11 +72,15 @@ else
         </tbody>
     </table>
 }
+
+<Modal @ref=modal></Modal>
+
 @code {
 
     public FuncionarioViewModel funcionario = new FuncionarioViewModel();
     List<FuncionarioViewModel> funcionarios = new List<FuncionarioViewModel>();
     List<EfetivoViewModel> efetivos = new List<EfetivoViewModel>();
+    private Modal modal { get; set; }
     public string[] tableHeaders = { "Nome", "Cargo", "Data Nascimento" };
     private bool loading = false;
 
@@ -88,7 +101,7 @@ else
         {
             loading = true;
             string url = $"https://localhost:44388/Efetivo/Listar";
-            var response = await httpCliente.GetAsync(url);
+            var response = await httpClient.GetAsync(url);
 
             if (response.IsSuccessStatusCode == true)
             {
@@ -102,7 +115,7 @@ else
                     efetivo.Codigo_Efetivo = efetivoRetorno.codigo_efetivo.ToString();
                     efetivo.Nome = efetivoRetorno.nome;
                     efetivo.Cpf = efetivoRetorno.cpf;
-                    efetivo.Data_Nascimento = efetivoRetorno.data_Nascimento.ToString();
+                    efetivo.Data_Nascimento = efetivoRetorno.data_Nascimento;
                     efetivo.Email = efetivoRetorno.email;
                     efetivo.Cargo = efetivoRetorno.cargo;
                     efetivo.Empresa = efetivoRetorno.empresa;
@@ -120,7 +133,34 @@ else
         {
             loading = false;
         }
+    }
 
+    public async Task ExcluirEfetivo(string codigoEfetivo)
+    {
+
+        try
+        {
+            string url = $"https://localhost:44388/Efetivo/Excluir?pCodEfetivo={codigoEfetivo}";
+            var response = await httpClient.DeleteAsync(url);
+
+            if (response.IsSuccessStatusCode == true)
+            {
+                await ListarFuncionario();
+                modal.Open("Funcionário excluído com sucesso", "Excluir Efetivo" ,"PesquisaFuncionario");
+            }
+            else
+            {
+                modal.Open("Erro ao excluir o funcionário", "Excluir Efetivo" ,"PesquisaFuncionario");
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+        finally
+        {
+            StateHasChanged();
+        }
     }
 
 }

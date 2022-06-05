@@ -1,5 +1,4 @@
-﻿@page "/CadastroContato"
-@page "/CadastroContato/{codContato?}"
+﻿@page "/CadastroContato/{codContato?}"
 @inject HttpClient httpClient
 @using Projeto_Contabilidade.Client.Componentes.Modal
 @using Projeto_Contabilidade.Client.Pages.cliente
@@ -8,28 +7,34 @@
 @using Projeto_Contabilidade.Client.Componentes.Steper
 @using Newtonsoft.Json
 
-<div class="card">
-    <h4 class="card-header">@formTitle</h4>
-    <div class="card-body">
-        <EditForm Model="vmContato">
-            <Steper>
-                <Step Icon="oi-info" Text="Informações Gerais" Value="Step1" Enabled="IsEnabled">
-                    <div class="form__div">
-                        <h3 class="form__title">
-                            Informações Gerais
-                        </h3>
-                        <div class="form__inputs">
-                            <div class="field__control">
-                                <label>Cliente</label>
-                                <InputSelect @onclick=@(() => Console.WriteLine(@vmContato.Cliente.Codigo_Cliente)) class="field__input" @bind-Value="vmContato.Cliente.Codigo_Cliente">
-                                    @if (clientes.Count > 0)
-                                    {
+@if (loading)
+{
+    <h3>CARREGANDO ...</h3>
+}
+else
+{
+    <div class="card">
+        <h4 class="card-header">@formTitle</h4>
+        <div class="card-body">
+            <EditForm Model="vmContato">
+                <Steper>
+                    <Step Icon="oi-info" Text="Informações Gerais" Value="Step1" Enabled="IsEnabled">
+                        <div class="form__div">
+                            <h3 class="form__title">
+                                Informações Gerais
+                            </h3>
+                            <div class="form__inputs">
+                                <div class="field__control">
+                                    <label>Cliente</label>
+                                    <InputSelect @onclick=@(() => Console.WriteLine(@vmContato.Cliente.Codigo_Cliente)) class="field__input" @bind-Value="vmContato.Cliente.Codigo_Cliente">
+                                        @if (clientes.Count > 0)
+                                        {
                                         <option value="0">Selecione</option>
                                         @foreach (ClienteViewModel cliente in clientes)
-                                        {
+                                            {
                                             <option value="@cliente.Codigo_Cliente">@($"{cliente.Codigo_Cliente} - {cliente.Razao_Social}")</option>
+                                            }
                                         }
-                                    }
                                 </InputSelect>
                             </div>
                             <div class="field__control">
@@ -65,19 +70,20 @@
 
                 <button @onclick="Gravar" class="btn btn-lg btn-outline-primary">
                     @if (string.IsNullOrWhiteSpace(vmContato.Cod_Contato) == false)
-                    {
-                        <div>Editar</div>
-                    }
-                    else
-                    {
-                        <div>Gravar</div>
-                    }
-                </button>
-            </div>
-        </EditForm>
+                        {
+                            <div>Editar</div>
+                        }
+                        else
+                        {
+                            <div>Gravar</div>
+                        }
+                    </button>
+                </div>
+            </EditForm>
+        </div>
     </div>
-    <Modal @ref="modal"></Modal>
-</div>
+}
+<Modal @ref="modal"></Modal>
 
 @code {
     [Parameter] public string codContato { get; set; }
@@ -92,7 +98,10 @@
     async protected override Task OnInitializedAsync()
     {
         await ListarCliente();
+    }
 
+    protected override void OnInitialized()
+    {
         if (codContato != null)
         {
             formTitle = "Editar Contato";
@@ -123,6 +132,7 @@
     {
         try
         {
+            loading = true;
             string url = $"https://localhost:44388/Cliente/Listar";
             var response = await httpClient.PostAsJsonAsync(url, clientTemp);
             if (response.IsSuccessStatusCode == true)
@@ -147,10 +157,15 @@
         {
             throw new InvalidOperationException(ex.Message);
         }
+        finally
+        {
+            loading = false;
+        }
     }
 
     private async Task EditarContato()
     {
+        loading = true;
         Contato contatoEditar = new Contato();
         contatoEditar.cod_Contato = int.Parse(vmContato.Cod_Contato);
         contatoEditar.nome = vmContato.Nome_Contato;
@@ -160,7 +175,7 @@
 
         if (vmContato.Cliente.Codigo_Cliente == 0)
         {
-            modal.Open("Selecione o contato","Cadastrar Contato" ,"CadastroContato");
+            modal.Open("Selecione o contato", "Cadastrar Contato", "CadastroContato");
         }
         else
         {
@@ -185,11 +200,11 @@
                     vmContato.Telefone = contatoRetorno.telefone;
                     vmContato.Setor = contatoRetorno.setor;
 
-                    modal.Open("Contato editado com sucesso", "Editar Contato","PesquisaContato");
+                    modal.Open("Contato editado com sucesso", "Editar Contato", "PesquisaContato");
                 }
                 else
                 {
-                    modal.Open("Erro ao editar o Contato", "Editar Contato","CadastroContato");
+                    modal.Open("Erro ao editar o Contato", "Editar Contato", "CadastroContato");
                 }
             }
             catch (InvalidOperationException ex)
@@ -198,6 +213,7 @@
             }
             finally
             {
+                loading = false;
                 StateHasChanged();
             }
         }
@@ -205,6 +221,7 @@
 
     private async Task CadastrarContato()
     {
+        loading = true;
         Contato contatoGravar = new Contato();
         contatoGravar.nome = vmContato.Nome_Contato;
         contatoGravar.email = vmContato.Email;
@@ -213,7 +230,7 @@
 
         if (vmContato.Cliente.Codigo_Cliente == 0)
         {
-            modal.Open("Selecione o cliente", "Cadastrar Contato","CadastroContato");
+            modal.Open("Selecione o cliente", "Cadastrar Contato", "CadastroContato");
         }
         else
         {
@@ -234,12 +251,12 @@
                     vmContato.Email = contatoRetorno.email;
                     vmContato.Telefone = contatoRetorno.telefone;
                     vmContato.Setor = contatoRetorno.setor;
-                    modal.Open("Contato gravado com sucesso", "Cadastrar Contato","PesquisaContato");
+                    modal.Open("Contato gravado com sucesso", "Cadastrar Contato", "PesquisaContato");
 
                 }
                 else
                 {
-                    modal.Open("Erro ao gravar o Contato", "Cadastrar Contato","CadastroContato");
+                    modal.Open("Erro ao gravar o Contato", "Cadastrar Contato", "CadastroContato");
                 }
             }
             catch (InvalidOperationException ex)
@@ -248,6 +265,7 @@
             }
             finally
             {
+                loading = false;
                 StateHasChanged();
             }
         }
@@ -264,12 +282,12 @@
             if (response.IsSuccessStatusCode == true)
             {
                 LimparTelaContato();
-                modal.Open("Contato excluído com sucesso", "Excluir Contato","PesquisaContato");
+                modal.Open("Contato excluído com sucesso", "Excluir Contato", "PesquisaContato");
 
             }
             else
             {
-                modal.Open("Erro ao excluir o contato", "Excluir Contato","PesquisaContato");
+                modal.Open("Erro ao excluir o contato", "Excluir Contato", "PesquisaContato");
             }
         }
         catch (InvalidOperationException ex)
@@ -286,7 +304,7 @@
     {
         try
         {
-            this.loading = true;
+            loading = true;
             string url = $"https://localhost:44388/Contato/Carregar?pCodContato={codContato}";
             var response = await httpClient.GetAsync(url);
             if (response.IsSuccessStatusCode == true)
