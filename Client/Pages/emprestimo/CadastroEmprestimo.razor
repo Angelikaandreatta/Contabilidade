@@ -1,0 +1,274 @@
+﻿@page "/CadastroEmprestimo/{codEmprestimo?}"
+@inject HttpClient httpClient
+@inject IJSRuntime jsRuntime
+@inject NavigationManager NavigationManager;
+@using System.Text
+@using Negocio.Cadastro
+@using Newtonsoft.Json
+@using Projeto_Contabilidade.Client.Componentes.Steper
+@using Projeto_Contabilidade.Client.Componentes.Input
+@using Projeto_Contabilidade.Client.Componentes.Modal
+@using Projeto_Contabilidade.Client.Pages.funcionario
+@using Projeto_Contabilidade.Client.Pages.emprestimo
+@using Projeto_Contabilidade.Client.Pages.periodico
+
+@if (loading)
+{
+    <h3>CARREGANDO...</h3>
+}
+else
+{
+    <div class="card">
+        <div class="card-header">@formTitle</div>
+        <div class="card-body">
+            <EditForm Model="vmEmprestimo">
+                <Steper>
+                    <Step Text="Informações pessoais" Icon="oi-info" Value="Step1" Enabled="@IsEnabled">
+                        <div class="form__div">
+                            <h3 class="form__title">
+                                Informações Empréstimo
+                            </h3>
+                            <div class="field__control">
+                                <label>Efetivo</label>
+                                <InputSelect @onclick=@(() => Console.WriteLine(@vmEmprestimo.Efetivo.codigo_Efetivo)) class="field__input" @bind-Value="vmEmprestimo.Efetivo.codigo_Efetivo">
+                                    @if (listaEfetivos.Count > 0)
+                                    {
+                                    <option value="0">Selecione</option>
+                                    @foreach (EfetivoViewModel efetivo in listaEfetivos)
+                                        {
+                                        <option value="@efetivo.Codigo_Efetivo">@($"{efetivo.Codigo_Efetivo} - {efetivo.Nome}")</option>
+                                        }
+                                    }
+                            </InputSelect>
+                        </div>
+
+                        <div class="field__control">
+                            <label>Periodico</label>
+                            <InputSelect @onclick=@(() => Console.WriteLine(@vmEmprestimo.Periodico.codigo_Periodico)) class="field__input" @bind-Value="vmEmprestimo.Periodico.codigo_Periodico">
+                                @if (listaPeriodicos.Count > 0)
+                                    {
+                                    <option value="0">Selecione</option>
+                                    @foreach (PeriodicoViewModel periodico in listaPeriodicos)
+                                        {
+                                        <option value="@periodico.Codigo_Periodico">@($"{periodico.Codigo_Periodico} - {periodico.Nome}")</option>
+                                        }
+                                    }
+                            </InputSelect>
+                        </div>
+
+                        <div class="field__control">
+                            <label>Data Empréstimo</label>
+                            <InputDate class="field__input field__input--active" @bind-Value="vmEmprestimo.data_Emprestimo"></InputDate>
+                        </div>
+
+                        <div class="field__control">
+                            <label>Data Devolução</label>
+                            <InputDate class="field__input field__input--active" @bind-Value="vmEmprestimo.data_Devolucao"></InputDate>
+                        </div>
+                    </div>
+                </Step>
+            </Steper>
+            <div class="form__buttons">
+                <button @onclick="Excluir" class="btn btn-lg btn-outline-danger ">
+                    Excluir
+                </button>
+                <button @onclick="LimparTelaPeriodico" class="btn btn-lg btn-outline-primary">
+                    Limpar
+                </button>
+                <button @onclick="Gravar" class="btn btn-lg btn-outline-primary">
+                    @if (string.IsNullOrWhiteSpace(vmEmprestimo.codigo_Emprestimo) == false)
+                        {
+                            <div>Editar</div>
+                        }
+                        else
+                        {
+                            <div>Gravar</div>
+                        }
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+        <Modal @ref="modal"></Modal>
+    </div>
+}
+
+@code {
+    [Parameter] public string codEmprestimo { get; set; }
+    private Modal modal = new Modal();
+    EmprestimoViewModel vmEmprestimo = new EmprestimoViewModel();
+    private string formTitle = "Cadastro de Empréstimo";
+    public bool IsEnabled = true;
+    public bool loading = false;
+    private string error;
+
+    List<EfetivoViewModel> listaEfetivos = new List<EfetivoViewModel>();
+    List<PeriodicoViewModel> listaPeriodicos = new List<PeriodicoViewModel>();
+    public Periodico periodicoObj = new Periodico();
+
+    async protected override Task OnInitializedAsync()
+    {
+        await ListarEfetivo();
+        await ListarPeriodico();
+    }
+
+
+    protected override async void OnParametersSet()
+    {
+        if (codEmprestimo != null)
+        {
+            await CarregarEmprestimo();
+        }
+    }
+
+    public async Task Gravar()
+    {
+        if (string.IsNullOrWhiteSpace(vmEmprestimo.codigo_Emprestimo) == true)
+        {
+            await CadastrarEmprestimo();
+        }
+        else
+        {
+            await EditarEmprestimo();
+        }
+    }
+
+    protected async Task ListarEfetivo()
+    {
+        try
+        {
+            string url = $"https://localhost:44388/Efetivo/Listar";
+            var response = await httpClient.GetAsync(url);
+
+            if (response.IsSuccessStatusCode == true)
+            {
+                List<Efetivo> efetivosRetorno = JsonConvert.DeserializeObject<List<Efetivo>>(await response.Content.ReadAsStringAsync());
+                listaEfetivos.RemoveRange(0, listaEfetivos.Count);
+                foreach (Efetivo efetivoRetorno in efetivosRetorno)
+                {
+                    EfetivoViewModel efetivo = new EfetivoViewModel();
+                    efetivo.Codigo_Efetivo = efetivoRetorno.codigo_efetivo.ToString();
+                    efetivo.Nome = efetivoRetorno.nome;
+                    efetivo.Cpf = efetivoRetorno.cpf;
+                    efetivo.Data_Nascimento = efetivoRetorno.data_Nascimento.ToString();
+                    efetivo.Email = efetivoRetorno.email;
+                    efetivo.Cargo = efetivoRetorno.cargo;
+                    efetivo.Empresa = efetivoRetorno.empresa;
+                    efetivo.Endereco = efetivoRetorno.endereco;
+
+                    listaEfetivos.Add(efetivo);
+                }
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+    }
+
+    private async Task EditarEmprestimo()
+    {
+
+    }
+
+    private async Task CadastrarEmprestimo()
+    {
+        Emprestimo emprestimoGravar = new Emprestimo();
+    }
+
+    protected async Task ListarPeriodico()
+    {
+        try
+        {
+            string url = $"https://localhost:44388/Periodico/Listar";
+            var response = await httpClient.PostAsJsonAsync(url, periodicoObj);
+
+            if (response.IsSuccessStatusCode == true)
+            {
+                List<Periodico> periodicosRetorno = JsonConvert.DeserializeObject<List<Periodico>>(await response.Content.ReadAsStringAsync());
+                listaPeriodicos.RemoveRange(0, listaPeriodicos.Count);
+                foreach (Periodico periodicoRetorno in periodicosRetorno)
+                {
+                    PeriodicoViewModel periodico = new PeriodicoViewModel();
+                    periodico.Codigo_Periodico = periodicoRetorno.codigo_Periodico.ToString();
+                    periodico.Nome = periodicoRetorno.Nome;
+                    periodico.Autor = periodicoRetorno.Autor;
+                    periodico.Editora = periodicoRetorno.Editora;
+                    periodico.Status = periodicoRetorno.Status;
+
+                    listaPeriodicos.Add(periodico);
+                }
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+    }
+
+    private async Task CarregarEmprestimo()
+    {
+        try
+        {
+            this.loading = true;
+            string url = $"https://localhost:44388/Emprestimo/Carregar?pCodEmprestimo={codEmprestimo}";
+            var response = await httpClient.GetAsync(url);
+            if (response.IsSuccessStatusCode == true)
+            {
+                Emprestimo emprestimoRetorno = JsonConvert.DeserializeObject<Emprestimo>(await response.Content.ReadAsStringAsync());
+                vmEmprestimo.codigo_Emprestimo = emprestimoRetorno.cod_Emprestimo.ToString();
+                vmEmprestimo.Efetivo = new vmEfetivo();
+                vmEmprestimo.Efetivo.codigo_Efetivo = emprestimoRetorno.efetivo.codigo_efetivo;
+                vmEmprestimo.Periodico = new vmPeriodico();
+                vmEmprestimo.Periodico.codigo_Periodico = emprestimoRetorno.periodico.codigo_Periodico;
+                vmEmprestimo.data_Emprestimo = emprestimoRetorno.data_Emprestimo;
+                vmEmprestimo.data_Devolucao = emprestimoRetorno.data_Devolucao;
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+        finally
+        {
+            this.loading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task Excluir()
+    {
+        try
+        {
+            string url = $"https://localhost:44388/Emprestimo/Excluir?pCodEmprestimo={vmEmprestimo.codigo_Emprestimo}";
+            var response = await httpClient.DeleteAsync(url);
+
+            if (response.IsSuccessStatusCode == true)
+            {
+                LimparTelaPeriodico();
+                modal.Open("Empréstimo excluído com sucesso", "Excluir Empréstimo", "PesquisaEmprestimo");
+
+            }
+            else
+            {
+                modal.Open("Erro ao excluir o contato", "Excluir Empréstimo", "PesquisaEmprestimo");
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+        finally
+        {
+            StateHasChanged();
+        }
+    }
+
+    public void LimparTelaPeriodico()
+    {
+        vmEmprestimo.codigo_Emprestimo = "";
+        vmEmprestimo.Efetivo.codigo_Efetivo = 0;
+        vmEmprestimo.Periodico.codigo_Periodico = 0;
+        vmEmprestimo.data_Emprestimo = null;
+        vmEmprestimo.data_Devolucao = null;
+    }
+}

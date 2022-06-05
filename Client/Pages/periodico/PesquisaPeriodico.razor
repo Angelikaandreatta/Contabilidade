@@ -122,12 +122,12 @@ else
             if (response.IsSuccessStatusCode == true)
             {
                 await listarPeriodicos();
-                modal.Open("Periodico excluído com sucesso", "PesquisaPeriodico");
+                modal.Open("Periodico excluído com sucesso", "Excluir Periodico", "PesquisaPeriodico");
 
             }
             else
             {
-                modal.Open("Erro ao excluir o periodico", "PesquisaPeriodico");
+                modal.Open("Erro ao excluir o periodico", "Excluir Periodico", "PesquisaPeriodico");
             }
         }
         catch (InvalidOperationException ex)
