@@ -30,7 +30,7 @@ else
                             </h3>
                             <div class="field__control">
                                 <label>Efetivo</label>
-                                <InputSelect @onclick=@(() => Console.WriteLine(@vmEmprestimo.Efetivo.codigo_Efetivo)) class="field__input" @bind-Value="vmEmprestimo.Efetivo.codigo_Efetivo">
+                                <InputSelect @onclick=@(() => Console.WriteLine(@vmEmprestimo.Efetivo.codigo_efetivo)) class="field__input" @bind-Value="vmEmprestimo.Efetivo.codigo_efetivo">
                                     @if (listaEfetivos.Count > 0)
                                     {
                                     <option value="0">Selecione</option>
@@ -97,7 +97,7 @@ else
     public bool IsEnabled = true;
     public bool loading = false;
     private string error;
-
+    public Emprestimo emprestimoObj = new Emprestimo();
     List<EfetivoViewModel> listaEfetivos = new List<EfetivoViewModel>();
     List<PeriodicoViewModel> listaPeriodicos = new List<PeriodicoViewModel>();
     public Periodico periodicoObj = new Periodico();
@@ -167,24 +167,22 @@ else
         loading = true;
         Emprestimo emprestimoGravar = new Emprestimo();
 
-        if (vmEmprestimo.Efetivo.codigo_Efetivo == 0)
+        if (vmEmprestimo.Efetivo.codigo_efetivo.ToString() == "")
         {
             modal.Open("Selecione o efetivo", "Cadastrar Empréstimo", "CadastroEmprestimo");
         }
         else
         {
-            emprestimoGravar.efetivo = new Efetivo();
-            emprestimoGravar.efetivo.codigo_efetivo = vmEmprestimo.Efetivo.codigo_Efetivo;
+            emprestimoGravar.efetivo = vmEmprestimo.Efetivo;
         }
 
-        if (vmEmprestimo.Periodico.codigo_Periodico == 0)
+        if (vmEmprestimo.Periodico.codigo_Periodico.ToString() == "")
         {
             modal.Open("Selecione o periodico", "Cadastrar Empréstimo", "CadastroEmprestimo");
         }
         else
         {
-            emprestimoGravar.periodico = new Periodico();
-            emprestimoGravar.periodico.codigo_Periodico = vmEmprestimo.Periodico.codigo_Periodico;
+            emprestimoGravar.periodico = vmEmprestimo.Periodico;
         }
 
         emprestimoGravar.data_Emprestimo = vmEmprestimo.data_Emprestimo;
@@ -198,10 +196,8 @@ else
             {
                 Emprestimo emprestimoRetorno = JsonConvert.DeserializeObject<Emprestimo>(await response.Content.ReadAsStringAsync());
                 vmEmprestimo.codigo_Emprestimo = emprestimoRetorno.cod_Emprestimo.ToString();
-                vmEmprestimo.Efetivo = new vmEfetivo();
-                vmEmprestimo.Efetivo.codigo_Efetivo = emprestimoRetorno.efetivo.codigo_efetivo;
-                vmEmprestimo.Periodico = new vmPeriodico();
-                vmEmprestimo.Periodico.codigo_Periodico = emprestimoRetorno.periodico.codigo_Periodico;
+                vmEmprestimo.Efetivo = emprestimoRetorno.efetivo;
+                vmEmprestimo.Periodico = emprestimoRetorno.periodico;
 
                 modal.Open("Emprésimo gravado com sucesso", "Cadastrar Empréstimo", "PesquisaEmprestimo");
 
@@ -226,24 +222,22 @@ else
     {
         loading = true;
         Emprestimo emprestimoEditar = new Emprestimo();
-        if (vmEmprestimo.Efetivo.codigo_Efetivo == 0)
+        if (vmEmprestimo.Efetivo.ToString() == "")
         {
             modal.Open("Selecione o efetivo", "Cadastrar Empréstimo", "CadastroEmprestimo");
         }
         else
         {
-            emprestimoEditar.efetivo = new Efetivo();
-            emprestimoEditar.efetivo.codigo_efetivo = vmEmprestimo.Efetivo.codigo_Efetivo;
+            emprestimoEditar.efetivo = vmEmprestimo.Efetivo;
         }
 
-        if (vmEmprestimo.Periodico.codigo_Periodico == 0)
+        if (vmEmprestimo.Periodico.ToString() == "")
         {
             modal.Open("Selecione o periodico", "Cadastrar Empréstimo", "CadastroEmprestimo");
         }
         else
         {
-            emprestimoEditar.periodico = new Periodico();
-            emprestimoEditar.periodico.codigo_Periodico = vmEmprestimo.Periodico.codigo_Periodico;
+            emprestimoEditar.periodico = vmEmprestimo.Periodico;
         }
 
         emprestimoEditar.data_Emprestimo = vmEmprestimo.data_Emprestimo;
@@ -260,10 +254,10 @@ else
             {
                 Emprestimo emprestimoRetorno = JsonConvert.DeserializeObject<Emprestimo>(await response.Content.ReadAsStringAsync());
                 vmEmprestimo.codigo_Emprestimo = emprestimoRetorno.cod_Emprestimo.ToString();
-                vmEmprestimo.Efetivo = new vmEfetivo();
-                vmEmprestimo.Efetivo.codigo_Efetivo = emprestimoRetorno.efetivo.codigo_efetivo;
-                vmEmprestimo.Periodico = new vmPeriodico();
-                vmEmprestimo.Periodico.codigo_Periodico = emprestimoRetorno.periodico.codigo_Periodico;
+                vmEmprestimo.Efetivo = emprestimoRetorno.efetivo;
+                vmEmprestimo.Periodico = emprestimoRetorno.periodico;
+                vmEmprestimo.data_Emprestimo = emprestimoRetorno.data_Emprestimo;
+                vmEmprestimo.data_Devolucao = emprestimoRetorno.data_Devolucao;
 
                 modal.Open("Emprésimo editado com sucesso", "Editar Empréstimo", "PesquisaEmprestimo");
             }
@@ -319,15 +313,13 @@ else
         {
             this.loading = true;
             string url = $"https://localhost:44388/Emprestimo/Carregar?pCodEmprestimo={codEmprestimo}";
-            var response = await httpClient.GetAsync(url);
+            var response = await httpClient.PostAsJsonAsync(url, emprestimoObj);
             if (response.IsSuccessStatusCode == true)
             {
                 Emprestimo emprestimoRetorno = JsonConvert.DeserializeObject<Emprestimo>(await response.Content.ReadAsStringAsync());
                 vmEmprestimo.codigo_Emprestimo = emprestimoRetorno.cod_Emprestimo.ToString();
-                vmEmprestimo.Efetivo = new vmEfetivo();
-                vmEmprestimo.Efetivo.codigo_Efetivo = emprestimoRetorno.efetivo.codigo_efetivo;
-                vmEmprestimo.Periodico = new vmPeriodico();
-                vmEmprestimo.Periodico.codigo_Periodico = emprestimoRetorno.periodico.codigo_Periodico;
+                vmEmprestimo.Efetivo = emprestimoRetorno.efetivo;
+                vmEmprestimo.Periodico = emprestimoRetorno.periodico;
                 vmEmprestimo.data_Emprestimo = emprestimoRetorno.data_Emprestimo;
                 vmEmprestimo.data_Devolucao = emprestimoRetorno.data_Devolucao;
             }
@@ -346,7 +338,7 @@ else
     public void LimparTelaPeriodico()
     {
         vmEmprestimo.codigo_Emprestimo = "";
-        vmEmprestimo.Efetivo.codigo_Efetivo = 0;
+        vmEmprestimo.Efetivo.codigo_efetivo = 0;
         vmEmprestimo.Periodico.codigo_Periodico = 0;
         vmEmprestimo.data_Emprestimo = null;
         vmEmprestimo.data_Devolucao = null;

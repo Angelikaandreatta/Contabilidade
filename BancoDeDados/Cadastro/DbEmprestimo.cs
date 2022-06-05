@@ -96,6 +96,7 @@ namespace BancoDeDados.Cadastro
             sql.CommandText = "SELECT e.*, p.status FROM Emprestimo as E";
             sql.CommandText += " inner join Periodico as P";
             sql.CommandText += " on E.codigo_Periodico = P.codigo_Periodico";
+            pEmprestimo.periodico = new Periodico();
             if (pEmprestimo.periodico.Status == "indisponivel")
             {
                 sql.CommandText += " where status = 'indisponivel'";

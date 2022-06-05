@@ -7,32 +7,18 @@ namespace Projeto_Contabilidade.Client.Pages.emprestimo
     {
         public EmprestimoViewModel()
         {
-            this.Efetivo = new vmEfetivo();
-            this.Periodico = new vmPeriodico();
+            this.Efetivo = new Efetivo();
+            this.Periodico = new Periodico();
         }
 
         public string codigo_Emprestimo { get; set; } = "";
 
-        public vmEfetivo Efetivo;
+        public Efetivo Efetivo { get; set; } = null;
 
-        public vmPeriodico Periodico;
+        public Periodico Periodico { get; set; } = null;
 
         public DateTime? data_Emprestimo { get; set; } = null;
 
         public DateTime? data_Devolucao { get; set; } = null;
-    }
-
-    public class vmEfetivo
-    {
-        public int codigo_Efetivo { get; set; } = 0;
-
-        public string nome { get; set; } = "";
-    }
-
-    public class vmPeriodico
-    {
-        public int codigo_Periodico { get; set; } = 0;
-
-        public string nome { get; set; } = "";
     }
 }

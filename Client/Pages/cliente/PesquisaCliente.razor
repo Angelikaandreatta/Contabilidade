@@ -15,7 +15,7 @@ else
         <h2 class="">Clientes Cadastrados</h2>
         <div style="width:250px" class="d-flex form-control">
             <span class="oi oi-magnifying-glass"></span>
-            <input style="outline:0" type="text" placeholder="Pesquisa" class="w-100 h-100 border-0"/>
+            <input style="outline:0" type="text" placeholder="Pesquisa" class="w-100 h-100 border-0" />
         </div>
     </div>
 
@@ -37,7 +37,7 @@ else
                         <button @onclick=@(() => NavigationManager.NavigateTo($"InformacaoCliente/{cliente.Codigo_Cliente}")) class="btn btn- btn-primary">
                             <span class="oi oi-info"></span>
                         </button>
-                        
+
                     </td>
                     <td>@cliente.Razao_Social</td>
                     <td>@cliente.Cnpj</td>
@@ -128,12 +128,12 @@ else
             if (response.IsSuccessStatusCode == true)
             {
                 await ListarCliente();
-                modal.Open("Cliente excluído com sucesso","Excluir Cliente" ,"PesquisaCliente");
+                modal.Open("Cliente excluído com sucesso", "Excluir Cliente", "PesquisaCliente");
 
             }
             else
             {
-                modal.Open("Erro ao excluir o cliente", "Excluir Cliente","PesquisaCliente");
+                modal.Open("Erro ao excluir o cliente", "Excluir Cliente", "PesquisaCliente");
             }
         }
         catch (InvalidOperationException ex)
@@ -141,5 +141,4 @@ else
             throw new InvalidOperationException(ex.Message);
         }
     }
-
-    }
+}
