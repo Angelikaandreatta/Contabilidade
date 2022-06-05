@@ -33,7 +33,7 @@ else
                             <div class="form__inputs">
                                 <div class="field__control">
                                     <label>Efetivo</label>
-                                    <InputSelect @onclick=@(() => Console.WriteLine(@vmEmprestimo.Efetivo.codigo_Efetivo)) class="field__input" @bind-Value="vmEmprestimo.Efetivo.codigo_Efetivo">
+                                    <InputSelect @onclick=@(() => Console.WriteLine(@vmEmprestimo.Efetivo.codigo_efetivo)) class="field__input" @bind-Value="vmEmprestimo.Efetivo.codigo_efetivo">
                                         @if (listaEfetivos.Count > 0)
                                         {
                                         <option value="0">Selecione</option>
@@ -207,6 +207,8 @@ else
                 vmEmprestimo.codigo_Emprestimo = emprestimoRetorno.cod_Emprestimo.ToString();
                 vmEmprestimo.Efetivo = emprestimoRetorno.efetivo;
                 vmEmprestimo.Periodico = emprestimoRetorno.periodico;
+                vmEmprestimo.data_Emprestimo = emprestimoRetorno.data_Emprestimo;
+                vmEmprestimo.data_Devolucao = emprestimoRetorno.data_Devolucao;
 
                 modal.Open("Emprésimo gravado com sucesso", "Cadastrar Empréstimo", "PesquisaEmprestimo");
 
@@ -231,6 +233,7 @@ else
     {
         loading = true;
         Emprestimo emprestimoEditar = new Emprestimo();
+        emprestimoEditar.cod_Emprestimo = int.Parse(vmEmprestimo.codigo_Emprestimo);
         if (vmEmprestimo.Efetivo.ToString() == "")
         {
             modal.Open("Selecione o efetivo", "Cadastrar Empréstimo", "CadastroEmprestimo");
@@ -268,7 +271,7 @@ else
                 vmEmprestimo.data_Emprestimo = emprestimoRetorno.data_Emprestimo;
                 vmEmprestimo.data_Devolucao = emprestimoRetorno.data_Devolucao;
 
-                modal.Open("Emprésimo editado com sucesso", "Editar Empréstimo", "PesquisaEmprestimo");
+                modal.Open("Empréstimo editado com sucesso", "Editar Empréstimo", "PesquisaEmprestimo");
             }
             else
             {
@@ -323,10 +326,12 @@ else
 
     private async Task CarregarEmprestimo()
     {
+        emprestimoObj.cod_Emprestimo = int.Parse(codEmprestimo);
         try
         {
             this.loading = true;
-            string url = $"https://localhost:44388/Emprestimo/Carregar?pCodEmprestimo={codEmprestimo}";
+            //string url = $"https://localhost:44388/Emprestimo/Carregar?pEmprestimo={codEmprestimo}";
+            string url = $"https://localhost:44388/Emprestimo/Carregar";
             var response = await httpClient.PostAsJsonAsync(url, emprestimoObj);
             if (response.IsSuccessStatusCode == true)
             {
