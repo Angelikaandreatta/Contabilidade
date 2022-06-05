@@ -13,8 +13,8 @@ namespace Projeto_Contabilidade.Client.Pages.funcionario
         public string Cpf { get => cpf; set => cpf = value; }
         private string email { get; set; }
         public string Email { get => email; set => email = value; }
-        private string data_nascimento { get; set; }
-        public string Data_Nascimento { get => data_nascimento; set => data_nascimento = value; }
+        private DateTime? data_nascimento { get; set; }
+        public DateTime? Data_Nascimento { get => data_nascimento; set => data_nascimento = value; }
         #endregion
 
         #region Empresa

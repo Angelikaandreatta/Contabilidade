@@ -1,5 +1,4 @@
-﻿@page "/CadastroContato"
-@page "/CadastroContato/{codContato?}"
+﻿@page "/CadastroContato/{codContato?}"
 @inject HttpClient httpClient
 @using Projeto_Contabilidade.Client.Componentes.Modal
 @using Projeto_Contabilidade.Client.Pages.cliente
@@ -100,7 +99,10 @@ else
     async protected override Task OnInitializedAsync()
     {
         await ListarCliente();
+    }
 
+    protected override void OnInitialized()
+    {
         if (codContato != null)
         {
             formTitle = "Editar Contato";
@@ -131,6 +133,7 @@ else
     {
         try
         {
+            loading = true;
             string url = $"https://localhost:44388/Cliente/Listar";
             var response = await httpClient.PostAsJsonAsync(url, clientTemp);
             if (response.IsSuccessStatusCode == true)
@@ -155,10 +158,15 @@ else
         {
             throw new InvalidOperationException(ex.Message);
         }
+        finally
+        {
+            loading = false;
+        }
     }
 
     private async Task EditarContato()
     {
+        loading = true;
         Contato contatoEditar = new Contato();
         contatoEditar.cod_Contato = int.Parse(vmContato.Cod_Contato);
         contatoEditar.nome = vmContato.Nome_Contato;
@@ -206,6 +214,7 @@ else
             }
             finally
             {
+                loading = false;
                 StateHasChanged();
             }
         }
@@ -213,6 +222,7 @@ else
 
     private async Task CadastrarContato()
     {
+        loading = true;
         Contato contatoGravar = new Contato();
         contatoGravar.nome = vmContato.Nome_Contato;
         contatoGravar.email = vmContato.Email;
@@ -256,6 +266,7 @@ else
             }
             finally
             {
+                loading = false;
                 StateHasChanged();
             }
         }
@@ -294,7 +305,7 @@ else
     {
         try
         {
-            this.loading = true;
+            loading = true;
             string url = $"https://localhost:44388/Contato/Carregar?pCodContato={codContato}";
             var response = await httpClient.GetAsync(url);
             if (response.IsSuccessStatusCode == true)

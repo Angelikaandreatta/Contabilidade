@@ -1,5 +1,4 @@
-﻿@page "/CadastroFuncionario"
-@page "/CadastroFuncionario/{codFuncionario}"
+﻿@page "/CadastroFuncionario/{codFuncionario?}/{pTipoFuncionario?}"
 @inject HttpClient httpClient
 @inject IJSRuntime jsRuntime
 @using System.Text
@@ -10,6 +9,11 @@
 @using Projeto_Contabilidade.Client.Componentes.Modal
 @using Newtonsoft.Json
 
+@if(loading){
+    <h3>CARREGANDO ...</h3>
+}
+else
+{
 <div class="card">
     <h4 class="card-header">@formTitle</h4>
     <div class="card-body">
@@ -23,23 +27,24 @@
                         <div class="form__inputs">
                             <div class="field__control">
                                 <label>Nome</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmEfetivo.Nome"></InputText>
+                                <InputText class="field__input field__input--active" @bind-Value="vmFuncionario.Nome"></InputText>
                             </div>
                             <div class="field__control">
                                 <label>CPF</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmEfetivo.Cpf"></InputText>
+                                <InputText class="field__input field__input--active" @bind-Value="vmFuncionario.Cpf"></InputText>
                             </div>
                             <div class="field__control">
                                 <label>E-Mail</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmEfetivo.Email"></InputText>
+                                <InputText class="field__input field__input--active" @bind-Value="vmFuncionario.Email"></InputText>
                             </div>
                             <div class="field__control">
                                 <label>Data Nascimento</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmEfetivo.Data_Nascimento"></InputText>
+                                <InputDate class="field__input field__input--active" @bind-Value="vmFuncionario.Data_Nascimento"></InputDate>
                             </div>
                             <div class="field__control">
-                                <label>Tipo</label>
+                                <label>Tipo de funcionário</label>
                                 <InputSelect class="field__input field__input--active" @bind-Value="tipoFuncionario">
+                                    <option default>Selecione</option>
                                     <option value="efetivo">Efetivo</option>
                                     <option value="estagiario">Estágiario</option>
                                 </InputSelect>
@@ -48,11 +53,23 @@
                             {
                                 <div class="field__control">
                                     <label>Nome do curso</label>
-                                    <InputText class="field__input field__input--active" @bind-Value="vmEstagiario.nomeCurso"></InputText>
+                                    <InputText class="field__input field__input--active" @bind-Value="vmEstagiario.Nome_Curso"></InputText>
                                 </div>
                                 <div class="field__control">
                                     <label>Data do inicio do curso</label>
-                                    <InputText class="field__input field__input--active" @bind-Value="vmEstagiario.dataInicioCurso"></InputText>
+                                    <InputText class="field__input field__input--active" @bind-Value="vmEstagiario.Data_Inicio_Curso"></InputText>
+                                </div>
+                            }
+                            else if (tipoFuncionario == "efetivo")
+                            {
+                                <div class="field__control">
+                                    <label>Cargo do funcionário</label>
+                                    <InputSelect class="field__input field__input--active" @bind-Value="vmEfetivo.Cargo.nome">
+                                        <option value="suporte">Suporte</option>
+                                        <option value="gestor">Gestor</option>
+                                        <option value="analista">Analista</option>
+                                        <option value="diretor">Diretor</option>
+                                    </InputSelect>
                                 </div>
                             }
                         </div>
@@ -85,14 +102,14 @@
                 </Step>
             </Steper>
             <div class="form__buttons">
-                <button class="btn btn-lg btn-outline-danger">
+                <button @onclick="ExcluirEfetivo" class="btn btn-lg btn-outline-danger">
                     Excluir
                 </button>
                 <button class="btn btn-lg btn-outline-primary">
                     Limpar
                 </button>
 
-                <button class="btn btn-lg btn-outline-primary">
+                <button @onclick="Gravar" class="btn btn-lg btn-outline-primary">
                     @if (string.IsNullOrWhiteSpace(vmEfetivo.Codigo_Efetivo) == false)
                     {
                         <div>Editar</div>
@@ -108,14 +125,20 @@
     </div>
 
     <Modal @ref="modal"></Modal>
-
 </div>
+}
 @code {
 
-    [Parameter]
-    public string codFuncionario { get; set; }
+    public enum EnumTipoFuncionario
+    {
+        efetivo,
+        estagiario
+    }
+
+    [Parameter] public string codFuncionario { get; set; }
+    [Parameter] public string pTipoFuncionario { get; set; }
     FuncionarioViewModel vmFuncionario = new FuncionarioViewModel();
-    EstagionarioViewModel vmEstagiario = new EstagionarioViewModel();
+    EstagiarioViewModel vmEstagiario = new EstagiarioViewModel();
     EfetivoViewModel vmEfetivo = new EfetivoViewModel();
 
     private Modal modal { get; set; }
@@ -132,120 +155,229 @@
         }
     }
 
+    protected override async void OnParametersSet()
+    {
+        if (codFuncionario != null && pTipoFuncionario == "0")
+        {
+            Console.WriteLine("Chegou Aqui");
+            await CarregarEfetivo();
+
+        }
+
+        else if (codFuncionario != null && pTipoFuncionario == "1")
+        {
+            await CarregarEstagiario();
+
+        }
+
+    }
+
+    public async Task CarregarCargos()
+    {
+        //try
+        //{
+        //    public string url = $"https://localhost:44388/Cargo/Carregar";
+        //}
+        //catch(InvalidOperationException ex)
+        //{
+
+        //}
+    }
+
     public async Task Gravar()
     {
-        if (string.IsNullOrWhiteSpace(vmEfetivo.Codigo_Efetivo) == true)
+        if (tipoFuncionario == "efetivo")
         {
-            await CadastrarFuncionario();
+            if (string.IsNullOrWhiteSpace(vmEfetivo.Codigo_Efetivo) == true) await CadastrarEfetivo();
+            else await EditarEfetivo();
         }
-        else
+        else if (tipoFuncionario == "estagiario")
         {
-            await EditarFuncionario();
+            if (string.IsNullOrWhiteSpace(vmEstagiario.Codigo_Estagiario) == true) await CadastrarEstagiario();
+            else await EditarEstagiario();
         }
     }
 
-    public async Task CadastrarFuncionario()
+    public async Task CadastrarEfetivo()
     {
-        //Efetivo efetivoGravar = new Efetivo();
 
-        //efetivoGravar.
+        Efetivo efetivoGravar = new Efetivo();
+        efetivoGravar.nome = vmFuncionario.Nome;
+        efetivoGravar.cpf = vmFuncionario.Cpf;
+        efetivoGravar.email = vmFuncionario.Email;
+        efetivoGravar.data_Nascimento = vmFuncionario.Data_Nascimento;
+        efetivoGravar.empresa = new Empresa();
+        efetivoGravar.empresa.codigo_Empresa = 1;
+        efetivoGravar.endereco = new Endereco();
+        efetivoGravar.endereco.codigo_Endereco = 1;
+        efetivoGravar.cargo = new Cargo();
+        efetivoGravar.cargo.codigo_Cargo = 1;
+        try
+        {
+            string url = $"https://localhost:44388/Efetivo/Gravar";
+            var response = await httpClient.PostAsJsonAsync(url, efetivoGravar);
+            if (response.IsSuccessStatusCode == true)
+            {
+                Efetivo efetivoRetorno = JsonConvert.DeserializeObject<Efetivo>(await response.Content.ReadAsStringAsync());
+                modal.Open("Funcionario cadastrado com sucesso", "Cadastrar funcionário", "PesquisaFuncionario");
+            }
+            else
+            {
+                modal.Open("Erro ao cadastrar o funcionario", "Cadastrar funcionário", "PesquisaFuncionario");
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+        finally
+        {
+            StateHasChanged();
+        }
+    }
 
-        //try
-        //{
-        //    string url = $"https://localhost:44388/funcionario/gravar";
-        //    var response = await httpClient.PostAsJsonAsync(url, efetivoGravar);
-        //    if (response.IsSuccessStatusCode == true)
-        //    {
-        //        funcionario funcionarioretorno = jsonconvert.deserializeobject<funcionario>(await response.content.readasstringasync());
-        //        modal.open("funcionario gravado com sucesso", "cadastrofuncionario");
-        //    }
-        //    else
-        //    {
-        //        modal.open("erro ao gravar o funcionario", "cadastrofuncionario");
-        //    }
-        //}
-        //catch (invalidoperationexception ex)
-        //{
-        //    throw new invalidoperationexception(ex.message);
-        //}
-        //finally
-        //{
-        //    statehaschanged();
-        //}
+    public async Task CadastrarEstagiario()
+    {
+
+        Estagiario estagiarioGravar = new Estagiario();
+        estagiarioGravar.nome = vmFuncionario.Nome;
+        estagiarioGravar.email = vmFuncionario.Email;
+        estagiarioGravar.data_Nasciimento = vmFuncionario.Data_Nascimento;
+        estagiarioGravar.empresa = new Empresa();
+        estagiarioGravar.empresa.codigo_Empresa = 1;
+        estagiarioGravar.endereco = new Endereco();
+        estagiarioGravar.endereco.codigo_Endereco = 1;
+        try
+        {
+            string url = $"https://localhost:44388/Estagiario/Gravar";
+            var response = await httpClient.PostAsJsonAsync(url, estagiarioGravar);
+            if (response.IsSuccessStatusCode == true)
+            {
+                Efetivo efetivoRetorno = JsonConvert.DeserializeObject<Efetivo>(await response.Content.ReadAsStringAsync());
+                modal.Open("Funcionario cadastrado com sucesso", "Cadastrar funcionário", "PesquisaFuncionario");
+            }
+            else
+            {
+                modal.Open("Erro ao cadastrar o funcionario", "Cadastrar funcionário", "PesquisaFuncionario");
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+        finally
+        {
+            StateHasChanged();
+        }
 
     }
 
-    public async Task EditarFuncionario()
+    public async Task EditarEfetivo()
     {
-        //Funcionario funcionarioEditar = new Funcionario();
+        Efetivo efetivoEditar = new Efetivo();
+        efetivoEditar.codigo_efetivo = int.Parse(vmEfetivo.Codigo_Efetivo);
+        efetivoEditar.nome = vmFuncionario.Nome;
+        efetivoEditar.cpf = vmFuncionario.Cpf;
+        efetivoEditar.email = vmFuncionario.Email;
+        efetivoEditar.data_Nascimento = vmFuncionario.Data_Nascimento;
+        efetivoEditar.cargo = vmEfetivo.Cargo;
+        efetivoEditar.empresa = vmEfetivo.Empresa;
+        efetivoEditar.endereco = vmEfetivo.Endereco;
 
-        //try
-        //{
-        //    string url = $"https://localhost:44388/Funcionario/Editar";
-        //    var response = await httpClient.PostAsJsonAsync(url, funcionarioEditar);
+        try
+        {
+            string url = $"https://localhost:44388/Efetivo/Atualizar";
+            var response = await httpClient.PostAsJsonAsync(url, efetivoEditar);
 
-        //    if (response.IsSuccessStatusCode == true)
-        //    {
-        //        funcionario funcionarioRetorno = JsonConvert.DeserializeObject<Funcionario>(await response.Content.ReadAsStringAsync());
-        //        modal.Open("Funcionario editado com sucesso", "PesquisaFuncionario");
-        //    }
-        //    else
-        //    {
-        //        modal.Open("Erro ao gravar o Funcionario", "CadastroFuncionario");
-        //    }
-        //}
-        //catch (InvalidOperationException ex)
-        //{
-        //    throw new InvalidOperationException(ex.Message);
-        //}
-        //finally
-        //{
-        //    StateHasChanged();
-        //}
+            if (response.IsSuccessStatusCode == true)
+            {
+                Efetivo efetivoRetorno = JsonConvert.DeserializeObject<Efetivo>(await response.Content.ReadAsStringAsync());
+                vmEfetivo.Codigo_Efetivo = efetivoRetorno.codigo_efetivo.ToString();
+                vmEfetivo.Nome = efetivoRetorno.nome;
+                vmEfetivo.Cpf = efetivoRetorno.cpf;
+                vmEfetivo.Email = efetivoRetorno.email;
+                vmEfetivo.Data_Nascimento = efetivoRetorno.data_Nascimento;
+                vmEfetivo.Cargo = efetivoRetorno.cargo;
+                vmEfetivo.Empresa = efetivoRetorno.empresa;
+                vmEfetivo.Endereco = efetivoRetorno.endereco;
+                modal.Open("Funcionario editado com sucesso", "Editar Funcionário", "PesquisaFuncionario");
+            }
+            else
+            {
+                modal.Open("Erro ao editar o funcionario", "Editar Funcionário", "CadastroFuncionario");
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+        finally
+        {
+            StateHasChanged();
+        }
     }
 
-    public async Task CarregarFuncionario()
+    public async Task EditarEstagiario()
     {
 
-        //try
-        //{
-        //    this.loading = true;
-        //    string url = $"https://localhost:44388/Funcionario/Carregar?pCodFuncionario={codFuncionario}";
-        //    var response = await httpClient.GetAsync(url);
-        //    if (response.IsSuccessStatusCode == true)
-        //    {
-        //        Funcionario funcionarioRetorno = JsonConvert.DeserializeObject<Funcionario>(await response.Content.ReadAsStringAsync());
-
-
-        //    }
-        //}
-        //catch (InvalidOperationException ex)
-        //{
-        //    throw new InvalidOperationException(ex.Message);
-        //}
-        //finally
-        //{
-        //    this.loading = false;
-        //    StateHasChanged();
-        //}
     }
 
-
-    public async Task Excluir()
+    public async Task CarregarEfetivo()
     {
 
         try
         {
-            string url = $"https://localhost:44388/Funcionario/Excluir?pCodFuncionario={vmEfetivo.Codigo_Efetivo}";
+            this.loading = true;
+            string url = $"https://localhost:44388/Efetivo/Carregar?pCodEfetivo={codFuncionario}";
+            var response = await httpClient.GetAsync(url);
+            if (response.IsSuccessStatusCode == true)
+            {
+                Efetivo efetivoRetorno = JsonConvert.DeserializeObject<Efetivo>(await response.Content.ReadAsStringAsync());
+                vmEfetivo.Codigo_Efetivo = efetivoRetorno.codigo_efetivo.ToString();
+                vmFuncionario.Nome = efetivoRetorno.nome;
+                vmFuncionario.Cpf = efetivoRetorno.cpf;
+                vmFuncionario.Email = efetivoRetorno.email;
+                vmFuncionario.Data_Nascimento = efetivoRetorno.data_Nascimento;
+                vmEfetivo.Cargo = efetivoRetorno.cargo;
+                Console.WriteLine(vmEfetivo.Cargo.nome);
+                vmEfetivo.Empresa = efetivoRetorno.empresa;
+                vmEfetivo.Endereco = efetivoRetorno.endereco;
+                tipoFuncionario = "efetivo";
+
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+        finally
+        {
+            this.loading = false;
+            StateHasChanged();
+        }
+    }
+
+    public async Task CarregarEstagiario()
+    {
+
+    }
+
+
+    public async Task ExcluirEfetivo()
+    {
+
+        try
+        {
+            string url = $"https://localhost:44388/Efetivo/Excluir?pCodEfetivo={vmEfetivo.Codigo_Efetivo}";
             var response = await httpClient.DeleteAsync(url);
 
             if (response.IsSuccessStatusCode == true)
             {
-                modal.Open("Funcionário excluído com sucesso", "PesquisaFuncionario");
+                modal.Open("Funcionário excluído com sucesso", "Excluir Efetivo" ,"PesquisaFuncionario");
             }
             else
             {
-                modal.Open("Erro ao excluir o funcionário", "PesquisaFuncionario");
+                modal.Open("Erro ao excluir o funcionário", "Excluir Efetivo" ,"PesquisaFuncionario");
             }
         }
         catch (InvalidOperationException ex)
