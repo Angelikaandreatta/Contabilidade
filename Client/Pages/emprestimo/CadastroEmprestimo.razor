@@ -69,9 +69,6 @@ else
                 </Step>
             </Steper>
             <div class="form__buttons">
-                <button @onclick="Excluir" class="btn btn-lg btn-outline-danger ">
-                    Excluir
-                </button>
                 <button @onclick="LimparTelaPeriodico" class="btn btn-lg btn-outline-primary">
                     Limpar
                 </button>
@@ -149,7 +146,7 @@ else
                     efetivo.Codigo_Efetivo = efetivoRetorno.codigo_efetivo.ToString();
                     efetivo.Nome = efetivoRetorno.nome;
                     efetivo.Cpf = efetivoRetorno.cpf;
-                    efetivo.Data_Nascimento = efetivoRetorno.data_Nascimento.ToString();
+                    efetivo.Data_Nascimento = efetivoRetorno.data_Nascimento;
                     efetivo.Email = efetivoRetorno.email;
                     efetivo.Cargo = efetivoRetorno.cargo;
                     efetivo.Empresa = efetivoRetorno.empresa;
@@ -165,14 +162,125 @@ else
         }
     }
 
-    private async Task EditarEmprestimo()
-    {
-
-    }
-
     private async Task CadastrarEmprestimo()
     {
+        loading = true;
         Emprestimo emprestimoGravar = new Emprestimo();
+
+        if (vmEmprestimo.Efetivo.codigo_Efetivo == 0)
+        {
+            modal.Open("Selecione o efetivo", "Cadastrar Empréstimo", "CadastroEmprestimo");
+        }
+        else
+        {
+            emprestimoGravar.efetivo = new Efetivo();
+            emprestimoGravar.efetivo.codigo_efetivo = vmEmprestimo.Efetivo.codigo_Efetivo;
+        }
+
+        if (vmEmprestimo.Periodico.codigo_Periodico == 0)
+        {
+            modal.Open("Selecione o periodico", "Cadastrar Empréstimo", "CadastroEmprestimo");
+        }
+        else
+        {
+            emprestimoGravar.periodico = new Periodico();
+            emprestimoGravar.periodico.codigo_Periodico = vmEmprestimo.Periodico.codigo_Periodico;
+        }
+
+        emprestimoGravar.data_Emprestimo = vmEmprestimo.data_Emprestimo;
+        emprestimoGravar.data_Devolucao = vmEmprestimo.data_Devolucao;
+
+        try
+        {
+            string url = $"https://localhost:44388/Emprestimo/Gravar";
+            var response = await httpClient.PostAsJsonAsync(url, emprestimoGravar);
+            if (response.IsSuccessStatusCode == true)
+            {
+                Emprestimo emprestimoRetorno = JsonConvert.DeserializeObject<Emprestimo>(await response.Content.ReadAsStringAsync());
+                vmEmprestimo.codigo_Emprestimo = emprestimoRetorno.cod_Emprestimo.ToString();
+                vmEmprestimo.Efetivo = new vmEfetivo();
+                vmEmprestimo.Efetivo.codigo_Efetivo = emprestimoRetorno.efetivo.codigo_efetivo;
+                vmEmprestimo.Periodico = new vmPeriodico();
+                vmEmprestimo.Periodico.codigo_Periodico = emprestimoRetorno.periodico.codigo_Periodico;
+
+                modal.Open("Emprésimo gravado com sucesso", "Cadastrar Empréstimo", "PesquisaEmprestimo");
+
+            }
+            else
+            {
+                modal.Open("Erro ao gravar o Empréstimo", "Cadastrar Empréstimo", "PesquisaEmprestimo");
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+        finally
+        {
+            loading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task EditarEmprestimo()
+    {
+        loading = true;
+        Emprestimo emprestimoEditar = new Emprestimo();
+        if (vmEmprestimo.Efetivo.codigo_Efetivo == 0)
+        {
+            modal.Open("Selecione o efetivo", "Cadastrar Empréstimo", "CadastroEmprestimo");
+        }
+        else
+        {
+            emprestimoEditar.efetivo = new Efetivo();
+            emprestimoEditar.efetivo.codigo_efetivo = vmEmprestimo.Efetivo.codigo_Efetivo;
+        }
+
+        if (vmEmprestimo.Periodico.codigo_Periodico == 0)
+        {
+            modal.Open("Selecione o periodico", "Cadastrar Empréstimo", "CadastroEmprestimo");
+        }
+        else
+        {
+            emprestimoEditar.periodico = new Periodico();
+            emprestimoEditar.periodico.codigo_Periodico = vmEmprestimo.Periodico.codigo_Periodico;
+        }
+
+        emprestimoEditar.data_Emprestimo = vmEmprestimo.data_Emprestimo;
+        emprestimoEditar.data_Devolucao = vmEmprestimo.data_Devolucao;
+
+        try
+        {
+            string url = $"https://localhost:44388/Emprestimo/Atualizar";
+
+            var response = await httpClient.PostAsJsonAsync(url, emprestimoEditar);
+
+
+            if (response.IsSuccessStatusCode == true)
+            {
+                Emprestimo emprestimoRetorno = JsonConvert.DeserializeObject<Emprestimo>(await response.Content.ReadAsStringAsync());
+                vmEmprestimo.codigo_Emprestimo = emprestimoRetorno.cod_Emprestimo.ToString();
+                vmEmprestimo.Efetivo = new vmEfetivo();
+                vmEmprestimo.Efetivo.codigo_Efetivo = emprestimoRetorno.efetivo.codigo_efetivo;
+                vmEmprestimo.Periodico = new vmPeriodico();
+                vmEmprestimo.Periodico.codigo_Periodico = emprestimoRetorno.periodico.codigo_Periodico;
+
+                modal.Open("Emprésimo editado com sucesso", "Editar Empréstimo", "PesquisaEmprestimo");
+            }
+            else
+            {
+                modal.Open("Erro ao editar o Empréstimo", "Editar Empréstimo", "CadastroEmprestimo");
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+        finally
+        {
+            loading = false;
+            StateHasChanged();
+        }
     }
 
     protected async Task ListarPeriodico()
@@ -231,34 +339,6 @@ else
         finally
         {
             this.loading = false;
-            StateHasChanged();
-        }
-    }
-
-    private async Task Excluir()
-    {
-        try
-        {
-            string url = $"https://localhost:44388/Emprestimo/Excluir?pCodEmprestimo={vmEmprestimo.codigo_Emprestimo}";
-            var response = await httpClient.DeleteAsync(url);
-
-            if (response.IsSuccessStatusCode == true)
-            {
-                LimparTelaPeriodico();
-                modal.Open("Empréstimo excluído com sucesso", "Excluir Empréstimo", "PesquisaEmprestimo");
-
-            }
-            else
-            {
-                modal.Open("Erro ao excluir o contato", "Excluir Empréstimo", "PesquisaEmprestimo");
-            }
-        }
-        catch (InvalidOperationException ex)
-        {
-            throw new InvalidOperationException(ex.Message);
-        }
-        finally
-        {
             StateHasChanged();
         }
     }
