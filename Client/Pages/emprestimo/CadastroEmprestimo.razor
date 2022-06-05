@@ -19,7 +19,9 @@
 else
 {
     <div class="card">
-        <div class="card-header">@formTitle</div>
+        <div class="card-header">
+            @formTitle
+        </div>
         <div class="card-body">
             <EditForm Model="vmEmprestimo">
                 <Steper>
@@ -28,42 +30,44 @@ else
                             <h3 class="form__title">
                                 Informações Empréstimo
                             </h3>
+                            <div class="form__inputs">
+                                <div class="field__control">
+                                    <label>Efetivo</label>
+                                    <InputSelect @onclick=@(() => Console.WriteLine(@vmEmprestimo.Efetivo.codigo_Efetivo)) class="field__input" @bind-Value="vmEmprestimo.Efetivo.codigo_Efetivo">
+                                        @if (listaEfetivos.Count > 0)
+                                        {
+                                        <option value="0">Selecione</option>
+                                        @foreach (EfetivoViewModel efetivo in listaEfetivos)
+                                            {
+                                            <option value="@efetivo.Codigo_Efetivo">@($"{efetivo.Codigo_Efetivo} - {efetivo.Nome}")</option>
+                                            }
+                                        }
+                                </InputSelect>
+                            </div>
+
                             <div class="field__control">
-                                <label>Efetivo</label>
-                                <InputSelect @onclick=@(() => Console.WriteLine(@vmEmprestimo.Efetivo.codigo_Efetivo)) class="field__input" @bind-Value="vmEmprestimo.Efetivo.codigo_Efetivo">
-                                    @if (listaEfetivos.Count > 0)
-                                    {
-                                    <option value="0">Selecione</option>
-                                    @foreach (EfetivoViewModel efetivo in listaEfetivos)
+                                <label>Periodico</label>
+                                <InputSelect @onclick=@(() => Console.WriteLine(@vmEmprestimo.Periodico.codigo_Periodico)) class="field__input" @bind-Value="vmEmprestimo.Periodico.codigo_Periodico">
+                                    @if (listaPeriodicos.Count > 0)
                                         {
-                                        <option value="@efetivo.Codigo_Efetivo">@($"{efetivo.Codigo_Efetivo} - {efetivo.Nome}")</option>
+                                        <option value="0">Selecione</option>
+                                        @foreach (PeriodicoViewModel periodico in listaPeriodicos)
+                                            {
+                                            <option value="@periodico.Codigo_Periodico">@($"{periodico.Codigo_Periodico} - {periodico.Nome}")</option>
+                                            }
                                         }
-                                    }
-                            </InputSelect>
-                        </div>
+                                </InputSelect>
+                            </div>
 
-                        <div class="field__control">
-                            <label>Periodico</label>
-                            <InputSelect @onclick=@(() => Console.WriteLine(@vmEmprestimo.Periodico.codigo_Periodico)) class="field__input" @bind-Value="vmEmprestimo.Periodico.codigo_Periodico">
-                                @if (listaPeriodicos.Count > 0)
-                                    {
-                                    <option value="0">Selecione</option>
-                                    @foreach (PeriodicoViewModel periodico in listaPeriodicos)
-                                        {
-                                        <option value="@periodico.Codigo_Periodico">@($"{periodico.Codigo_Periodico} - {periodico.Nome}")</option>
-                                        }
-                                    }
-                            </InputSelect>
-                        </div>
+                            <div class="field__control">
+                                <label>Data Empréstimo</label>
+                                <InputDate class="field__input field__input--active" @bind-Value="vmEmprestimo.data_Emprestimo"></InputDate>
+                            </div>
 
-                        <div class="field__control">
-                            <label>Data Empréstimo</label>
-                            <InputDate class="field__input field__input--active" @bind-Value="vmEmprestimo.data_Emprestimo"></InputDate>
-                        </div>
-
-                        <div class="field__control">
-                            <label>Data Devolução</label>
-                            <InputDate class="field__input field__input--active" @bind-Value="vmEmprestimo.data_Devolucao"></InputDate>
+                            <div class="field__control">
+                                <label>Data Devolução</label>
+                                <InputDate class="field__input field__input--active" @bind-Value="vmEmprestimo.data_Devolucao"></InputDate>
+                            </div>
                         </div>
                     </div>
                 </Step>
@@ -85,9 +89,9 @@ else
                 </div>
             </EditForm>
         </div>
-        <Modal @ref="modal"></Modal>
     </div>
 }
+<Modal @ref="modal"></Modal>
 
 @code {
     [Parameter] public string codEmprestimo { get; set; }
@@ -133,6 +137,7 @@ else
     {
         try
         {
+            loading = true;
             string url = $"https://localhost:44388/Efetivo/Listar";
             var response = await httpClient.GetAsync(url);
 
@@ -159,6 +164,10 @@ else
         catch (InvalidOperationException ex)
         {
             throw new InvalidOperationException(ex.Message);
+        }
+        finally{
+            loading = false;
+            StateHasChanged();
         }
     }
 
@@ -287,6 +296,7 @@ else
     {
         try
         {
+            loading = true;
             string url = $"https://localhost:44388/Periodico/Listar";
             var response = await httpClient.PostAsJsonAsync(url, periodicoObj);
 
@@ -310,6 +320,10 @@ else
         catch (InvalidOperationException ex)
         {
             throw new InvalidOperationException(ex.Message);
+        }
+        finally{
+            loading = false;
+            StateHasChanged();
         }
     }
 
