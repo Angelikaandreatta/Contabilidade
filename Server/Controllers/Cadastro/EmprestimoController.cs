@@ -74,9 +74,9 @@ namespace Projeto_Contabilidade.Server.Controllers.Cadastro
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("Carregar")]
-        public async Task<IActionResult> Carregar([FromBody] Emprestimo pEmprestimo)
+        public async Task<IActionResult> Carregar(int pCodEmprestimo)
         {
             Emprestimo emprestimoRetorno = null;
             int retorno = 0;
@@ -84,7 +84,7 @@ namespace Projeto_Contabilidade.Server.Controllers.Cadastro
             try
             {
                 ControleEmprestimo controleEmprestimo = new ControleEmprestimo();
-                emprestimoRetorno = await controleEmprestimo.Carregar(pEmprestimo);
+                emprestimoRetorno = await controleEmprestimo.Carregar(pCodEmprestimo);
                 if (emprestimoRetorno != null)
                 {
                     return Ok(emprestimoRetorno);
@@ -105,17 +105,16 @@ namespace Projeto_Contabilidade.Server.Controllers.Cadastro
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("Listar")]
-        public async Task<IActionResult> Listar([FromBody] Emprestimo pEmprestimo)
+        public async Task<IActionResult> Listar(string pStatus, int pCodEmp)
         {
             List<Emprestimo> emprestimoRetorno = null;
-            int retorno = 0;
 
             try
             {
                 ControleEmprestimo controleEmprestimo = new ControleEmprestimo();
-                emprestimoRetorno = await controleEmprestimo.Listar(pEmprestimo);
+                emprestimoRetorno = await controleEmprestimo.Listar(pStatus, pCodEmp);
                 if (emprestimoRetorno != null)
                 {
                     return Ok(emprestimoRetorno);

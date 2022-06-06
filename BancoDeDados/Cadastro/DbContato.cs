@@ -10,7 +10,7 @@ using BancoDeDados.UtilDb;
 
 namespace BancoDeDados.Cadastro
 {
-    public class DbContato:ComandoSQL
+    public class DbContato : ComandoSQL
     {
         public Contato Gravar(Contato pContato)
         {
@@ -23,7 +23,7 @@ namespace BancoDeDados.Cadastro
             comando.InsertSqlObj("nome", $"'{pContato.nome}'");
             comando.InsertSqlObj("email", $"'{pContato.email}'");
             comando.InsertSqlObj("telefone", $"'{pContato.telefone}'");
-            comando.InsertSqlObj("setor", $"'{pContato.setor}'",true);
+            comando.InsertSqlObj("setor", $"'{pContato.setor}'", true);
 
             if (comando.ExecutarComandoInsertSql() > 0)
             {
@@ -81,7 +81,7 @@ namespace BancoDeDados.Cadastro
         {
             pContato.cod_Contato = Int32.Parse(rd["codigo_Contato"].ToString());
             pContato.cliente = new Cliente();
-            pContato.cliente.codigo_Cliente = Int32.Parse(rd["codigo_Cliente"].ToString());
+            pContato.cliente = new DbCliente().CarregarCliente(Int32.Parse(rd["codigo_Cliente"].ToString()));
             pContato.nome = rd["nome"].ToString();
             pContato.email = rd["email"].ToString();
             pContato.telefone = rd["telefone"].ToString();

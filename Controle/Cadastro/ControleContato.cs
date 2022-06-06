@@ -36,6 +36,7 @@ namespace Controle.Cadastro
 
                 if (contatoGravado != null)
                 {
+                    contatoGravado = new DbContato().CarregarContato(contatoGravado.cod_Contato);
                     return contatoGravado;
                 }
                 else
@@ -78,6 +79,7 @@ namespace Controle.Cadastro
 
                 if (contatoGravado != null)
                 {
+                    contatoGravado = new DbContato().CarregarContato(contatoGravado.cod_Contato);
                     return contatoGravado;
                 }
                 else

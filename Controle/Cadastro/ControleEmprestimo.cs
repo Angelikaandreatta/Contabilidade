@@ -30,6 +30,7 @@ namespace Controle.Cadastro
             try
             {
                 Emprestimo emprestimoGravado = new Emprestimo();
+
                 DbEmprestimo dbEmprestimo = new DbEmprestimo();
 
                 emprestimoGravado = dbEmprestimo.Gravar(pEmprestimo);
@@ -38,7 +39,7 @@ namespace Controle.Cadastro
                 {
                     if (new DbPeriodico().AtualizarStatusPeriodico("indisponivel", pEmprestimo.periodico.codigo_Periodico) == 1)
                     {
-                        emprestimoGravado.periodico = new DbPeriodico().CarregarPeriodico(emprestimoGravado.periodico.codigo_Periodico);
+                        emprestimoGravado = new DbEmprestimo().CarregarEmprestimo(emprestimoGravado.cod_Emprestimo);
                         return emprestimoGravado;
                     }
                     else
@@ -86,6 +87,7 @@ namespace Controle.Cadastro
 
                 if (emprestimoGravado != null)
                 {
+                    emprestimoGravado = new DbEmprestimo().CarregarEmprestimo(emprestimoGravado.cod_Emprestimo);
                     return emprestimoGravado;
                 }
                 else
@@ -103,14 +105,14 @@ namespace Controle.Cadastro
             }
         }
 
-        public async Task<List<Emprestimo>> Listar(Emprestimo pEmprestimo)
+        public async Task<List<Emprestimo>> Listar(string pStatus, int pCodEmp)
         {
             List<Emprestimo> lstEmprestimoRetorno = null;
 
             try
             {
                 DbEmprestimo dbEmprestimo = new DbEmprestimo();
-                lstEmprestimoRetorno = dbEmprestimo.Listar(pEmprestimo);
+                lstEmprestimoRetorno = dbEmprestimo.Listar(pStatus, pCodEmp);
 
                 if (lstEmprestimoRetorno != null && lstEmprestimoRetorno.Count > 0)
                 {
@@ -132,11 +134,11 @@ namespace Controle.Cadastro
         }
 
 
-        public async Task<Emprestimo> Carregar(Emprestimo pEmprestimo)
+        public async Task<Emprestimo> Carregar(int pCodEmprestimo)
         {
             Emprestimo emprestimoRetorno = null;
 
-            if (pEmprestimo.cod_Emprestimo <= 0)
+            if (pCodEmprestimo <= 0)
             {
                 throw new InvalidOperationException("Informe o código do emprestimo para carrega-lo.");
             }
@@ -144,7 +146,7 @@ namespace Controle.Cadastro
             try
             {
                 DbEmprestimo dbEmprestimo = new DbEmprestimo();
-                emprestimoRetorno = dbEmprestimo.CarregarEmprestimo(pEmprestimo);
+                emprestimoRetorno = dbEmprestimo.CarregarEmprestimo(pCodEmprestimo);
 
                 if (emprestimoRetorno != null)
                 {

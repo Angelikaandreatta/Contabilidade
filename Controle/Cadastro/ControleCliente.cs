@@ -36,6 +36,7 @@ namespace Controle.Cadastro
 
                 if (clienteGravado != null)
                 {
+                    clienteGravado = new DbCliente().CarregarCliente(clienteGravado.codigo_Cliente);
                     return clienteGravado;
                 }
                 else
@@ -78,6 +79,7 @@ namespace Controle.Cadastro
 
                 if (clienteGravado != null)
                 {
+                    clienteGravado = new DbCliente().CarregarCliente(clienteGravado.codigo_Cliente);
                     return clienteGravado;
                 }
                 else
@@ -124,11 +126,11 @@ namespace Controle.Cadastro
         }
 
 
-        public async Task<Cliente> Carregar(string pCodCliente)
+        public async Task<Cliente> Carregar(int pCodCliente)
         {
             Cliente clienteRetorno = null;
 
-            if (string.IsNullOrWhiteSpace(pCodCliente) == true)
+            if (pCodCliente <= 0)
             {
                 throw new InvalidOperationException("Informe o código do cliente para carrega-lo.");
             }

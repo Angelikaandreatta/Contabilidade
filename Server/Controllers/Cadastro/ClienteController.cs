@@ -75,7 +75,7 @@ namespace Projeto_Contabilidade.Server.Controllers.Cadastro
 
         [HttpGet]
         [Route("Carregar")]
-        public async Task<IActionResult> Carregar(string pCodCliente)
+        public async Task<IActionResult> Carregar(int pCodCliente)
         {
             Cliente clienteRetorno = null;
 

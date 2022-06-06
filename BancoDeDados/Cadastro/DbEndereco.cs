@@ -16,7 +16,8 @@ namespace BancoDeDados.Cadastro
             pEndereco.codigo_Endereco = Int32.Parse(rd["codigo_Endereco"].ToString());
             pEndereco.rua = rd["rua"].ToString();
             pEndereco.numero = rd["numero"].ToString();
-            pEndereco.bairro = rd["cidade"].ToString();
+            pEndereco.bairro = rd["bairro"].ToString();
+            pEndereco.cidade = rd["cidade"].ToString();
             pEndereco.uf = rd["uf"].ToString();
 
             return pEndereco;

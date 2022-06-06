@@ -36,6 +36,7 @@ namespace Controle.Cadastro
 
                 if (periodicoGravado != null)
                 {
+                    periodicoGravado = new DbPeriodico().CarregarPeriodico(periodicoGravado.codigo_Periodico);
                     return periodicoGravado;
                 }
                 else
@@ -78,6 +79,7 @@ namespace Controle.Cadastro
 
                 if (periodicoGravado != null)
                 {
+                    periodicoGravado = new DbPeriodico().CarregarPeriodico(periodicoGravado.codigo_Periodico);
                     return periodicoGravado;
                 }
                 else

@@ -59,16 +59,20 @@ namespace BancoDeDados.Cadastro
             int codigoRetorno = 0;
 
             SqlCommand sql = new SqlCommand("", new ConexaoDB().Conectar());
-            sql.CommandText = "select max(codigo_Emprestimo) as maiorCodigo from Emprestimo";
+            sql.CommandText = "SELECT max(codigo_Emprestimo) as maiorCodigo FROM Emprestimo";
 
             using (SqlDataReader dt = sql.ExecuteReader())
             {
-
                 DataTable dataTable = new DataTable();
                 dataTable.Load(dt);
                 DataRow rd = dataTable.Rows[0];
 
-                codigoRetorno = Int32.Parse(rd["maiorCodigo"].ToString());
+                string UltimoCod = rd["maiorCodigo"].ToString();
+
+                if (string.IsNullOrWhiteSpace(UltimoCod) == false)
+                {
+                    codigoRetorno = Int32.Parse(rd["maiorCodigo"].ToString());
+                }
                 codigoRetorno += 1;
 
                 return codigoRetorno;
@@ -79,7 +83,7 @@ namespace BancoDeDados.Cadastro
         {
             pEmprestimo.cod_Emprestimo = Int32.Parse(rd["codigo_Emprestimo"].ToString());
             pEmprestimo.efetivo = new Efetivo();
-            pEmprestimo.efetivo.codigo_efetivo = Int32.Parse(rd["codigo_Efetivo"].ToString());
+            pEmprestimo.efetivo = new DbEfetivo().CarregarEfetivo(Int32.Parse(rd["codigo_Efetivo"].ToString()));
             pEmprestimo.periodico = new Periodico();
             pEmprestimo.periodico = new DbPeriodico().CarregarPeriodico(Int32.Parse(rd["codigo_Periodico"].ToString()));
             pEmprestimo.data_Emprestimo = DateTime.Parse(rd["data_Emprestimo"].ToString());
@@ -88,18 +92,20 @@ namespace BancoDeDados.Cadastro
             return pEmprestimo;
         }
 
-        public List<Emprestimo> Listar(Emprestimo pEmprestimo)
+        public List<Emprestimo> Listar(string pStatus, int pCodEmp)
         {
             List<Emprestimo> lstEmprestimos = null;
 
             SqlCommand sql = new SqlCommand("", new ConexaoDB().Conectar());
-            sql.CommandText = "SELECT e.*, p.status FROM Emprestimo as E";
+            sql.CommandText = "SELECT e.*, p.status, p.codigo_Empresa, emp.nome FROM Emprestimo as e";
             sql.CommandText += " inner join Periodico as P";
-            sql.CommandText += " on E.codigo_Periodico = P.codigo_Periodico";
-            pEmprestimo.periodico = new Periodico();
-            if (pEmprestimo.periodico.Status == "indisponivel")
+            sql.CommandText += " on e.codigo_Periodico = P.codigo_Periodico";
+            sql.CommandText += " inner join empresa as emp";
+            sql.CommandText += " on p.codigo_empresa = emp.codigo_empresa";
+            sql.CommandText += $" where p.codigo_Empresa = {pCodEmp}";
+            if (string.IsNullOrWhiteSpace(pStatus) == false)
             {
-                sql.CommandText += " where status = 'indisponivel'";
+                sql.CommandText += $" and status = '{pStatus}'";
             }
 
             using (SqlDataReader dt = sql.ExecuteReader())
@@ -123,11 +129,11 @@ namespace BancoDeDados.Cadastro
             }
         }
 
-        public Emprestimo CarregarEmprestimo(Emprestimo pEmprestimo)
+        public Emprestimo CarregarEmprestimo(int pCodEmprestimo)
         {
             SqlCommand sql = new SqlCommand("", new ConexaoDB().Conectar());
             sql.CommandText = "select * from Emprestimo";
-            sql.CommandText += $" where codigo_Emprestimo = '{pEmprestimo.cod_Emprestimo}'";
+            sql.CommandText += $" where codigo_Emprestimo = '{pCodEmprestimo}'";
 
             using (SqlDataReader dt = sql.ExecuteReader())
             {

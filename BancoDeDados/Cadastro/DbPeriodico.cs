@@ -104,7 +104,7 @@ namespace BancoDeDados.Cadastro
         {
             pPeriodico.codigo_Periodico = Int32.Parse(rd["codigo_Periodico"].ToString());
             pPeriodico.empresa = new Empresa();
-            pPeriodico.empresa.codigo_Empresa = Int32.Parse(rd["codigo_Empresa"].ToString());
+            pPeriodico.empresa = new DbEmpresa().CarregarEmpresa( Int32.Parse(rd["codigo_Empresa"].ToString()));
             pPeriodico.Nome = rd["nome"].ToString();
             pPeriodico.Editora = rd["editora"].ToString();
             pPeriodico.Autor = rd["autor"].ToString();

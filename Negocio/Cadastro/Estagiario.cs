@@ -18,6 +18,8 @@ namespace Negocio.Cadastro
 
         public string nome { get; set; }
 
+        public string cpf { get; set; }
+
         public string email { get; set; }
 
         public DateTime? data_Nasciimento { get; set; }
@@ -43,6 +45,10 @@ namespace Negocio.Cadastro
                 lstRetorno.Add("Informe a empresa do estagiario");
             }
             if (string.IsNullOrWhiteSpace(pEstagiario.nome) == true)
+            {
+                lstRetorno.Add("Informe o nome do efetivo");
+            }
+            if (string.IsNullOrWhiteSpace(pEstagiario.cpf) == true)
             {
                 lstRetorno.Add("Informe o nome do efetivo");
             }

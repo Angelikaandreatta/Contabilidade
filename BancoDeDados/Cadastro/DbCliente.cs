@@ -10,7 +10,7 @@ using BancoDeDados.UtilDb;
 
 namespace BancoDeDados.Cadastro
 {
-    public class DbCliente:ComandoSQL
+    public class DbCliente : ComandoSQL
     {
         public Cliente Gravar(Cliente pCliente)
         {
@@ -84,9 +84,9 @@ namespace BancoDeDados.Cadastro
         {
             pCliente.codigo_Cliente = Int32.Parse(rd["codigo_Cliente"].ToString());
             pCliente.empresa = new Empresa();
-            pCliente.empresa.codigo_Empresa = Int32.Parse(rd["codigo_Empresa"].ToString());
+            pCliente.empresa = new DbEmpresa().CarregarEmpresa(Int32.Parse(rd["codigo_Empresa"].ToString()));
             pCliente.endereco = new Endereco();
-            pCliente.endereco.codigo_Endereco = Int32.Parse(rd["codigo_Endereco"].ToString());
+            pCliente.endereco = new DbEndereco().CarregarEndereco(Int32.Parse(rd["codigo_Endereco"].ToString()));
             pCliente.razao_Social = rd["razao_Social"].ToString();
             pCliente.cnpj = rd["cnpj"].ToString();
             pCliente.qtd_Empregado = rd["qtd_Empregado"].ToString();
@@ -122,11 +122,11 @@ namespace BancoDeDados.Cadastro
             }
         }
 
-        public Cliente CarregarCliente(string pCliente)
+        public Cliente CarregarCliente(int pCodCliente)
         {
             SqlCommand sql = new SqlCommand("", new ConexaoDB().Conectar());
             sql.CommandText = "select * from Cliente";
-            sql.CommandText += $" where codigo_Cliente = '{pCliente}'";
+            sql.CommandText += $" where codigo_Cliente = {pCodCliente}";
 
             using (SqlDataReader dt = sql.ExecuteReader())
             {
