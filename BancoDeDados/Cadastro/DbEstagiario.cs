@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BancoDeDados.Cadastro
 {
-    public class DbEstagiario
+    public class DbEstagiario:ComandoSQL
     {
         private Estagiario CarregarDado(Estagiario pEstagiario, DataRow rd)
         {
@@ -24,7 +24,7 @@ namespace BancoDeDados.Cadastro
             pEstagiario.nome = rd["nome"].ToString();
             pEstagiario.email = rd["cpf"].ToString();
             pEstagiario.email = rd["email"].ToString();
-            pEstagiario.data_Nasciimento = DateTime.Parse(rd["data_Nasimento"].ToString());
+            pEstagiario.data_Nascimento = DateTime.Parse(rd["data_Nascimento"].ToString());
             pEstagiario.nome_curso = rd["nome_Curso"].ToString();
             pEstagiario.data_Inicio_Curso = DateTime.Parse(rd["data_Inicio_Curso"].ToString());
 
@@ -56,7 +56,7 @@ namespace BancoDeDados.Cadastro
             pEstagiario.codigo_Estagiario = this.ProximoCodigo();
 
             ComandoSQL comando = new ComandoSQL();
-            comando.InsertTabela("Efetivo");
+            comando.InsertTabela("Estagiario");
             comando.InsertSqlObj("codigo_Estagiario", $"{pEstagiario.codigo_Estagiario}");
             comando.InsertSqlObj("codigo_Efetivo", $"{pEstagiario.efetivo.codigo_efetivo}");
             comando.InsertSqlObj("codigo_Endereco", $"{pEstagiario.endereco.codigo_Endereco}");
@@ -64,11 +64,36 @@ namespace BancoDeDados.Cadastro
             comando.InsertSqlObj("nome", $"'{pEstagiario.nome}'");
             comando.InsertSqlObj("cpf", $"'{pEstagiario.cpf}'");
             comando.InsertSqlObj("email", $"'{pEstagiario.email}'");
-            comando.InsertSqlObj("data_Nascimento", $"{new FormatarValores().FormatarDataParaSQL(DateTime.Parse(pEstagiario.data_Nasciimento.ToString()))}");
-            comando.InsertSqlObj("nome_Curso", $"{pEstagiario.nome_curso}");
-            comando.InsertSqlObj("data_Nascimento", $"{new FormatarValores().FormatarDataParaSQL(DateTime.Parse(pEstagiario.data_Inicio_Curso.ToString()))}", true);
+            comando.InsertSqlObj("data_Nascimento", $"{new FormatarValores().FormatarDataParaSQL(DateTime.Parse(pEstagiario.data_Nascimento.ToString()))}");
+            comando.InsertSqlObj("nome_curso", $"'{pEstagiario.nome_curso}'");
+            comando.InsertSqlObj("data_Inicio_Curso", $"{new FormatarValores().FormatarDataParaSQL(DateTime.Parse(pEstagiario.data_Inicio_Curso.ToString()))}", true);
 
             if (comando.ExecutarComandoInsertSql() > 0)
+            {
+                return pEstagiario;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public Estagiario Atualizar(Estagiario pEstagiario)
+        {
+            ComandoSQL comando = new ComandoSQL();
+            comando.UpdateTabela("Estagiario");
+            comando.UpdateSqlObj("codigo_Efetivo", $"{pEstagiario.efetivo.codigo_efetivo}");
+            comando.UpdateSqlObj("codigo_Endereco", $"{pEstagiario.endereco.codigo_Endereco}");
+            comando.UpdateSqlObj("codigo_Empresa", $"{pEstagiario.empresa.codigo_Empresa}");
+            comando.UpdateSqlObj("nome", $"'{pEstagiario.nome}'");
+            comando.UpdateSqlObj("cpf", $"'{pEstagiario.cpf}'");
+            comando.UpdateSqlObj("email", $"'{pEstagiario.email}'");
+            comando.UpdateSqlObj("data_Nascimento", $"{new FormatarValores().FormatarDataParaSQL(DateTime.Parse(pEstagiario.data_Nascimento.ToString()))}");
+            comando.UpdateSqlObj("nome_Curso", $"'{pEstagiario.nome_curso}'");
+            comando.UpdateSqlObj("data_Inicio_Curso", $"{new FormatarValores().FormatarDataParaSQL(DateTime.Parse(pEstagiario.data_Inicio_Curso.ToString()))}", true);
+            comando.strWhere = $" where codigo_Estagiario = {pEstagiario.codigo_Estagiario}";
+
+            if (comando.ExecutarComandoUpdateSql() > 0)
             {
                 return pEstagiario;
             }
@@ -102,5 +127,55 @@ namespace BancoDeDados.Cadastro
                 return codigoRetorno;
             }
         }
+
+        public List<Estagiario> Listar()
+        {
+            List<Estagiario> lstEstagiario = null;
+
+            SqlCommand sql = new SqlCommand("", new ConexaoDB().Conectar());
+            sql.CommandText = "select * from Estagiario";
+
+            using (SqlDataReader dt = sql.ExecuteReader())
+            {
+                DataTable dataTable = new DataTable();
+                dataTable.Load(dt);
+
+                lstEstagiario = new List<Estagiario>();
+
+                foreach (DataRow rd in dataTable.Rows)
+                {
+
+                    Estagiario estagiarioCarrager = new Estagiario();
+
+                    estagiarioCarrager = this.CarregarDado(estagiarioCarrager, rd);
+
+                    lstEstagiario.Add(estagiarioCarrager);
+                }
+
+                return lstEstagiario;
+            }
+        }
+
+        public int Excluir(int pCodEstagiario)
+        {
+            int retorno = 0;
+
+            StringBuilder sql = new StringBuilder();
+            sql.Append("delete from Efetivo");
+            sql.Append($" where codigo_Estagiario = {pCodEstagiario}");
+
+
+            if (ExecutarReader(sql.ToString()) == 1)
+            {
+                retorno = 1;
+            }
+            else
+            {
+                retorno = -1;
+            }
+
+            return retorno;
+        }
+
     }
 }

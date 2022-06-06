@@ -19,7 +19,7 @@ namespace BancoDeDados.Cadastro
             ComandoSQL comando = new ComandoSQL();
             comando.InsertTabela("Cliente");
             comando.InsertSqlObj("codigo_Cliente", $"{pCliente.codigo_Cliente}");
-            comando.InsertSqlObj("codigo_Empresa", "1");
+            comando.InsertSqlObj("codigo_Empresa", "2");
             comando.InsertSqlObj("codigo_Endereco", "1");
             comando.InsertSqlObj("razao_Social", $"'{pCliente.razao_Social}'");
             comando.InsertSqlObj("cnpj", $"'{pCliente.cnpj}'");

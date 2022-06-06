@@ -8,27 +8,27 @@ using System.Threading.Tasks;
 
 namespace Projeto_Contabilidade.Server.Controllers.Cadastro
 {
-    [Route("Efetivo")]
+    [Route("Estagiario")]
     [ApiController]
-    public class EfetivoController : ControllerBase
+    public class EstagiarioController : ControllerBase
     {
         [HttpPost]
         [Route("Gravar")]
-        public async Task<IActionResult> Gravar([FromBody] Efetivo pEfetivo)
+        public async Task<IActionResult> Gravar([FromBody] Estagiario pEstagiario)
         {
-            Efetivo efetivoRetorno = null;
+            Estagiario estagiarioRetorno = null;
 
             try
             {
-                ControleEfetivo controleEfetivo = new ControleEfetivo();
-                efetivoRetorno = await controleEfetivo.Gravar(pEfetivo);
-                if (efetivoRetorno != null)
+                ControleEstagiario controleEstagiario = new ControleEstagiario();
+                estagiarioRetorno = await controleEstagiario.Gravar(pEstagiario);
+                if (estagiarioRetorno != null)
                 {
-                    return Ok(efetivoRetorno);
+                    return Ok(estagiarioRetorno);
                 }
                 else
                 {
-                    throw new InvalidOperationException("Não foi possível gravar o efetivo.");
+                    throw new InvalidOperationException("Não foi possível gravar o estagiario.");
                 }
 
             }
@@ -44,21 +44,21 @@ namespace Projeto_Contabilidade.Server.Controllers.Cadastro
 
         [HttpPost]
         [Route("Atualizar")]
-        public async Task<IActionResult> Atualizar([FromBody] Efetivo pEfetivo)
+        public async Task<IActionResult> Atualizar([FromBody] Estagiario pEstagiario)
         {
-            Efetivo efetivoRetorno = null;
+            Estagiario estagiarioRetorno = null;
 
             try
             {
-                ControleEfetivo controleEfetivo = new ControleEfetivo();
-                efetivoRetorno = await controleEfetivo.Atualizar(pEfetivo);
-                if (efetivoRetorno != null)
+                ControleEstagiario controleEstagiario = new ControleEstagiario();
+                estagiarioRetorno = await controleEstagiario.Atualizar(pEstagiario);
+                if (estagiarioRetorno != null)
                 {
-                    return Ok(efetivoRetorno);
+                    return Ok(estagiarioRetorno);
                 }
                 else
                 {
-                    throw new InvalidOperationException("Não foi possível Atualizar o efetivo.");
+                    throw new InvalidOperationException("Não foi possível Atualizar o estagiario.");
                 }
 
             }
@@ -74,21 +74,21 @@ namespace Projeto_Contabilidade.Server.Controllers.Cadastro
 
         [HttpGet]
         [Route("Carregar")]
-        public async Task<IActionResult> Carregar(int pCodEfetivo)
+        public async Task<IActionResult> Carregar(int pCodEstagiario)
         {
-            Efetivo efetivoRetorno = null;
+            Estagiario estagiarioRetorno = null;
 
             try
             {
-                ControleEfetivo controleEfetivo = new ControleEfetivo();
-                efetivoRetorno = await controleEfetivo.Carregar(pCodEfetivo);
-                if (efetivoRetorno != null)
+                ControleEstagiario controleEstagiario = new ControleEstagiario();
+                estagiarioRetorno = await controleEstagiario.Carregar(pCodEstagiario);
+                if (estagiarioRetorno != null)
                 {
-                    return Ok(efetivoRetorno);
+                    return Ok(estagiarioRetorno);
                 }
                 else
                 {
-                    return NotFound("Não foi possível Carregar o efetivo.");
+                    return NotFound("Não foi possível Carregar o estagiario.");
                 }
 
             }
@@ -106,19 +106,19 @@ namespace Projeto_Contabilidade.Server.Controllers.Cadastro
         [Route("Listar")]
         public async Task<IActionResult> Listar()
         {
-            List<Efetivo> efetivoRetorno = null;
+            List<Estagiario> lstEstagiario = null;
 
             try
             {
-                ControleEfetivo controleEfetivo= new ControleEfetivo();
-                efetivoRetorno = await controleEfetivo.Listar();
-                if (efetivoRetorno != null)
+                ControleEstagiario controleEstagiario = new ControleEstagiario();
+                lstEstagiario = await controleEstagiario.Listar();
+                if (lstEstagiario != null)
                 {
-                    return Ok(efetivoRetorno);
+                    return Ok(lstEstagiario);
                 }
                 else
                 {
-                    throw new InvalidOperationException("Não foi possível Listar o efetivo.");
+                    throw new InvalidOperationException("Não foi possível Listar o estagiario.");
                 }
 
             }
@@ -134,22 +134,22 @@ namespace Projeto_Contabilidade.Server.Controllers.Cadastro
 
         [HttpDelete]
         [Route("Excluir")]
-        public async Task<IActionResult> Excluir(int pCodEfetivo)
+        public async Task<IActionResult> Excluir(int pCodEstagiario)
         {
-            int efetivoRetorno = 0;
+            int estagiarioRetorno = 0;
 
             try
             {
-                ControleEfetivo controleEfetivo= new ControleEfetivo();
-                efetivoRetorno = await controleEfetivo.Excluir(pCodEfetivo);
+                ControleEfetivo controleEfetivo = new ControleEfetivo();
+                estagiarioRetorno = await controleEfetivo.Excluir(pCodEstagiario);
 
-                if (efetivoRetorno == 1)
+                if (estagiarioRetorno == 1)
                 {
-                    return Ok(efetivoRetorno);
+                    return Ok(estagiarioRetorno);
                 }
                 else
                 {
-                    throw new InvalidOperationException("Não foi possível Excluir o efetivo.");
+                    throw new InvalidOperationException("Não foi possível Excluir o estagiario.");
                 }
 
             }
@@ -162,6 +162,5 @@ namespace Projeto_Contabilidade.Server.Controllers.Cadastro
                 return BadRequest(new Exception(ex.Message));
             }
         }
-
     }
 }

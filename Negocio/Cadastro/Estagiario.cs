@@ -22,7 +22,7 @@ namespace Negocio.Cadastro
 
         public string email { get; set; }
 
-        public DateTime? data_Nasciimento { get; set; }
+        public DateTime? data_Nascimento { get; set; }
 
         public string nome_curso { get; set; }
 
@@ -52,15 +52,15 @@ namespace Negocio.Cadastro
             {
                 lstRetorno.Add("Informe o nome do efetivo");
             }
-            if (string.IsNullOrWhiteSpace(pEstagiario.email) == false)
+            if (string.IsNullOrWhiteSpace(pEstagiario.email) == true)
             {
                 lstRetorno.Add("Informe o email do estagiario");
             }
-            if (string.IsNullOrWhiteSpace(pEstagiario.nome_curso) == false)
+            if (string.IsNullOrWhiteSpace(pEstagiario.nome_curso) == true)
             {
                 lstRetorno.Add("Informe a data de nascimento do efetivo");
             }
-            if (string.IsNullOrWhiteSpace(data_Inicio_Curso.ToString()) == false)
+            if (string.IsNullOrWhiteSpace(data_Inicio_Curso.ToString()) == true)
             {
                 lstRetorno.Add("Informe a data de inicio do curso do estagiario");
             }
