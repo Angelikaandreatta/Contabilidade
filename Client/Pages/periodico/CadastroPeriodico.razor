@@ -138,6 +138,7 @@ else
 
     private async Task EditarPeriodico()
     {
+        loading = true;
         Periodico periodicoEditar = new Periodico();
         periodicoEditar.codigo_Periodico = int.Parse(vmPeriodico.Codigo_Periodico);
         periodicoEditar.empresa = new Empresa();
@@ -148,7 +149,7 @@ else
 
         if (vmPeriodico.Status == "selecione")
         {
-            modal.Open("Selecione o status do periódico", "CadastroPeriodico");
+            modal.Open("Selecione o status do periódico", "Cadastrar periódico", "CadastroPeriodico");
         }
         else
         {
@@ -183,6 +184,7 @@ else
             }
             finally
             {
+                loading = false;
                 StateHasChanged();
             }
         }
@@ -190,6 +192,7 @@ else
 
     private async Task CadastrarPeriodico()
     {
+        loading = true;
         Periodico periodicoGravar = new Periodico();
         periodicoGravar.empresa = new Empresa();
         periodicoGravar.empresa.codigo_Empresa = 1;
@@ -199,7 +202,7 @@ else
 
         if (vmPeriodico.Status == null || vmPeriodico.Status == "selecione")
         {
-            modal.Open("Selecione o status do periódico", "CadastroPeriodico");
+            modal.Open("Selecione o status do periódico", "Cadastrar periódico", "CadastroPeriodico");
         }
         else
         {
@@ -235,6 +238,7 @@ else
             }
             finally
             {
+                loading = false;
                 StateHasChanged();
             }
         }
