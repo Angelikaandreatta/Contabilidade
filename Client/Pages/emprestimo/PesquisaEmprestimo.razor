@@ -84,8 +84,8 @@ else
         try
         {
             loading = true;
-            string url = $"https://localhost:44388/Emprestimo/Listar";
-            var response = await httpClient.PostAsJsonAsync(url, emprestimoObj);
+            string url = $"https://localhost:44388/Emprestimo/Listar?pStatus=indisponivel&pCodEmp=1";
+            var response = await httpClient.GetAsync(url);
             if (response.IsSuccessStatusCode == true)
             {
                 List<Emprestimo> emprestimosRetorno = JsonConvert.DeserializeObject<List<Emprestimo>>(await response.Content.ReadAsStringAsync());
@@ -102,7 +102,6 @@ else
 
                     emprestimos.Add(emprestimo);
                 }
-
             }
 
         }

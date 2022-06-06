@@ -165,7 +165,8 @@ else
         {
             throw new InvalidOperationException(ex.Message);
         }
-        finally{
+        finally
+        {
             loading = false;
             StateHasChanged();
         }
@@ -318,7 +319,8 @@ else
         {
             throw new InvalidOperationException(ex.Message);
         }
-        finally{
+        finally
+        {
             loading = false;
             StateHasChanged();
         }
@@ -326,13 +328,11 @@ else
 
     private async Task CarregarEmprestimo()
     {
-        emprestimoObj.cod_Emprestimo = int.Parse(codEmprestimo);
         try
         {
             this.loading = true;
-            //string url = $"https://localhost:44388/Emprestimo/Carregar?pEmprestimo={codEmprestimo}";
-            string url = $"https://localhost:44388/Emprestimo/Carregar";
-            var response = await httpClient.PostAsJsonAsync(url, emprestimoObj);
+            string url = $"https://localhost:44388/Emprestimo/Carregar?pCodEmprestimo={codEmprestimo}";
+            var response = await httpClient.GetAsync(url);
             if (response.IsSuccessStatusCode == true)
             {
                 Emprestimo emprestimoRetorno = JsonConvert.DeserializeObject<Emprestimo>(await response.Content.ReadAsStringAsync());
