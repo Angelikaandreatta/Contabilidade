@@ -78,6 +78,7 @@ namespace Controle.Cadastro
 
                 if (loginGravado != null)
                 {
+                    loginGravado = new DbLogin().CarregarLogin(loginGravado.codigo_Login);
                     return loginGravado;
                 }
                 else
@@ -124,19 +125,19 @@ namespace Controle.Cadastro
         }
 
 
-        public async Task<Login> Carregar(string pEmailLogin)
+        public async Task<Login> Carregar(int pCodLogin)
         {
             Login loginRetorno = null;
 
-            if (string.IsNullOrWhiteSpace(pEmailLogin) == true)
+            if (pCodLogin <= 0)
             {
-                throw new InvalidOperationException("Informe o email do login para carrega-lo.");
+                throw new InvalidOperationException("Informe o código do login para carrega-lo.");
             }
 
             try
             {
                 DbLogin dbLogin = new DbLogin();
-                loginRetorno = dbLogin.CarregarLogin(pEmailLogin);
+                loginRetorno = dbLogin.CarregarLogin(pCodLogin);
 
                 if (loginRetorno != null)
                 {
@@ -157,19 +158,19 @@ namespace Controle.Cadastro
             }
         }
 
-        public async Task<int> Excluir(string pEmailLogin)
+        public async Task<int> Excluir(int pCodLogin)
         {
             int loginRetorno = 0;
 
-            if (string.IsNullOrWhiteSpace(pEmailLogin) == true)
+            if (pCodLogin <= 0)
             {
-                throw new InvalidOperationException("Informe o email do login para carrega-lo.");
+                throw new InvalidOperationException("Informe o código do login para carrega-lo.");
             }
 
             try
             {
                 DbLogin dbLogin = new DbLogin();
-                loginRetorno = dbLogin.Excluir(pEmailLogin);
+                loginRetorno = dbLogin.Excluir(pCodLogin);
 
                 if (loginRetorno == 1)
                 {

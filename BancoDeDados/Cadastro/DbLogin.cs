@@ -14,11 +14,14 @@ namespace BancoDeDados.Cadastro
     {
         public Login Gravar(Login pLogin)
         {
+            pLogin.codigo_Login = this.ProximoCodigo();
+
             ComandoSQL comando = new ComandoSQL();
             comando.InsertTabela("Tb_Login");
-            comando.InsertSqlObj("email", $"{pLogin.nome}");
+            comando.InsertSqlObj("codigo_Login", $"{pLogin.codigo_Login}");
+            comando.InsertSqlObj("nome", $"{pLogin.nome}");
             comando.InsertSqlObj("email", $"{pLogin.email}");
-            comando.InsertSqlObj("email", $"{pLogin.cargo}");
+            comando.InsertSqlObj("cargo", $"{pLogin.cargo}");
             comando.InsertSqlObj("senha", $"{pLogin.senha}");
 
             if (comando.ExecutarComandoInsertSql() > 0)
@@ -35,10 +38,11 @@ namespace BancoDeDados.Cadastro
         {
             ComandoSQL comando = new ComandoSQL();
             comando.UpdateTabela("Tb_Login");
-            comando.UpdateSqlObj("email", $"'{pLogin.nome}'");
-            comando.UpdateSqlObj("senha", $"'{pLogin.email}'");
-            comando.UpdateSqlObj("senha", $"'{pLogin.cargo}'");
+            comando.UpdateSqlObj("nome", $"'{pLogin.nome}'");
+            comando.UpdateSqlObj("email", $"'{pLogin.email}'");
+            comando.UpdateSqlObj("cargo", $"'{pLogin.cargo}'");
             comando.UpdateSqlObj("senha", $"'{pLogin.senha}'");
+            comando.strWhere = $" where codigo_Login = {pLogin.codigo_Login}";
 
             if (comando.ExecutarComandoUpdateSql() > 0)
             {
@@ -50,8 +54,34 @@ namespace BancoDeDados.Cadastro
             }
         }
 
+        public int ProximoCodigo()
+        {
+            int codigoRetorno = 0;
+
+            SqlCommand sql = new SqlCommand("", new ConexaoDB().Conectar());
+            sql.CommandText = "select max(codigo_Login) as maiorCodigo from tb_Login";
+
+            using (SqlDataReader dt = sql.ExecuteReader())
+            {
+                DataTable dataTable = new DataTable();
+                dataTable.Load(dt);
+                DataRow rd = dataTable.Rows[0];
+
+                string UltimoCod = rd["maiorCodigo"].ToString();
+
+                if (string.IsNullOrWhiteSpace(UltimoCod) == false)
+                {
+                    codigoRetorno = Int32.Parse(rd["maiorCodigo"].ToString());
+                }
+                codigoRetorno += 1;
+
+                return codigoRetorno;
+            }
+        }
+
         private Login CarregarDado(Login pLogin, DataRow rd)
         {
+            pLogin.codigo_Login = Int32.Parse(rd["codigo_Login"].ToString());
             pLogin.nome = rd["nome"].ToString();
             pLogin.email = rd["email"].ToString();
             pLogin.cargo = rd["cargo"].ToString();
@@ -64,7 +94,7 @@ namespace BancoDeDados.Cadastro
             List<Login> lstLogins = null;
 
             SqlCommand sql = new SqlCommand("", new ConexaoDB().Conectar());
-            sql.CommandText = "select nome, email, cargo  from Tb_Login";
+            sql.CommandText = "select codigo_Login, email, nome, cargo  from Tb_Login";
 
             using (SqlDataReader dt = sql.ExecuteReader())
             {
@@ -87,11 +117,11 @@ namespace BancoDeDados.Cadastro
             }
         }
 
-        public Login CarregarLogin(string pLogin)
+        public Login CarregarLogin(int pCodLogin)
         {
             SqlCommand sql = new SqlCommand("", new ConexaoDB().Conectar());
-            sql.CommandText = "select  nome, email, cargo from Tb_Login";
-            sql.CommandText += $" where email = '{pLogin}'";
+            sql.CommandText = "select  codigo_Login, email, nome, cargo from Tb_Login";
+            sql.CommandText += $" where codigo_Login = '{pCodLogin}'";
 
             using (SqlDataReader dt = sql.ExecuteReader())
             {
@@ -107,13 +137,13 @@ namespace BancoDeDados.Cadastro
             }
         }
 
-        public int Excluir(string pLogin)
+        public int Excluir(int pCodLogin)
         {
             int retorno = 0;
 
             StringBuilder sql = new StringBuilder();
             sql.Append("delete from Tb_Login");
-            sql.Append($" where email = '{pLogin}'");
+            sql.Append($" where codigo_Login = '{pCodLogin}'");
 
 
             if (ExecutarReader(sql.ToString()) == 1)
@@ -131,7 +161,7 @@ namespace BancoDeDados.Cadastro
         public bool Logar(Login pLogin)
         {
             SqlCommand sql = new SqlCommand("", new ConexaoDB().Conectar());
-            sql.CommandText = $"select DISTINCT  email, senha from tb_Login where email = '{pLogin.email}'";
+            sql.CommandText = $"select DISTINCT  email, senha from tb_Login where codigo_Login = '{pLogin.codigo_Login}'";
 
             using (SqlDataReader dt = sql.ExecuteReader())
             {

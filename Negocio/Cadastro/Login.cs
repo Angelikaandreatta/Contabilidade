@@ -8,6 +8,7 @@ namespace Negocio.Cadastro
 {
     public class Login
     {
+        public int codigo_Login { get; set; }
         public string nome { get; set; }
         public string email { get; set; }
         public string cargo { get; set; }
