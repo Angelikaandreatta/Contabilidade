@@ -1,14 +1,27 @@
-﻿@inherits LayoutComponentBase
+﻿@using Projeto_Contabilidade.Client.Pages.cliente
+@inherits LayoutComponentBase
 @inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+    @if (autenticado)
+    {
+        <div class="sidebar">
+            <NavMenu />
+        </div>
 
-    <div class="main p-5">
-        @Body
-    </div>
+        <div class="main p-5">
+            @Body
+        </div>
+    }
+    else
+    {
+        <Projeto_Contabilidade.Client.Pages.login.LoginUsuario/>
+    }
 </div>
 
+@code {
+    // Alterar para false para ver tela de Login
+    public bool autenticado { get; set; } = true;
+
+}

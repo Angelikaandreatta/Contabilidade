@@ -108,8 +108,7 @@ else
 
     async protected override Task OnInitializedAsync()
     {
-        await ListarEfetivo();
-        await ListarPeriodico();
+        await CarregarSelects();
     }
 
 
@@ -137,7 +136,6 @@ else
     {
         try
         {
-            loading = true;
             string url = $"https://localhost:44388/Efetivo/Listar";
             var response = await httpClient.GetAsync(url);
 
@@ -167,7 +165,6 @@ else
         }
         finally
         {
-            loading = false;
             StateHasChanged();
         }
     }
@@ -294,7 +291,6 @@ else
     {
         try
         {
-            loading = true;
             string url = $"https://localhost:44388/Periodico/Listar";
             var response = await httpClient.PostAsJsonAsync(url, periodicoObj);
 
@@ -321,8 +317,25 @@ else
         }
         finally
         {
-            loading = false;
             StateHasChanged();
+        }
+    }
+
+    private async Task CarregarSelects()
+    {
+        try
+        {
+            loading = true;
+            await ListarEfetivo();
+            await ListarPeriodico();
+        }
+        catch(Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+        finally
+        {
+            loading = false;
         }
     }
 

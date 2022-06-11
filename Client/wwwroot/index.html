@@ -27,6 +27,17 @@
         <a class="dismiss">🗙</a>
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
+    <script>
+        window.blazorExtensions = {
+
+            WriteCookie: function (name, value) {
+
+                console.log("Teste");
+
+                document.cookie = `${name}=${value}; path=/`;
+            }
+        }
+    </script>
 </body>
 
 </html>
