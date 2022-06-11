@@ -15,8 +15,8 @@
         <div class="field__control w-100 mt-2 mb-2">
             <label>Empresa</label>
             <InputSelect class="field__input" @bind-Value="@empresa">
-                <option>Empresa 1</option>
-                <option>Empresa 2</option>
+                <option value="empresa 1">Empresa 1</option>
+                <option value="empresa 2">Empresa 2</option>
             </InputSelect>
         </div>
         <div class="field__control w-100">
@@ -42,5 +42,7 @@
     {
         await JSRuntime.InvokeAsync<string>("blazorExtensions.WriteCookie", "empresa", empresa);
         NavigationManager.NavigateTo("");
+        string cookieEmpresa = await JSRuntime.InvokeAsync<string>("blazorExtensions.GetCookie");
+        Console.WriteLine(cookieEmpresa);
     }
 }

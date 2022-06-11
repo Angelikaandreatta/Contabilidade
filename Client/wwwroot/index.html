@@ -32,9 +32,14 @@
 
             WriteCookie: function (name, value) {
 
-                console.log("Teste");
-
                 document.cookie = `${name}=${value}; path=/`;
+            },
+
+            GetCookie: function () {
+
+                var cookie = document.cookie.split("=");
+                var empresa = cookie[1];
+                return empresa;
             }
         }
     </script>
