@@ -22,7 +22,7 @@ namespace BancoDeDados.Cadastro
             pEstagiario.empresa = new Empresa();
             pEstagiario.empresa = new DbEmpresa().CarregarEmpresa(Int32.Parse(rd["codigo_Empresa"].ToString()));
             pEstagiario.nome = rd["nome"].ToString();
-            pEstagiario.email = rd["cpf"].ToString();
+            pEstagiario.cpf = rd["cpf"].ToString();
             pEstagiario.email = rd["email"].ToString();
             pEstagiario.data_Nascimento = DateTime.Parse(rd["data_Nascimento"].ToString());
             pEstagiario.nome_curso = rd["nome_Curso"].ToString();

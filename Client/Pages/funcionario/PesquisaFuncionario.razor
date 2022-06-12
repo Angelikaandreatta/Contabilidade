@@ -157,10 +157,10 @@ else
 
                     efetivos.Add(efetivo);
                 }
-                foreach(Estagiario estagiarioRetorno in estagiariosRetorno)
+                foreach (Estagiario estagiarioRetorno in estagiariosRetorno)
                 {
                     EstagiarioViewModel estagiario = new EstagiarioViewModel();
-                    Console.WriteLine("Cpf " + estagiarioRetorno.cpf);
+                    Console.WriteLine("Cpf" + estagiarioRetorno.cpf);
                     estagiario.Codigo_Estagiario = estagiarioRetorno.codigo_Estagiario.ToString();
                     estagiario.Nome = estagiarioRetorno.nome;
                     estagiario.Cpf = estagiarioRetorno.cpf;
@@ -196,11 +196,11 @@ else
             if (response.IsSuccessStatusCode == true)
             {
                 await ListarFuncionario();
-                modal.Open("Funcionário excluído com sucesso", "Excluir Efetivo" ,"PesquisaFuncionario");
+                modal.Open("Funcionário excluído com sucesso", "Excluir Efetivo", "PesquisaFuncionario");
             }
             else
             {
-                modal.Open("Erro ao excluir o funcionário", "Excluir Efetivo" ,"PesquisaFuncionario");
+                modal.Open("Erro ao excluir o funcionário", "Excluir Efetivo", "PesquisaFuncionario");
             }
         }
         catch (InvalidOperationException ex)
@@ -224,11 +224,11 @@ else
             if (response.IsSuccessStatusCode == true)
             {
                 await ListarFuncionario();
-                modal.Open("Funcionário excluído com sucesso", "Excluir Estagiario" ,"PesquisaFuncionario");
+                modal.Open("Funcionário excluído com sucesso", "Excluir Estagiario", "PesquisaFuncionario");
             }
             else
             {
-                modal.Open("Erro ao excluir o funcionário", "Excluir Estagiario" ,"PesquisaFuncionario");
+                modal.Open("Erro ao excluir o funcionário", "Excluir Estagiario", "PesquisaFuncionario");
             }
         }
         catch (InvalidOperationException ex)
