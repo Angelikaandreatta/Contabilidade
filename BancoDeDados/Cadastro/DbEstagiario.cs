@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BancoDeDados.Cadastro
 {
-    public class DbEstagiario:ComandoSQL
+    public class DbEstagiario : ComandoSQL
     {
         private Estagiario CarregarDado(Estagiario pEstagiario, DataRow rd)
         {
@@ -161,7 +161,7 @@ namespace BancoDeDados.Cadastro
             int retorno = 0;
 
             StringBuilder sql = new StringBuilder();
-            sql.Append("delete from Efetivo");
+            sql.Append("delete from Estagiario");
             sql.Append($" where codigo_Estagiario = {pCodEstagiario}");
 
 
