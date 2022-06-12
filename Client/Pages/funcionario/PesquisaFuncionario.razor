@@ -50,6 +50,7 @@ else
                     <td>
                         @efetivo.Email
                     </td>
+
                     <td>
                         <div>
                             <button type="button" class="btn btn-outline-success"
@@ -57,6 +58,36 @@ else
                                 Editar
                             </button>
                             <button @onclick=" () => ExcluirEfetivo(efetivo.Codigo_Efetivo)" type="button" class="btn btn-outline-danger">Deletar</button>
+                        </div>
+                    </td>
+                </tr>
+            }
+            @foreach (EstagiarioViewModel estagiario in estagiarios)
+            {
+                <tr>
+                    <td>
+                        @estagiario.Nome
+                    </td>
+                    <td>
+                        Estagiario
+                    </td>
+                    <td>
+                        @estagiario.Data_Nascimento
+                    </td>
+                    <td>
+                        @estagiario.Cpf
+                    </td>
+                    <td>
+                        @estagiario.Email
+                    </td>
+
+                    <td>
+                        <div>
+                            <button type="button" class="btn btn-outline-success"
+                            @onclick=@(() => NavigationManager.NavigateTo($"CadastroFuncionario/{estagiario.Codigo_Estagiario}/1"))>
+                                Editar
+                            </button>
+                            <button @onclick=" () => ExcluirEstagiario(estagiario.Codigo_Estagiario)" type="button" class="btn btn-outline-danger">Deletar</button>
                         </div>
                     </td>
                 </tr>
@@ -80,8 +111,8 @@ else
     public FuncionarioViewModel funcionario = new FuncionarioViewModel();
     List<FuncionarioViewModel> funcionarios = new List<FuncionarioViewModel>();
     List<EfetivoViewModel> efetivos = new List<EfetivoViewModel>();
+    List<EstagiarioViewModel> estagiarios = new List<EstagiarioViewModel>();
     private Modal modal { get; set; }
-    public string[] tableHeaders = { "Nome", "Cargo", "Data Nascimento" };
     private bool loading = false;
 
     protected override void OnInitialized()
@@ -100,15 +131,18 @@ else
         try
         {
             loading = true;
-            string url = $"https://localhost:44388/Efetivo/Listar";
-            var response = await httpClient.GetAsync(url);
+            string urlEfetivo = $"https://localhost:44388/Efetivo/Listar";
+            string urlEstagiario = $"https://localhost:44388/Estagiario/Listar";
+            var responseEfetivo = await httpClient.GetAsync(urlEfetivo);
+            var responseEstagiario = await httpClient.GetAsync(urlEstagiario);
 
-            if (response.IsSuccessStatusCode == true)
+            if (responseEfetivo.IsSuccessStatusCode == true && responseEstagiario.IsSuccessStatusCode == true)
             {
-                List<Efetivo> efetivosRetorno = JsonConvert.DeserializeObject<List<Efetivo>>(await response.Content.ReadAsStringAsync());
+                List<Efetivo> efetivosRetorno = JsonConvert.DeserializeObject<List<Efetivo>>(await responseEfetivo.Content.ReadAsStringAsync());
+                List<Estagiario> estagiariosRetorno = JsonConvert.DeserializeObject<List<Estagiario>>(await responseEstagiario.Content.ReadAsStringAsync());
 
                 efetivos.RemoveRange(0, efetivos.Count);
-
+                estagiarios.RemoveRange(0, estagiarios.Count);
                 foreach (Efetivo efetivoRetorno in efetivosRetorno)
                 {
                     EfetivoViewModel efetivo = new EfetivoViewModel();
@@ -122,6 +156,22 @@ else
                     efetivo.Endereco = efetivoRetorno.endereco;
 
                     efetivos.Add(efetivo);
+                }
+                foreach(Estagiario estagiarioRetorno in estagiariosRetorno)
+                {
+                    EstagiarioViewModel estagiario = new EstagiarioViewModel();
+                    Console.WriteLine("Cpf " + estagiarioRetorno.cpf);
+                    estagiario.Codigo_Estagiario = estagiarioRetorno.codigo_Estagiario.ToString();
+                    estagiario.Nome = estagiarioRetorno.nome;
+                    estagiario.Cpf = estagiarioRetorno.cpf;
+                    estagiario.Data_Nascimento = estagiarioRetorno.data_Nascimento;
+                    estagiario.Email = estagiarioRetorno.email;
+                    estagiario.Data_Inicio_Curso = estagiarioRetorno.data_Inicio_Curso;
+                    estagiario.Nome_Curso = estagiarioRetorno.nome_curso;
+                    estagiario.Empresa = estagiarioRetorno.empresa;
+                    estagiario.Endereco = estagiarioRetorno.endereco;
+
+                    estagiarios.Add(estagiario);
                 }
             }
         }
@@ -151,6 +201,34 @@ else
             else
             {
                 modal.Open("Erro ao excluir o funcionário", "Excluir Efetivo" ,"PesquisaFuncionario");
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+        finally
+        {
+            StateHasChanged();
+        }
+    }
+
+    public async Task ExcluirEstagiario(string codigoEstagiario)
+    {
+
+        try
+        {
+            string url = $"https://localhost:44388/Estagiario/Excluir?pCodEstagiario={codigoEstagiario}";
+            var response = await httpClient.DeleteAsync(url);
+
+            if (response.IsSuccessStatusCode == true)
+            {
+                await ListarFuncionario();
+                modal.Open("Funcionário excluído com sucesso", "Excluir Estagiario" ,"PesquisaFuncionario");
+            }
+            else
+            {
+                modal.Open("Erro ao excluir o funcionário", "Excluir Estagiario" ,"PesquisaFuncionario");
             }
         }
         catch (InvalidOperationException ex)

@@ -9,123 +9,124 @@
 @using Projeto_Contabilidade.Client.Componentes.Modal
 @using Newtonsoft.Json
 
-@if(loading){
+@if (loading)
+{
     <h3>CARREGANDO ...</h3>
 }
 else
 {
-<div class="card">
-    <h4 class="card-header">@formTitle</h4>
-    <div class="card-body">
-        <EditForm Model="vmEfetivo">
-            <Steper>
-                <Step Text="Informações Gerais" Icon="oi-info" Value="Step1" Enabled="@IsEnabled">
-                    <div class="form__div">
-                        <h3 class="form__title">
-                            Informações Gerais
-                        </h3>
-                        <div class="form__inputs">
-                            <div class="field__control">
-                                <label>Nome</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmFuncionario.Nome"></InputText>
-                            </div>
-                            <div class="field__control">
-                                <label>CPF</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmFuncionario.Cpf"></InputText>
-                            </div>
-                            <div class="field__control">
-                                <label>E-Mail</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmFuncionario.Email"></InputText>
-                            </div>
-                            <div class="field__control">
-                                <label>Data Nascimento</label>
-                                <InputDate class="field__input field__input--active" @bind-Value="vmFuncionario.Data_Nascimento"></InputDate>
-                            </div>
-                            <div class="field__control">
-                                <label>Tipo de funcionário</label>
-                                <InputSelect class="field__input field__input--active" @bind-Value="tipoFuncionario">
-                                    <option default>Selecione</option>
-                                    <option value="efetivo">Efetivo</option>
-                                    <option value="estagiario">Estágiario</option>
-                                </InputSelect>
-                            </div>
-                            @if (tipoFuncionario == "estagiario")
-                            {
+    <div class="card">
+        <h4 class="card-header">@formTitle</h4>
+        <div class="card-body">
+            <EditForm Model="vmEfetivo">
+                <Steper>
+                    <Step Text="Informações Gerais" Icon="oi-info" Value="Step1" Enabled="@IsEnabled">
+                        <div class="form__div">
+                            <h3 class="form__title">
+                                Informações Gerais
+                            </h3>
+                            <div class="form__inputs">
                                 <div class="field__control">
-                                    <label>Nome do curso</label>
-                                    <InputText class="field__input field__input--active" @bind-Value="vmEstagiario.Nome_Curso"></InputText>
+                                    <label>Nome</label>
+                                    <InputText class="field__input field__input--active" @bind-Value="vmFuncionario.Nome"></InputText>
                                 </div>
                                 <div class="field__control">
-                                    <label>Data do inicio do curso</label>
-                                    <InputText class="field__input field__input--active" @bind-Value="vmEstagiario.Data_Inicio_Curso"></InputText>
+                                    <label>CPF</label>
+                                    <InputText class="field__input field__input--active" @bind-Value="vmFuncionario.Cpf"></InputText>
                                 </div>
-                            }
-                            else if (tipoFuncionario == "efetivo")
-                            {
                                 <div class="field__control">
-                                    <label>Cargo do funcionário</label>
-                                    <InputSelect class="field__input field__input--active" @bind-Value="vmEfetivo.Cargo.nome">
-                                        <option value="suporte">Suporte</option>
-                                        <option value="gestor">Gestor</option>
-                                        <option value="analista">Analista</option>
-                                        <option value="diretor">Diretor</option>
+                                    <label>E-Mail</label>
+                                    <InputText class="field__input field__input--active" @bind-Value="vmFuncionario.Email"></InputText>
+                                </div>
+                                <div class="field__control">
+                                    <label>Data Nascimento</label>
+                                    <InputDate class="field__input field__input--active" @bind-Value="vmFuncionario.Data_Nascimento"></InputDate>
+                                </div>
+                                <div class="field__control">
+                                    <label>Tipo de funcionário</label>
+                                    <InputSelect class="field__input field__input--active" @bind-Value="tipoFuncionario">
+                                        <option default>Selecione</option>
+                                        <option value="efetivo">Efetivo</option>
+                                        <option value="estagiario">Estágiario</option>
                                     </InputSelect>
                                 </div>
-                            }
-                        </div>
-                    </div>
-                </Step>
-                <Step Text="Informações de Endereço" Icon="oi-location" Value="Step2" Enabled="@IsEnabled">
-                    <div class="form__div">
-                        <h3 class="form__title">
-                            Informações De Endereço
-                        </h3>
-                        <div class="form__inputs">
-                            <div class="field__control">
-                                <label>Rua</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmEfetivo.Endereco.rua"></InputText>
-                            </div>
-                            <div class="field__control">
-                                <label>Número</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmEfetivo.Endereco.numero"></InputText>
-                            </div>
-                            <div class="field__control">
-                                <label>Bairro</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmEfetivo.Endereco.bairro"></InputText>
-                            </div>
-                            <div class="field__control">
-                                <label>Cidade</label>
-                                <InputText class="field__input field__input--active" @bind-Value="vmEfetivo.Endereco.cidade"></InputText>
+                                @if (tipoFuncionario == "estagiario")
+                                {
+                                    <div class="field__control">
+                                        <label>Nome do curso</label>
+                                        <InputText class="field__input field__input--active" @bind-Value="vmEstagiario.Nome_Curso"></InputText>
+                                    </div>
+                                    <div class="field__control">
+                                        <label>Data do inicio do curso</label>
+                                        <InputDate class="field__input field__input--active" @bind-Value="vmEstagiario.Data_Inicio_Curso"></InputDate>
+                                    </div>
+                                }
+                                else if (tipoFuncionario == "efetivo")
+                                {
+                                    <div class="field__control">
+                                        <label>Cargo do funcionário</label>
+                                        <InputSelect class="field__input field__input--active" @bind-Value="vmEfetivo.Cargo.nome">
+                                            <option value="suporte">Suporte</option>
+                                            <option value="gestor">Gestor</option>
+                                            <option value="analista">Analista</option>
+                                            <option value="diretor">Diretor</option>
+                                        </InputSelect>
+                                    </div>
+                                }
                             </div>
                         </div>
-                    </div>
-                </Step>
-            </Steper>
-            <div class="form__buttons">
-                <button @onclick="ExcluirEfetivo" class="btn btn-lg btn-outline-danger">
-                    Excluir
-                </button>
-                <button class="btn btn-lg btn-outline-primary">
-                    Limpar
-                </button>
+                    </Step>
+                    <Step Text="Informações de Endereço" Icon="oi-location" Value="Step2" Enabled="@IsEnabled">
+                        <div class="form__div">
+                            <h3 class="form__title">
+                                Informações De Endereço
+                            </h3>
+                            <div class="form__inputs">
+                                <div class="field__control">
+                                    <label>Rua</label>
+                                    <InputText class="field__input field__input--active" @bind-Value="vmEfetivo.Endereco.rua"></InputText>
+                                </div>
+                                <div class="field__control">
+                                    <label>Número</label>
+                                    <InputText class="field__input field__input--active" @bind-Value="vmEfetivo.Endereco.numero"></InputText>
+                                </div>
+                                <div class="field__control">
+                                    <label>Bairro</label>
+                                    <InputText class="field__input field__input--active" @bind-Value="vmEfetivo.Endereco.bairro"></InputText>
+                                </div>
+                                <div class="field__control">
+                                    <label>Cidade</label>
+                                    <InputText class="field__input field__input--active" @bind-Value="vmEfetivo.Endereco.cidade"></InputText>
+                                </div>
+                            </div>
+                        </div>
+                    </Step>
+                </Steper>
+                <div class="form__buttons">
+                    <button @onclick="ExcluirEfetivo" class="btn btn-lg btn-outline-danger">
+                        Excluir
+                    </button>
+                    <button class="btn btn-lg btn-outline-primary">
+                        Limpar
+                    </button>
 
-                <button @onclick="Gravar" class="btn btn-lg btn-outline-primary">
-                    @if (string.IsNullOrWhiteSpace(vmEfetivo.Codigo_Efetivo) == false)
-                    {
-                        <div>Editar</div>
-                    }
-                    else
-                    {
-                        <div>Gravar</div>
-                    }
-                </button>
+                    <button @onclick="Gravar" class="btn btn-lg btn-outline-primary">
+                        @if (!string.IsNullOrWhiteSpace(vmEfetivo.Codigo_Efetivo) || !string.IsNullOrWhiteSpace(vmEstagiario.Codigo_Estagiario))
+                        {
+                            <div>Editar</div>
+                        }
+                        else
+                        {
+                            <div>Gravar</div>
+                        }
+                    </button>
 
-            </div>
-        </EditForm>
+                </div>
+            </EditForm>
+        </div>
     </div>
-</div>
 }
-    <Modal @ref="modal"></Modal>
+<Modal @ref="modal"></Modal>
 @code {
 
     public enum EnumTipoFuncionario
@@ -158,7 +159,6 @@ else
     {
         if (codFuncionario != null && pTipoFuncionario == "0")
         {
-            Console.WriteLine("Chegou Aqui");
             await CarregarEfetivo();
 
         }
@@ -187,12 +187,12 @@ else
     {
         if (tipoFuncionario == "efetivo")
         {
-            if (string.IsNullOrWhiteSpace(vmEfetivo.Codigo_Efetivo) == true) await CadastrarEfetivo();
+            if (string.IsNullOrWhiteSpace(vmEfetivo.Codigo_Efetivo)) await CadastrarEfetivo();
             else await EditarEfetivo();
         }
         else if (tipoFuncionario == "estagiario")
         {
-            if (string.IsNullOrWhiteSpace(vmEstagiario.Codigo_Estagiario) == true) await CadastrarEstagiario();
+            if (string.IsNullOrWhiteSpace(vmEstagiario.Codigo_Estagiario)) await CadastrarEstagiario();
             else await EditarEstagiario();
         }
     }
@@ -213,6 +213,7 @@ else
         efetivoGravar.cargo.codigo_Cargo = 1;
         try
         {
+            loading = true;
             string url = $"https://localhost:44388/Efetivo/Gravar";
             var response = await httpClient.PostAsJsonAsync(url, efetivoGravar);
             if (response.IsSuccessStatusCode == true)
@@ -231,6 +232,7 @@ else
         }
         finally
         {
+            loading = false;
             StateHasChanged();
         }
     }
@@ -240,19 +242,26 @@ else
 
         Estagiario estagiarioGravar = new Estagiario();
         estagiarioGravar.nome = vmFuncionario.Nome;
+        estagiarioGravar.cpf = vmFuncionario.Cpf;
         estagiarioGravar.email = vmFuncionario.Email;
         estagiarioGravar.data_Nascimento = vmFuncionario.Data_Nascimento;
+        estagiarioGravar.nome_curso = vmEstagiario.Nome_Curso;
+        estagiarioGravar.data_Inicio_Curso = vmEstagiario.Data_Inicio_Curso;
         estagiarioGravar.empresa = new Empresa();
         estagiarioGravar.empresa.codigo_Empresa = 1;
         estagiarioGravar.endereco = new Endereco();
         estagiarioGravar.endereco.codigo_Endereco = 1;
+        estagiarioGravar.efetivo = new Efetivo();
+        estagiarioGravar.efetivo.codigo_efetivo = 1;
         try
         {
+            loading = true;
             string url = $"https://localhost:44388/Estagiario/Gravar";
             var response = await httpClient.PostAsJsonAsync(url, estagiarioGravar);
             if (response.IsSuccessStatusCode == true)
             {
-                Efetivo efetivoRetorno = JsonConvert.DeserializeObject<Efetivo>(await response.Content.ReadAsStringAsync());
+                Estagiario estagiarioRetorno = JsonConvert.DeserializeObject<Estagiario>(await response.Content.ReadAsStringAsync());
+
                 modal.Open("Funcionario cadastrado com sucesso", "Cadastrar funcionário", "PesquisaFuncionario");
             }
             else
@@ -266,11 +275,12 @@ else
         }
         finally
         {
+            loading = false;
             StateHasChanged();
         }
 
     }
-    
+
     public async Task EditarEfetivo()
     {
         Efetivo efetivoEditar = new Efetivo();
@@ -285,6 +295,7 @@ else
 
         try
         {
+            loading = true;
             string url = $"https://localhost:44388/Efetivo/Atualizar";
             var response = await httpClient.PostAsJsonAsync(url, efetivoEditar);
 
@@ -292,10 +303,10 @@ else
             {
                 Efetivo efetivoRetorno = JsonConvert.DeserializeObject<Efetivo>(await response.Content.ReadAsStringAsync());
                 vmEfetivo.Codigo_Efetivo = efetivoRetorno.codigo_efetivo.ToString();
-                vmEfetivo.Nome = efetivoRetorno.nome;
-                vmEfetivo.Cpf = efetivoRetorno.cpf;
-                vmEfetivo.Email = efetivoRetorno.email;
-                vmEfetivo.Data_Nascimento = efetivoRetorno.data_Nascimento;
+                vmFuncionario.Nome = efetivoRetorno.nome;
+                vmFuncionario.Cpf = efetivoRetorno.cpf;
+                vmFuncionario.Email = efetivoRetorno.email;
+                vmFuncionario.Data_Nascimento = efetivoRetorno.data_Nascimento;
                 vmEfetivo.Cargo = efetivoRetorno.cargo;
                 vmEfetivo.Empresa = efetivoRetorno.empresa;
                 vmEfetivo.Endereco = efetivoRetorno.endereco;
@@ -312,6 +323,7 @@ else
         }
         finally
         {
+            loading = true;
             StateHasChanged();
         }
     }
@@ -319,6 +331,52 @@ else
     public async Task EditarEstagiario()
     {
 
+        Estagiario estagiarioEditar = new Estagiario();
+        estagiarioEditar.codigo_Estagiario = int.Parse(vmEstagiario.Codigo_Estagiario);
+        estagiarioEditar.nome = vmFuncionario.Nome;
+        estagiarioEditar.cpf = vmFuncionario.Cpf;
+        estagiarioEditar.email = vmFuncionario.Email;
+        estagiarioEditar.data_Nascimento = vmFuncionario.Data_Nascimento;
+        estagiarioEditar.nome_curso = vmEstagiario.Nome_Curso;
+        estagiarioEditar.data_Inicio_Curso = vmEstagiario.Data_Inicio_Curso;
+        estagiarioEditar.empresa = vmEstagiario.Empresa;
+        estagiarioEditar.endereco = vmEstagiario.Endereco;
+        estagiarioEditar.efetivo = vmEstagiario.Efetivo;
+        try
+        {
+            loading = true;
+            string url = $"https://localhost:44388/Estagiario/Atualizar";
+            var response = await httpClient.PostAsJsonAsync(url, estagiarioEditar);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Estagiario estagiarioRetorno = JsonConvert.DeserializeObject<Estagiario>(await response.Content.ReadAsStringAsync());
+                vmEstagiario.Codigo_Estagiario = estagiarioRetorno.codigo_Estagiario.ToString();
+                vmFuncionario.Nome = estagiarioRetorno.nome;
+                vmFuncionario.Cpf = estagiarioRetorno.cpf;
+                vmFuncionario.Email = estagiarioRetorno.email;
+                vmFuncionario.Data_Nascimento = estagiarioRetorno.data_Nascimento;
+                vmEstagiario.Nome_Curso = estagiarioRetorno.nome_curso;
+                vmEstagiario.Data_Inicio_Curso = estagiarioRetorno.data_Inicio_Curso;
+                vmEstagiario.Empresa = estagiarioRetorno.empresa;
+                vmEstagiario.Endereco = estagiarioRetorno.endereco;
+                vmEstagiario.Efetivo = estagiarioRetorno.efetivo;
+                modal.Open("Funcionario editado com sucesso", "Editar Funcionário", "PesquisaFuncionario");
+            }
+            else
+            {
+                modal.Open("Erro ao editar o funcionario", "Editar Funcionário", "CadastroFuncionario");
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+        finally
+        {
+            loading = false;
+            StateHasChanged();
+        }
     }
 
     public async Task CarregarEfetivo()
@@ -338,7 +396,6 @@ else
                 vmFuncionario.Email = efetivoRetorno.email;
                 vmFuncionario.Data_Nascimento = efetivoRetorno.data_Nascimento;
                 vmEfetivo.Cargo = efetivoRetorno.cargo;
-                Console.WriteLine(vmEfetivo.Cargo.nome);
                 vmEfetivo.Empresa = efetivoRetorno.empresa;
                 vmEfetivo.Endereco = efetivoRetorno.endereco;
                 tipoFuncionario = "efetivo";
@@ -358,7 +415,38 @@ else
 
     public async Task CarregarEstagiario()
     {
+        try
+        {
+            loading = true;
+            string url = $"https://localhost:44388/Estagiario/Carregar?pCodEstagiario={codFuncionario}";
+            var response = await httpClient.GetAsync(url);
 
+            if (response.IsSuccessStatusCode)
+            {
+                Estagiario estagiarioRetorno = JsonConvert.DeserializeObject<Estagiario>(await response.Content.ReadAsStringAsync());
+                vmEstagiario.Codigo_Estagiario = estagiarioRetorno.codigo_Estagiario.ToString();
+                vmFuncionario.Nome = estagiarioRetorno.nome;
+                vmFuncionario.Cpf = estagiarioRetorno.cpf;
+                vmFuncionario.Email = estagiarioRetorno.email;
+                vmFuncionario.Data_Nascimento = estagiarioRetorno.data_Nascimento;
+                vmEstagiario.Nome_Curso = estagiarioRetorno.nome_curso;
+                vmEstagiario.Data_Inicio_Curso = estagiarioRetorno.data_Inicio_Curso;
+                tipoFuncionario = "estagiario";
+
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+        finally
+        {
+            this.loading = false;
+            StateHasChanged();
+        }
+        {
+
+        }
     }
 
     public async Task ExcluirEfetivo()
@@ -371,11 +459,11 @@ else
 
             if (response.IsSuccessStatusCode == true)
             {
-                modal.Open("Funcionário excluído com sucesso", "Excluir Efetivo" ,"PesquisaFuncionario");
+                modal.Open("Funcionário excluído com sucesso", "Excluir Efetivo", "PesquisaFuncionario");
             }
             else
             {
-                modal.Open("Erro ao excluir o funcionário", "Excluir Efetivo" ,"PesquisaFuncionario");
+                modal.Open("Erro ao excluir o funcionário", "Excluir Efetivo", "PesquisaFuncionario");
             }
         }
         catch (InvalidOperationException ex)
@@ -387,15 +475,6 @@ else
             StateHasChanged();
         }
     }
-
-
-    class EstagionarioViewModel
-    {
-        public string codEstagiario { get; set; }
-        public string nomeCurso { get; set; }
-        public string dataInicioCurso { get; set; }
-    }
-
 
 
 }
