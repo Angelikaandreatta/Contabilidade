@@ -117,7 +117,7 @@ namespace Controle.Cadastro
                 }
                 else
                 {
-                    throw new InvalidOperationException("Erro ao carregar cliente.");
+                    throw new InvalidOperationException("Erro ao carregar endereço.");
                 }
             }
             catch (InvalidOperationException ex)
