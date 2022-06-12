@@ -17,7 +17,7 @@ namespace Controle.Cadastro
             try
             {
                 DbCargo dbCargo = new DbCargo();
-                lstCargoRetorno = dbCargo.ListasrCargo();
+                lstCargoRetorno = dbCargo.ListarCargo();
 
                 if (lstCargoRetorno != null && lstCargoRetorno.Count > 0)
                 {

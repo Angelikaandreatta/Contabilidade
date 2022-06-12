@@ -124,12 +124,11 @@ else
             if (response.IsSuccessStatusCode == true)
             {
                 await listarContato();
-                modal.Open("Contato excluído com sucesso", "PesquisaContato");
-
+                modal.Open("Contato excluído com sucesso", "Pesquisa Contato", "PesquisaContato");
             }
             else
             {
-                modal.Open("Erro ao excluir o contato", "PesquisaContato");
+                modal.Open("Erro ao excluir o contato", "Pesquisa Contato", "PesquisaContato");
             }
         }
         catch (InvalidOperationException ex)

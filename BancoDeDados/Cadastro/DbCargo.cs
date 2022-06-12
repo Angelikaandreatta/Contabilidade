@@ -40,7 +40,7 @@ namespace BancoDeDados.Cadastro
             }
         }
 
-        public List<Cargo> ListasrCargo()
+        public List<Cargo> ListarCargo()
         {
 
             List<Cargo> lstCargos = null;
