@@ -1,4 +1,4 @@
-﻿@page "/CadastroCliente/{codCliente?}"
+﻿@page "/CadastroCliente/{codCliente?}/{codEndereco?}"
 @inject HttpClient httpClient
 @inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager;
@@ -51,23 +51,23 @@ else
                             <div class="form__inputs">
                                 <div class="field__control">
                                     <label>Rua</label>
-                                    <InputText class="field__input field__input--active" @bind-Value="vmEndereco.Rua"></InputText>
+                                    <InputText class="field__input field__input--active" @bind-Value="vmCliente.Endereco.rua"></InputText>
                                 </div>
                                 <div class="field__control">
                                     <label>Número</label>
-                                    <InputText class="field__input field__input--active" @bind-Value="vmEndereco.Numero"></InputText>
+                                    <InputText class="field__input field__input--active" @bind-Value="vmCliente.Endereco.numero"></InputText>
                                 </div>
                                 <div class="field__control">
                                     <label>Bairro</label>
-                                    <InputText class="field__input field__input--active" @bind-Value="vmEndereco.Bairro"></InputText>
+                                    <InputText class="field__input field__input--active" @bind-Value="vmCliente.Endereco.bairro"></InputText>
                                 </div>
                                 <div class="field__control">
                                     <label>Cidade</label>
-                                    <InputText class="field__input field__input--active" @bind-Value="vmEndereco.Cidade"></InputText>
+                                    <InputText class="field__input field__input--active" @bind-Value="vmCliente.Endereco.cidade"></InputText>
                                 </div>
                                 <div class="field__control">
                                     <label>UF</label>
-                                    <InputText class="field__input field__input--active" @bind-Value="vmEndereco.Uf"></InputText>
+                                    <InputText class="field__input field__input--active" @bind-Value="vmCliente.Endereco.uf"></InputText>
                                 </div>
                             </div>
                         </div>
@@ -100,6 +100,7 @@ else
 
 @code {
     [Parameter] public string codCliente { get; set; }
+    [Parameter] public string codEndereco { get; set; }
     ClienteViewModel vmCliente = new ClienteViewModel();
     EnderecoViewModel vmEndereco = new EnderecoViewModel();
     private Modal modal = new Modal();
@@ -279,6 +280,121 @@ else
                 vmCliente.Cnpj = clienteRetorno.cnpj;
                 vmCliente.Qtd_Empregado = clienteRetorno.qtd_Empregado;
                 vmCliente.Endereco = clienteRetorno.endereco;
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+        finally
+        {
+            this.loading = false;
+            StateHasChanged();
+        }
+    }
+
+    public async Task CadastrarEndereco()
+    {
+        string cookieEmpresa = await JSRuntime.InvokeAsync<string>("blazorExtensions.GetCookieEmpresa");
+        Endereco enderecoGravar = new Endereco();
+        enderecoGravar.rua = vmCliente.Endereco.rua;
+        enderecoGravar.numero = vmCliente.Endereco.numero;
+        enderecoGravar.bairro = vmCliente.Endereco.bairro;
+        enderecoGravar.cidade = vmCliente.Endereco.cidade;
+        enderecoGravar.uf = vmCliente.Endereco.uf;
+
+        try
+        {
+            loading = true;
+            string url = $"https://localhost:44388/Endereco/Gravar";
+            var response = await httpClient.PostAsJsonAsync(url, enderecoGravar);
+            if (response.IsSuccessStatusCode == true)
+            {
+                Endereco enderecoRetorno = JsonConvert.DeserializeObject<Endereco>(await response.Content.ReadAsStringAsync());
+                vmCliente.Endereco.codigo_Endereco = enderecoRetorno.codigo_Endereco;
+                vmCliente.Endereco.rua = enderecoRetorno.rua;
+                vmCliente.Endereco.numero = enderecoRetorno.numero;
+                vmCliente.Endereco.bairro = enderecoRetorno.bairro;
+                vmCliente.Endereco.cidade = enderecoRetorno.cidade;
+                vmCliente.Endereco.uf = enderecoRetorno.uf;
+
+                modal.Open("Endereço cadastrado com sucesso", "Cadastrar endereço", "PesquisaFuncionario");
+            }
+            else
+            {
+                modal.Open("Erro ao cadastrar o endereço", "Cadastrar endereço", "PesquisaFuncionario");
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+        finally
+        {
+            loading = false;
+            StateHasChanged();
+        }
+    }
+
+    public async Task EditarEndereco()
+    {
+
+        Endereco enderecoEditar = new Endereco();
+        enderecoEditar.rua = vmCliente.Endereco.rua;
+        enderecoEditar.numero = vmCliente.Endereco.numero;
+        enderecoEditar.bairro = vmCliente.Endereco.bairro;
+        enderecoEditar.cidade = vmCliente.Endereco.cidade;
+        enderecoEditar.uf = vmCliente.Endereco.uf;
+        try
+        {
+            loading = true;
+            string url = $"https://localhost:44388/Endereco/Atualizar";
+            var response = await httpClient.PostAsJsonAsync(url, enderecoEditar);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Endereco enderecoRetorno = JsonConvert.DeserializeObject<Endereco>(await response.Content.ReadAsStringAsync());
+                vmCliente.Endereco.codigo_Endereco = enderecoRetorno.codigo_Endereco;
+                vmCliente.Endereco.rua = enderecoRetorno.rua;
+                vmCliente.Endereco.numero = enderecoRetorno.numero;
+                vmCliente.Endereco.bairro = enderecoRetorno.bairro;
+                vmCliente.Endereco.cidade = enderecoRetorno.cidade;
+                vmCliente.Endereco.uf = enderecoRetorno.uf;
+
+                modal.Open("Endereço editado com sucesso", "Editar Endereço", "PesquisaFuncionario");
+            }
+            else
+            {
+                modal.Open("Erro ao editar o endereço", "Editar Endereço", "CadastroFuncionario");
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+        finally
+        {
+            loading = false;
+            StateHasChanged();
+        }
+    }
+
+    public async Task CarregarEndereco()
+    {
+        try
+        {
+            this.loading = true;
+            string url = $"https://localhost:44388/Endereco/Carregar?pCodEndereco={codEndereco}";
+            var response = await httpClient.GetAsync(url);
+            if (response.IsSuccessStatusCode == true)
+            {
+                Endereco enderecoRetorno = JsonConvert.DeserializeObject<Endereco>(await response.Content.ReadAsStringAsync());
+                vmCliente.Endereco.codigo_Endereco = enderecoRetorno.codigo_Endereco;
+                vmCliente.Endereco.rua = enderecoRetorno.rua;
+                vmCliente.Endereco.numero = enderecoRetorno.numero;
+                vmCliente.Endereco.bairro = enderecoRetorno.bairro;
+                vmCliente.Endereco.cidade = enderecoRetorno.cidade;
+                vmCliente.Endereco.uf = enderecoRetorno.uf;
             }
         }
         catch (InvalidOperationException ex)
