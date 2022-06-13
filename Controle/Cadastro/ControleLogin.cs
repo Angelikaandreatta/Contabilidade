@@ -13,20 +13,6 @@ namespace Controle.Cadastro
     {
         public async Task<Login> Gravar(Login pLogin)
         {
-            List<string> lstMensagemNegocio = new List<string>();
-            lstMensagemNegocio = pLogin.validarObjeto(pLogin);
-
-            if (lstMensagemNegocio != null)
-            {
-                Validacoes validacao = new Validacoes();
-
-                foreach (string mensagem in lstMensagemNegocio)
-                {
-                    validacao.strMensagemLista.Add(mensagem);
-                }
-                validacao.RetornarMensagem();
-            }
-
             try
             {
                 Login loginGravado = new Login();
@@ -36,6 +22,7 @@ namespace Controle.Cadastro
 
                 if (loginGravado != null)
                 {
+                    loginGravado = new DbLogin().CarregarLogin(loginGravado.id);
                     return loginGravado;
                 }
                 else
@@ -55,20 +42,6 @@ namespace Controle.Cadastro
 
         public async Task<Login> Atualizar(Login pLogin)
         {
-            //List<string> lstMensagemNegocio = new List<string>();
-            //lstMensagemNegocio = pLogin.validarObjeto(pLogin);
-
-            //if (lstMensagemNegocio != null)
-            //{
-            //    Validacoes validacao = new Validacoes();
-
-            //    foreach (string mensagem in lstMensagemNegocio)
-            //    {
-            //        validacao.strMensagemLista.Add(mensagem);
-            //    }
-            //    validacao.RetornarMensagem();
-            //}
-
             try
             {
                 Login loginGravado = new Login();
@@ -78,7 +51,7 @@ namespace Controle.Cadastro
 
                 if (loginGravado != null)
                 {
-                    loginGravado = new DbLogin().CarregarLogin(loginGravado.codigo_Login);
+                    loginGravado = new DbLogin().CarregarLogin(loginGravado.id);
                     return loginGravado;
                 }
                 else
@@ -164,7 +137,7 @@ namespace Controle.Cadastro
 
             if (pCodLogin <= 0)
             {
-                throw new InvalidOperationException("Informe o código do login para carrega-lo.");
+                throw new InvalidOperationException("Informe o código do login para exclui-lo.");
             }
 
             try
@@ -178,7 +151,7 @@ namespace Controle.Cadastro
                 }
                 else
                 {
-                    throw new InvalidOperationException("Erro ao carregar login.");
+                    throw new InvalidOperationException("Erro ao excluir login.");
                 }
             }
             catch (InvalidOperationException ex)
