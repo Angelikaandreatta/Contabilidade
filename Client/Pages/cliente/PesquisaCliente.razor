@@ -103,9 +103,9 @@ else
         try
         {
             loading = true;
+            await GetCookieCodigoEmpresa();
             string url = $"https://localhost:44388/Cliente/Listar";
             var response = await httpClient.PostAsJsonAsync(url, clientTemp);
-            await GetCookieCodigoEmpresa();
             if (response.IsSuccessStatusCode == true)
             {
                 List<Cliente> clientesRetorno = JsonConvert.DeserializeObject<List<Cliente>>(await response.Content.ReadAsStringAsync());

@@ -34,28 +34,27 @@ else
         <tbody>
             @foreach (EmprestimoViewModel emprestimo in emprestimos)
             {
-                @if (emprestimo.Efetivo.empresa.codigo_Empresa == codigoEmpresa)
-                {
-                    <tr>
-                        <td class="text-center">
-                            <button @onclick=@(() => NavigationManager.NavigateTo($"CadastroEmprestimo/{emprestimo.codigo_Emprestimo}")) class="btn btn- btn-primary">
-                                <span class="oi oi-info"></span>
-                            </button>
 
-                        </td>
-                        <td>@emprestimo.Efetivo.nome</td>
-                        <td>@emprestimo.Periodico.Nome</td>
-                        <td>@emprestimo.data_Emprestimo</td>
-                        <td>@emprestimo.data_Devolucao</td>
-                        <td>
-                            <div class="text-center">
-                                <button @onclick=@(() => NavigationManager.NavigateTo($"CadastroEmprestimo/{emprestimo.codigo_Emprestimo}")) type="button" class="btn btn-outline-success">
-                                    Editar
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                }
+                <tr>
+                    <td class="text-center">
+                        <button @onclick=@(() => NavigationManager.NavigateTo($"CadastroEmprestimo/{emprestimo.codigo_Emprestimo}")) class="btn btn- btn-primary">
+                            <span class="oi oi-info"></span>
+                        </button>
+
+                    </td>
+                    <td>@emprestimo.Efetivo.nome</td>
+                    <td>@emprestimo.Periodico.Nome</td>
+                    <td>@emprestimo.data_Emprestimo</td>
+                    <td>@emprestimo.data_Devolucao</td>
+                    <td>
+                        <div class="text-center">
+                            <button @onclick=@(() => NavigationManager.NavigateTo($"CadastroEmprestimo/{emprestimo.codigo_Emprestimo}")) type="button" class="btn btn-outline-success">
+                                Editar
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+
             }
             <tr>
                 <td colspan=5 class="text-center">
@@ -81,7 +80,6 @@ else
     async protected override Task OnInitializedAsync()
     {
         await ListarEmprestimo();
-        await GetCookieCodigoEmpresa();
         StateHasChanged();
     }
 
@@ -104,7 +102,8 @@ else
         try
         {
             loading = true;
-            string url = $"https://localhost:44388/Emprestimo/Listar?pStatus=indisponivel&pCodEmp=1";
+            await GetCookieCodigoEmpresa();
+            string url = $"https://localhost:44388/Emprestimo/Listar?pStatus=indisponivel&pCodEmp={codigoEmpresa}";
             var response = await httpClient.GetAsync(url);
             if (response.IsSuccessStatusCode == true)
             {

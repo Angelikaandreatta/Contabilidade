@@ -185,14 +185,18 @@ else
         }
     }
 
+    private async Task<string> GetEmpresaLogada()
+    {
+        return await JSRuntime.InvokeAsync<string>("blazorExtensions.GetCookieEmpresa");
+    }
+
     private async Task CadastrarCliente()
     {
         loading = true;
-        string cookieEmpresa = await JSRuntime.InvokeAsync<string>("blazorExtensions.GetCookieEmpresa");
         Cliente clienteGravar = new Cliente();
         clienteGravar.razao_Social = vmCliente.Razao_Social;
         clienteGravar.empresa = new Empresa();
-        clienteGravar.empresa.codigo_Empresa = int.Parse(cookieEmpresa);
+        clienteGravar.empresa.codigo_Empresa = int.Parse(await GetEmpresaLogada());
         clienteGravar.endereco = new Endereco();
         clienteGravar.endereco.codigo_Endereco = 1;
         clienteGravar.cnpj = vmCliente.Cnpj;

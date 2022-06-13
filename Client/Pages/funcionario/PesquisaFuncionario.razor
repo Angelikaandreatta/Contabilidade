@@ -142,7 +142,6 @@ else
     async protected override Task OnInitializedAsync()
     {
         await ListarFuncionario();
-        await GetCookieCodigoEmpresa();
         StateHasChanged();
     }
 
@@ -151,6 +150,7 @@ else
         try
         {
             loading = true;
+            await GetCookieCodigoEmpresa();
             string urlEfetivo = $"https://localhost:44388/Efetivo/Listar";
             string urlEstagiario = $"https://localhost:44388/Estagiario/Listar";
             var responseEfetivo = await httpClient.GetAsync(urlEfetivo);
