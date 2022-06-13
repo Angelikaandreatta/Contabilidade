@@ -14,15 +14,14 @@ namespace BancoDeDados.Cadastro
     {
         public Login Gravar(Login pLogin)
         {
-            pLogin.codigo_Login = this.ProximoCodigo();
 
+            pLogin.id = this.ProximoCodigo();
             ComandoSQL comando = new ComandoSQL();
-            comando.InsertTabela("Tb_Login");
-            comando.InsertSqlObj("codigo_Login", $"{pLogin.codigo_Login}");
-            comando.InsertSqlObj("nome", $"{pLogin.nome}");
-            comando.InsertSqlObj("email", $"{pLogin.email}");
-            comando.InsertSqlObj("cargo", $"{pLogin.cargo}");
-            comando.InsertSqlObj("senha", $"{pLogin.senha}");
+            comando.InsertTabela("Login");
+            comando.InsertSqlObj("id", $"{pLogin.id}");
+            comando.InsertSqlObj("codigo_Empresa", $"{pLogin.empresa.codigo_Empresa}");
+            comando.InsertSqlObj("usuario", $"'{pLogin.usuario}'");
+            comando.InsertSqlObj("senha", $"'{pLogin.senha}'", true);
 
             if (comando.ExecutarComandoInsertSql() > 0)
             {
@@ -37,12 +36,11 @@ namespace BancoDeDados.Cadastro
         public Login Atualizar(Login pLogin)
         {
             ComandoSQL comando = new ComandoSQL();
-            comando.UpdateTabela("Tb_Login");
-            comando.UpdateSqlObj("nome", $"'{pLogin.nome}'");
-            comando.UpdateSqlObj("email", $"'{pLogin.email}'");
-            comando.UpdateSqlObj("cargo", $"'{pLogin.cargo}'");
-            comando.UpdateSqlObj("senha", $"'{pLogin.senha}'");
-            comando.strWhere = $" where codigo_Login = {pLogin.codigo_Login}";
+            comando.UpdateTabela("Login");
+            comando.UpdateSqlObj("codigo_Empresa", $"{pLogin.empresa.codigo_Empresa}");
+            comando.UpdateSqlObj("usuario", $"'{pLogin.usuario}'");
+            comando.UpdateSqlObj("senha", $"'{pLogin.senha}'", true);
+            comando.strWhere = $" where id = {pLogin.id}";
 
             if (comando.ExecutarComandoUpdateSql() > 0)
             {
@@ -54,12 +52,91 @@ namespace BancoDeDados.Cadastro
             }
         }
 
+        private Login CarregarDado(Login pLogin, DataRow rd)
+        {
+            pLogin.id = Int32.Parse(rd["id"].ToString());
+            pLogin.empresa = new Empresa();
+            pLogin.empresa.codigo_Empresa = Int32.Parse(rd["codigo_Empresa"].ToString());
+            pLogin.usuario = rd["usuario"].ToString();
+            pLogin.senha = rd["senha"].ToString();
+
+            return pLogin;
+        }
+
+        public List<Login> Listar(Login pLogin)
+        {
+            List<Login> lstLogins = null;
+
+            SqlCommand sql = new SqlCommand("", new ConexaoDB().Conectar());
+            sql.CommandText = "select * from Login";
+
+            using (SqlDataReader dt = sql.ExecuteReader())
+            {
+                DataTable dataTable = new DataTable();
+                dataTable.Load(dt);
+
+                lstLogins = new List<Login>();
+
+                foreach (DataRow rd in dataTable.Rows)
+                {
+                    Login loginCarregar = new Login();
+
+                    loginCarregar = this.CarregarDado(loginCarregar, rd);
+
+                    lstLogins.Add(loginCarregar);
+                }
+
+                return lstLogins;
+            }
+        }
+
+        public Login CarregarLogin(int pIdLogin)
+        {
+            SqlCommand sql = new SqlCommand("", new ConexaoDB().Conectar());
+            sql.CommandText = "select * from Login";
+            sql.CommandText += $" where id = {pIdLogin}";
+
+            using (SqlDataReader dt = sql.ExecuteReader())
+            {
+                Login loginCarregar = new Login();
+
+                DataTable dataTable = new DataTable();
+                dataTable.Load(dt);
+                DataRow rd = dataTable.Rows[0];
+
+                loginCarregar = this.CarregarDado(loginCarregar, rd);
+
+                return loginCarregar;
+            }
+        }
+
+        public int Excluir(int pIdLogin)
+        {
+            int retorno = 0;
+
+            StringBuilder sql = new StringBuilder();
+            sql.Append("delete from Login");
+            sql.Append($" where id = '{pIdLogin}'");
+
+
+            if (ExecutarReader(sql.ToString()) == 1)
+            {
+                retorno = 1;
+            }
+            else
+            {
+                retorno = -1;
+            }
+
+            return retorno;
+        }
+
         public int ProximoCodigo()
         {
             int codigoRetorno = 0;
 
             SqlCommand sql = new SqlCommand("", new ConexaoDB().Conectar());
-            sql.CommandText = "select max(codigo_Login) as maiorCodigo from tb_Login";
+            sql.CommandText = "select max(id) as maiorCodigo from Login";
 
             using (SqlDataReader dt = sql.ExecuteReader())
             {
@@ -79,109 +156,5 @@ namespace BancoDeDados.Cadastro
             }
         }
 
-        private Login CarregarDado(Login pLogin, DataRow rd)
-        {
-            pLogin.codigo_Login = Int32.Parse(rd["codigo_Login"].ToString());
-            pLogin.nome = rd["nome"].ToString();
-            pLogin.email = rd["email"].ToString();
-            pLogin.cargo = rd["cargo"].ToString();
-
-            return pLogin;
-        }
-
-        public List<Login> Listar(Login pLogin)
-        {
-            List<Login> lstLogins = null;
-
-            SqlCommand sql = new SqlCommand("", new ConexaoDB().Conectar());
-            sql.CommandText = "select codigo_Login, email, nome, cargo  from Tb_Login";
-
-            using (SqlDataReader dt = sql.ExecuteReader())
-            {
-                DataTable dataTable = new DataTable();
-                dataTable.Load(dt);
-
-                lstLogins = new List<Login>();
-
-                foreach (DataRow rd in dataTable.Rows)
-                {
-
-                    Login loginCarregar = new Login();
-
-                    loginCarregar = this.CarregarDado(loginCarregar, rd);
-
-                    lstLogins.Add(loginCarregar);
-                }
-
-                return lstLogins;
-            }
-        }
-
-        public Login CarregarLogin(int pCodLogin)
-        {
-            SqlCommand sql = new SqlCommand("", new ConexaoDB().Conectar());
-            sql.CommandText = "select  codigo_Login, email, nome, cargo from Tb_Login";
-            sql.CommandText += $" where codigo_Login = '{pCodLogin}'";
-
-            using (SqlDataReader dt = sql.ExecuteReader())
-            {
-                Login loginCarregar = new Login();
-
-                DataTable dataTable = new DataTable();
-                dataTable.Load(dt);
-                DataRow rd = dataTable.Rows[0];
-
-                loginCarregar = this.CarregarDado(loginCarregar, rd);
-
-                return loginCarregar;
-            }
-        }
-
-        public int Excluir(int pCodLogin)
-        {
-            int retorno = 0;
-
-            StringBuilder sql = new StringBuilder();
-            sql.Append("delete from Tb_Login");
-            sql.Append($" where codigo_Login = '{pCodLogin}'");
-
-
-            if (ExecutarReader(sql.ToString()) == 1)
-            {
-                retorno = 1;
-            }
-            else
-            {
-                retorno = -1;
-            }
-
-            return retorno;
-        }
-
-        public bool Logar(Login pLogin)
-        {
-            SqlCommand sql = new SqlCommand("", new ConexaoDB().Conectar());
-            sql.CommandText = $"select DISTINCT  email, senha from tb_Login where codigo_Login = '{pLogin.codigo_Login}'";
-
-            using (SqlDataReader dt = sql.ExecuteReader())
-            {
-                DataTable dataTable = new DataTable();
-                dataTable.Load(dt);
-                DataRow rde = dataTable.Rows[0];
-                DataRow rds = dataTable.Rows[1];
-
-                string email = rde["email"].ToString();
-                string senha = rds["senha"].ToString();
-
-                if (email == pLogin.email && senha == pLogin.senha)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        }
     }
 }
