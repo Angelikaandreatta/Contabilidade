@@ -1,6 +1,8 @@
-﻿@page "/LoginUsuario"
+﻿@layout LoginLayout
+@page "/"
 @inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager
+@using Projeto_Contabilidade.Client.Componentes.Modal
 
 <div style="flex:1; height:100vh; " class="d-flex justify-content-center align-items-center">
     <EditForm style="width:500px" Model=@vmLogin>
@@ -15,8 +17,8 @@
         <div class="field__control w-100 mt-2 mb-2">
             <label>Empresa</label>
             <InputSelect class="field__input" @bind-Value="@empresa">
-                <option value="empresa 1">Empresa 1</option>
-                <option value="empresa 2">Empresa 2</option>
+                <option value="1">Empresa 1</option>
+                <option value="2">Empresa 2</option>
             </InputSelect>
         </div>
         <div class="field__control w-100">
@@ -25,7 +27,7 @@
             <a href="#" class="text-secondary text-right">Esqueci minha senha</a>
         </div>
         <div class="d-flex flex-column w-100 mt-4">
-            <button @onclick="WriteCookieASync" class="btn btn-primary">Entrar</button>
+            <button @onclick="ValidateLogin" class="btn btn-primary">Entrar</button>
             <button class="btn">Criar Conta</button>
         </div>
     </EditForm>
@@ -34,15 +36,30 @@
     </div>
 </div>
 
+<Modal @ref=modal></Modal>
 @code {
     private LoginViewModel vmLogin = new LoginViewModel();
-    private string empresa { get; set; } = "empresa 1";
+    private string empresa { get; set; } = "1";
+    Modal modal = new Modal();
+    public async Task ValidateLogin()
+    {
+        if(vmLogin.Usuario == "Administrador" && vmLogin.Password == "Admin1234")
+        {
+            await JSRuntime.InvokeAsync<string>("blazorExtensions.WriteCookieAutenticated", "true");
+            await WriteCookieASync();
+            modal.Open("Logado com sucesso", "Login", "/index");
+            StateHasChanged();
+        }
+        else
+        {
+            await JSRuntime.InvokeAsync<string>("blazorExtensions.WriteCookieAutenticated", "false");
+            modal.Open("Erro ao logar", "Login", "/");
+            StateHasChanged();
+        }
+    }
 
     public async Task WriteCookieASync()
     {
-        await JSRuntime.InvokeAsync<string>("blazorExtensions.WriteCookie", "empresa", empresa);
-        NavigationManager.NavigateTo("");
-        string cookieEmpresa = await JSRuntime.InvokeAsync<string>("blazorExtensions.GetCookie");
-        Console.WriteLine(cookieEmpresa);
+        await JSRuntime.InvokeAsync<string>("blazorExtensions.WriteCookieEmpresa", "empresa", empresa);
     }
 }

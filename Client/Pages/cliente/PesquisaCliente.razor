@@ -2,7 +2,8 @@
 @using Negocio.Cadastro
 @using Projeto_Contabilidade.Client.Componentes.Modal
 @inject HttpClient httpClient
-@inject NavigationManager NavigationManager;
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 @using Newtonsoft.Json
 
 @if (loading)
@@ -32,25 +33,28 @@ else
         <tbody>
             @foreach (ClienteViewModel cliente in clientes)
             {
-                <tr>
-                    <td class="text-center">
-                        <button @onclick=@(() => NavigationManager.NavigateTo($"InformacaoCliente/{cliente.Codigo_Cliente}")) class="btn btn- btn-primary">
-                            <span class="oi oi-info"></span>
-                        </button>
-
-                    </td>
-                    <td>@cliente.Razao_Social</td>
-                    <td>@cliente.Cnpj</td>
-                    <td>@cliente.Qtd_Empregado</td>
-                    <td>
-                        <div class="text-center">
-                            <button @onclick=@(() => NavigationManager.NavigateTo($"CadastroCliente/{cliente.Codigo_Cliente}")) type="button" class="btn btn-outline-success">
-                                Editar
+                @if (cliente.Empresa.codigo_Empresa == codigoEmpresa)
+                {
+                    <tr>
+                        <td class="text-center">
+                            <button @onclick=@(() => NavigationManager.NavigateTo($"InformacaoCliente/{cliente.Codigo_Cliente}")) class="btn btn- btn-primary">
+                                <span class="oi oi-info"></span>
                             </button>
-                            <button @onclick="@(() => ExcluirCliente(cliente.Codigo_Cliente))" type="button" class="btn btn-outline-danger">Deletar</button>
-                        </div>
-                    </td>
-                </tr>
+
+                        </td>
+                        <td>@cliente.Razao_Social</td>
+                        <td>@cliente.Cnpj</td>
+                        <td>@cliente.Qtd_Empregado</td>
+                        <td>
+                            <div class="text-center">
+                                <button @onclick=@(() => NavigationManager.NavigateTo($"CadastroCliente/{cliente.Codigo_Cliente}")) type="button" class="btn btn-outline-success">
+                                    Editar
+                                </button>
+                                <button @onclick="@(() => ExcluirCliente(cliente.Codigo_Cliente))" type="button" class="btn btn-outline-danger">Deletar</button>
+                            </div>
+                        </td>
+                    </tr>
+                }
             }
             <tr>
                 <td colspan=5 class="text-center">
@@ -69,6 +73,7 @@ else
 @code {
     public Cliente clientTemp = new Cliente();
     public bool loading = false;
+    public int codigoEmpresa { get; set; }
     List<ClienteViewModel> clientes = new List<ClienteViewModel>();
     Modal modal = new Modal();
 
@@ -79,6 +84,21 @@ else
         StateHasChanged();
     }
 
+    private async Task GetCookieCodigoEmpresa()
+    {
+        try
+        {
+            string cookieEmpresa = await JSRuntime.InvokeAsync<string>("blazorExtensions.GetCookieEmpresa");
+            codigoEmpresa = int.Parse(cookieEmpresa);
+            Console.WriteLine(codigoEmpresa);
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            throw new Exception(ex.Message);
+        }
+    }
+
     protected async Task ListarCliente()
     {
         try
@@ -86,6 +106,7 @@ else
             loading = true;
             string url = $"https://localhost:44388/Cliente/Listar";
             var response = await httpClient.PostAsJsonAsync(url, clientTemp);
+            await GetCookieCodigoEmpresa();
             if (response.IsSuccessStatusCode == true)
             {
                 List<Cliente> clientesRetorno = JsonConvert.DeserializeObject<List<Cliente>>(await response.Content.ReadAsStringAsync());
@@ -100,6 +121,7 @@ else
                     cliente.Qtd_Empregado = clienteRetorno.qtd_Empregado;
                     cliente.Endereco = new Endereco();
                     cliente.Endereco.codigo_Endereco = clienteRetorno.endereco.codigo_Endereco;
+                    cliente.Empresa = clienteRetorno.empresa;
 
                     clientes.Add(cliente);
                 }

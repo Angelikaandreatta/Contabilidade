@@ -4,24 +4,31 @@
 @inject NavigationManager NavigationManager
 
 <div class="page">
-    @if (autenticado)
-    {
-        <div class="sidebar">
-            <NavMenu />
-        </div>
 
-        <div class="main p-5">
-            @Body
-        </div>
-    }
-    else
-    {
-        <Projeto_Contabilidade.Client.Pages.login.LoginUsuario />
-    }
+
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <div class="main p-5">
+
+        @Body
+    </div>
+
+
 </div>
 
 @code {
-    // Alterar para false para ver tela de Login
-    public bool autenticado { get; set; } = true;
+    private string autenticated = "false";
 
+    protected async override Task OnInitializedAsync()
+    {
+        await GetAutentication();
+    }
+
+    private async Task GetAutentication()
+    {
+        string autentication = await JSRuntime.InvokeAsync<string>("blazorExtensions.GetCookieAutenticated");
+        autenticated = autentication;
+    }
 }

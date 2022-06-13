@@ -10,14 +10,14 @@ namespace Projeto_Contabilidade.Client.Pages.cliente
     {
         public ClienteViewModel()
         {
-            this.Empresa = new vmEmpresa();
+            this.Empresa = new Empresa();
             this.Endereco = new Endereco();
         }
 
         private string codigo_cliente = "";
         public string Codigo_Cliente { get => codigo_cliente; set => codigo_cliente = value; }
 
-        public vmEmpresa Empresa { get; set; } = null;
+        public Empresa Empresa { get; set; } = null;
 
         public Endereco Endereco { get; set; } = null;
 

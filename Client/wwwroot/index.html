@@ -30,16 +30,27 @@
     <script>
         window.blazorExtensions = {
 
-            WriteCookie: function (name, value) {
+            WriteCookieEmpresa: function (name, value) {
 
                 document.cookie = `${name}=${value}; path=/`;
             },
 
-            GetCookie: function () {
+            GetCookieEmpresa: function () {
 
-                var cookie = document.cookie.split("=");
-                var empresa = cookie[1];
-                return empresa;
+                var cookie = document.cookie.split(";");
+                var empresa = cookie[1].split("=");
+                return empresa[1].trim();
+            },
+
+            WriteCookieAutenticated: function (value) {
+                document.cookie = `autenticated=${value}; path=/`;
+            },
+
+            GetCookieAutenticated: function () {
+
+                var cookie = document.cookie.split(";");
+                var autenticated = cookie[0].split("=");
+                return autenticated[1];
             }
         }
     </script>

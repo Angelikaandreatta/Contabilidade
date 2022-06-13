@@ -1,6 +1,6 @@
 ﻿@page "/CadastroCliente/{codCliente?}"
 @inject HttpClient httpClient
-@inject IJSRuntime jsRuntime
+@inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager;
 @using System.Text
 @using Negocio.Cadastro
@@ -185,10 +185,11 @@ else
     private async Task CadastrarCliente()
     {
         loading = true;
+        string cookieEmpresa = await JSRuntime.InvokeAsync<string>("blazorExtensions.GetCookieEmpresa");
         Cliente clienteGravar = new Cliente();
         clienteGravar.razao_Social = vmCliente.Razao_Social;
         clienteGravar.empresa = new Empresa();
-        clienteGravar.empresa.codigo_Empresa = 1;
+        clienteGravar.empresa.codigo_Empresa = int.Parse(cookieEmpresa);
         clienteGravar.endereco = new Endereco();
         clienteGravar.endereco.codigo_Endereco = 1;
         clienteGravar.cnpj = vmCliente.Cnpj;
