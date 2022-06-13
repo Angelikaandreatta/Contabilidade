@@ -1,8 +1,9 @@
-﻿@page "/CadastroFuncionario/{codFuncionario?}/{pTipoFuncionario?}"
+﻿@page "/CadastroFuncionario/{codFuncionario?}/{codEndereco?}/{pTipoFuncionario?}"
 @inject HttpClient httpClient
 @inject IJSRuntime JSRuntime
 @using System.Text
 @using Negocio.Cadastro
+@using Projeto_Contabilidade.Client.Pages.endereco
 @using Projeto_Contabilidade.Client.Pages.funcionario
 @using Projeto_Contabilidade.Client.Componentes.Steper
 @using Projeto_Contabilidade.Client.Componentes.Input
@@ -98,6 +99,10 @@ else
                                     <label>Cidade</label>
                                     <InputText class="field__input field__input--active" @bind-Value="vmEfetivo.Endereco.cidade"></InputText>
                                 </div>
+                                <div class="field__control">
+                                    <label>UF</label>
+                                    <InputText class="field__input field__input--active" @bind-Value="vmEfetivo.Endereco.uf"></InputText>
+                                </div>
                             </div>
                         </div>
                     </Step>
@@ -136,9 +141,11 @@ else
     }
 
     [Parameter] public string codFuncionario { get; set; }
+    [Parameter] public string codEndereco { get; set; }
     [Parameter] public string pTipoFuncionario { get; set; }
     FuncionarioViewModel vmFuncionario = new FuncionarioViewModel();
     EstagiarioViewModel vmEstagiario = new EstagiarioViewModel();
+    EnderecoViewModel vmEndereco = new EnderecoViewModel();
     EfetivoViewModel vmEfetivo = new EfetivoViewModel();
 
     private Modal modal { get; set; }
@@ -281,6 +288,121 @@ else
 
     }
 
+    public async Task CadastrarEndereco()
+    {
+        string cookieEmpresa = await JSRuntime.InvokeAsync<string>("blazorExtensions.GetCookieEmpresa");
+        Endereco enderecoGravar = new Endereco();
+        enderecoGravar.rua = vmEfetivo.Endereco.rua;
+        enderecoGravar.numero = vmEfetivo.Endereco.numero;
+        enderecoGravar.bairro = vmEfetivo.Endereco.bairro;
+        enderecoGravar.cidade = vmEfetivo.Endereco.cidade;
+        enderecoGravar.uf = vmEfetivo.Endereco.uf;
+
+        try
+        {
+            loading = true;
+            string url = $"https://localhost:44388/Endereco/Gravar";
+            var response = await httpClient.PostAsJsonAsync(url, enderecoGravar);
+            if (response.IsSuccessStatusCode == true)
+            {
+                Endereco enderecoRetorno = JsonConvert.DeserializeObject<Endereco>(await response.Content.ReadAsStringAsync());
+                vmEfetivo.Endereco.codigo_Endereco = enderecoRetorno.codigo_Endereco;
+                vmEfetivo.Endereco.rua = enderecoRetorno.rua;
+                vmEfetivo.Endereco.numero = enderecoRetorno.numero;
+                vmEfetivo.Endereco.bairro = enderecoRetorno.bairro;
+                vmEfetivo.Endereco.cidade = enderecoRetorno.cidade;
+                vmEfetivo.Endereco.uf = enderecoRetorno.uf;
+
+                modal.Open("Endereço cadastrado com sucesso", "Cadastrar endereço", "PesquisaFuncionario");
+            }
+            else
+            {
+                modal.Open("Erro ao cadastrar o endereço", "Cadastrar endereço", "PesquisaFuncionario");
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+        finally
+        {
+            loading = false;
+            StateHasChanged();
+        }
+    }
+
+    public async Task EditarEndereco()
+    {
+
+        Endereco enderecoEditar = new Endereco();
+        enderecoEditar.rua = vmEfetivo.Endereco.rua;
+        enderecoEditar.numero = vmEfetivo.Endereco.numero;
+        enderecoEditar.bairro = vmEfetivo.Endereco.bairro;
+        enderecoEditar.cidade = vmEfetivo.Endereco.cidade;
+        enderecoEditar.uf = vmEfetivo.Endereco.uf;
+        try
+        {
+            loading = true;
+            string url = $"https://localhost:44388/Endereco/Atualizar";
+            var response = await httpClient.PostAsJsonAsync(url, enderecoEditar);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Endereco enderecoRetorno = JsonConvert.DeserializeObject<Endereco>(await response.Content.ReadAsStringAsync());
+                vmEfetivo.Endereco.codigo_Endereco = enderecoRetorno.codigo_Endereco;
+                vmEfetivo.Endereco.rua = enderecoRetorno.rua;
+                vmEfetivo.Endereco.numero = enderecoRetorno.numero;
+                vmEfetivo.Endereco.bairro = enderecoRetorno.bairro;
+                vmEfetivo.Endereco.cidade = enderecoRetorno.cidade;
+                vmEfetivo.Endereco.uf = enderecoRetorno.uf;
+
+                modal.Open("Endereço editado com sucesso", "Editar Endereço", "PesquisaFuncionario");
+            }
+            else
+            {
+                modal.Open("Erro ao editar o endereço", "Editar Endereço", "CadastroFuncionario");
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+        finally
+        {
+            loading = false;
+            StateHasChanged();
+        }
+    }
+
+    public async Task CarregarEndereco()
+    {
+        try
+        {
+            this.loading = true;
+            string url = $"https://localhost:44388/Endereco/Carregar?pCodEndereco={codEndereco}";
+            var response = await httpClient.GetAsync(url);
+            if (response.IsSuccessStatusCode == true)
+            {
+                Endereco enderecoRetorno = JsonConvert.DeserializeObject<Endereco>(await response.Content.ReadAsStringAsync());
+                vmEfetivo.Endereco.codigo_Endereco = enderecoRetorno.codigo_Endereco;
+                vmEfetivo.Endereco.rua = enderecoRetorno.rua;
+                vmEfetivo.Endereco.numero = enderecoRetorno.numero;
+                vmEfetivo.Endereco.bairro = enderecoRetorno.bairro;
+                vmEfetivo.Endereco.cidade = enderecoRetorno.cidade;
+                vmEfetivo.Endereco.uf = enderecoRetorno.uf;
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException(ex.Message);
+        }
+        finally
+        {
+            this.loading = false;
+            StateHasChanged();
+        }
+    }
+
     public async Task EditarEfetivo()
     {
         Efetivo efetivoEditar = new Efetivo();
@@ -381,7 +503,6 @@ else
 
     public async Task CarregarEfetivo()
     {
-
         try
         {
             this.loading = true;
