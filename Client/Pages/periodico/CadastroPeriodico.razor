@@ -1,7 +1,7 @@
 ﻿@page "/CadastroPeriodico";
 @page "/CadastroPeriodico/{CodPeriodico}"
 @inject HttpClient httpClient
-@inject IJSRuntime jsRuntime
+@inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager
 @using System.Text
 @using Negocio.Cadastro
@@ -139,10 +139,11 @@ else
     private async Task EditarPeriodico()
     {
         loading = true;
+        string cookieEmpresa = await JSRuntime.InvokeAsync<string>("blazorExtensions.GetCookieEmpresa");
         Periodico periodicoEditar = new Periodico();
         periodicoEditar.codigo_Periodico = int.Parse(vmPeriodico.Codigo_Periodico);
         periodicoEditar.empresa = new Empresa();
-        periodicoEditar.empresa.codigo_Empresa = 1;
+        periodicoEditar.empresa.codigo_Empresa = int.Parse(cookieEmpresa);
         periodicoEditar.Nome = vmPeriodico.Nome;
         periodicoEditar.Autor = vmPeriodico.Autor;
         periodicoEditar.Editora = vmPeriodico.Editora;
@@ -193,9 +194,10 @@ else
     private async Task CadastrarPeriodico()
     {
         loading = true;
+        string cookieEmpresa = await JSRuntime.InvokeAsync<string>("blazorExtensions.GetCookieEmpresa");
         Periodico periodicoGravar = new Periodico();
         periodicoGravar.empresa = new Empresa();
-        periodicoGravar.empresa.codigo_Empresa = 1;
+        periodicoGravar.empresa.codigo_Empresa = int.Parse(cookieEmpresa);
         periodicoGravar.Nome = vmPeriodico.Nome;
         periodicoGravar.Autor = vmPeriodico.Autor;
         periodicoGravar.Editora = vmPeriodico.Editora;

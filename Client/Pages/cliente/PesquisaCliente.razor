@@ -90,7 +90,6 @@ else
         {
             string cookieEmpresa = await JSRuntime.InvokeAsync<string>("blazorExtensions.GetCookieEmpresa");
             codigoEmpresa = int.Parse(cookieEmpresa);
-            Console.WriteLine(codigoEmpresa);
         }
         catch(Exception ex)
         {

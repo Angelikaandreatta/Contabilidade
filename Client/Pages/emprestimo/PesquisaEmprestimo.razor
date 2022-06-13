@@ -2,7 +2,8 @@
 @using Negocio.Cadastro
 @using Projeto_Contabilidade.Client.Componentes.Modal
 @inject HttpClient httpClient
-@inject NavigationManager NavigationManager;
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
 @using Newtonsoft.Json
 
 @if (loading)
@@ -33,25 +34,28 @@ else
         <tbody>
             @foreach (EmprestimoViewModel emprestimo in emprestimos)
             {
-                <tr>
-                    <td class="text-center">
-                        <button @onclick=@(() => NavigationManager.NavigateTo($"CadastroEmprestimo/{emprestimo.codigo_Emprestimo}")) class="btn btn- btn-primary">
-                            <span class="oi oi-info"></span>
-                        </button>
-
-                    </td>
-                    <td>@emprestimo.Efetivo.nome</td>
-                    <td>@emprestimo.Periodico.Nome</td>
-                    <td>@emprestimo.data_Emprestimo</td>
-                    <td>@emprestimo.data_Devolucao</td>
-                    <td>
-                        <div class="text-center">
-                            <button @onclick=@(() => NavigationManager.NavigateTo($"CadastroEmprestimo/{emprestimo.codigo_Emprestimo}")) type="button" class="btn btn-outline-success">
-                                Editar
+                @if (emprestimo.Efetivo.empresa.codigo_Empresa == codigoEmpresa)
+                {
+                    <tr>
+                        <td class="text-center">
+                            <button @onclick=@(() => NavigationManager.NavigateTo($"CadastroEmprestimo/{emprestimo.codigo_Emprestimo}")) class="btn btn- btn-primary">
+                                <span class="oi oi-info"></span>
                             </button>
-                        </div>
-                    </td>
-                </tr>
+
+                        </td>
+                        <td>@emprestimo.Efetivo.nome</td>
+                        <td>@emprestimo.Periodico.Nome</td>
+                        <td>@emprestimo.data_Emprestimo</td>
+                        <td>@emprestimo.data_Devolucao</td>
+                        <td>
+                            <div class="text-center">
+                                <button @onclick=@(() => NavigationManager.NavigateTo($"CadastroEmprestimo/{emprestimo.codigo_Emprestimo}")) type="button" class="btn btn-outline-success">
+                                    Editar
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
             }
             <tr>
                 <td colspan=5 class="text-center">
@@ -72,11 +76,27 @@ else
     Modal modal = new Modal();
     List<EmprestimoViewModel> emprestimos = new List<EmprestimoViewModel>();
     public Emprestimo emprestimoObj = new Emprestimo();
+    private int codigoEmpresa { get; set; }
 
     async protected override Task OnInitializedAsync()
     {
         await ListarEmprestimo();
+        await GetCookieCodigoEmpresa();
         StateHasChanged();
+    }
+
+    private async Task GetCookieCodigoEmpresa()
+    {
+        try
+        {
+            string cookieEmpresa = await JSRuntime.InvokeAsync<string>("blazorExtensions.GetCookieEmpresa");
+            codigoEmpresa = int.Parse(cookieEmpresa);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            throw new Exception(ex.Message);
+        }
     }
 
     protected async Task ListarEmprestimo()

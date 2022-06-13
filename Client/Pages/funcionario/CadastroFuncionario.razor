@@ -1,6 +1,6 @@
 ﻿@page "/CadastroFuncionario/{codFuncionario?}/{pTipoFuncionario?}"
 @inject HttpClient httpClient
-@inject IJSRuntime jsRuntime
+@inject IJSRuntime JSRuntime
 @using System.Text
 @using Negocio.Cadastro
 @using Projeto_Contabilidade.Client.Pages.funcionario
@@ -199,14 +199,14 @@ else
 
     public async Task CadastrarEfetivo()
     {
-
+        string cookieEmpresa = await JSRuntime.InvokeAsync<string>("blazorExtensions.GetCookieEmpresa");
         Efetivo efetivoGravar = new Efetivo();
         efetivoGravar.nome = vmFuncionario.Nome;
         efetivoGravar.cpf = vmFuncionario.Cpf;
         efetivoGravar.email = vmFuncionario.Email;
         efetivoGravar.data_Nascimento = vmFuncionario.Data_Nascimento;
         efetivoGravar.empresa = new Empresa();
-        efetivoGravar.empresa.codigo_Empresa = 1;
+        efetivoGravar.empresa.codigo_Empresa = int.Parse(cookieEmpresa);
         efetivoGravar.endereco = new Endereco();
         efetivoGravar.endereco.codigo_Endereco = 1;
         efetivoGravar.cargo = new Cargo();
@@ -239,7 +239,7 @@ else
 
     public async Task CadastrarEstagiario()
     {
-
+        string cookieEmpresa = await JSRuntime.InvokeAsync<string>("blazorExtensions.GetCookieEmpresa");
         Estagiario estagiarioGravar = new Estagiario();
         estagiarioGravar.nome = vmFuncionario.Nome;
         estagiarioGravar.cpf = vmFuncionario.Cpf;
@@ -248,7 +248,7 @@ else
         estagiarioGravar.nome_curso = vmEstagiario.Nome_Curso;
         estagiarioGravar.data_Inicio_Curso = vmEstagiario.Data_Inicio_Curso;
         estagiarioGravar.empresa = new Empresa();
-        estagiarioGravar.empresa.codigo_Empresa = 1;
+        estagiarioGravar.empresa.codigo_Empresa = int.Parse(cookieEmpresa);
         estagiarioGravar.endereco = new Endereco();
         estagiarioGravar.endereco.codigo_Endereco = 1;
         estagiarioGravar.efetivo = new Efetivo();

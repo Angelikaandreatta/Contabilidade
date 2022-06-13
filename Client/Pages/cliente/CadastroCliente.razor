@@ -139,10 +139,13 @@ else
     private async Task EditarCliente()
     {
         loading = true;
+        string cookieEmpresa = await JSRuntime.InvokeAsync<string>("blazorExtensions.GetCookieEmpresa");
         Cliente clienteEditar = new Cliente();
         clienteEditar.codigo_Cliente = int.Parse(vmCliente.Codigo_Cliente);
         clienteEditar.endereco = new Endereco();
         clienteEditar.endereco.codigo_Endereco = 1;
+        clienteEditar.empresa = new Empresa();
+        clienteEditar.empresa.codigo_Empresa = int.Parse(cookieEmpresa);
         clienteEditar.razao_Social = vmCliente.Razao_Social;
         clienteEditar.cnpj = vmCliente.Cnpj;
         clienteEditar.qtd_Empregado = vmCliente.Qtd_Empregado;

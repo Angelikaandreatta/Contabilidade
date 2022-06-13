@@ -149,6 +149,8 @@ else
                     cliente.Qtd_Empregado = clienteRetorno.qtd_Empregado;
                     cliente.Endereco = new Endereco();
                     cliente.Endereco.codigo_Endereco = clienteRetorno.endereco.codigo_Endereco;
+                    cliente.Empresa = new Empresa();
+                    cliente.Empresa = clienteRetorno.empresa;
 
                     clientes.Add(cliente);
                 }

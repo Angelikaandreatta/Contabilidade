@@ -1,6 +1,6 @@
 ﻿@page "/CadastroEmprestimo/{codEmprestimo?}"
 @inject HttpClient httpClient
-@inject IJSRuntime jsRuntime
+@inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager;
 @using System.Text
 @using Negocio.Cadastro
@@ -95,22 +95,37 @@ else
 
 @code {
     [Parameter] public string codEmprestimo { get; set; }
-    private Modal modal = new Modal();
-    EmprestimoViewModel vmEmprestimo = new EmprestimoViewModel();
-    private string formTitle = "Cadastro de Empréstimo";
-    public bool IsEnabled = true;
-    public bool loading = false;
-    private string error;
-    public Emprestimo emprestimoObj = new Emprestimo();
     List<EfetivoViewModel> listaEfetivos = new List<EfetivoViewModel>();
     List<PeriodicoViewModel> listaPeriodicos = new List<PeriodicoViewModel>();
+    EmprestimoViewModel vmEmprestimo = new EmprestimoViewModel();
+    public Emprestimo emprestimoObj = new Emprestimo();
     public Periodico periodicoObj = new Periodico();
+    public bool IsEnabled = true;
+    public bool loading = false;
+    private string formTitle = "Cadastro de Empréstimo";
+    private string error;
+    private Modal modal = new Modal();
+    private int codigoEmpresa { get; set; }
 
     async protected override Task OnInitializedAsync()
     {
+        await GetCookieCodigoEmpresa();
         await CarregarSelects();
     }
 
+    private async Task GetCookieCodigoEmpresa()
+    {
+        try
+        {
+            string cookieEmpresa = await JSRuntime.InvokeAsync<string>("blazorExtensions.GetCookieEmpresa");
+            codigoEmpresa = int.Parse(cookieEmpresa);
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            throw new Exception(ex.Message);
+        }
+    }
 
     protected override async void OnParametersSet()
     {
@@ -145,17 +160,21 @@ else
                 listaEfetivos.RemoveRange(0, listaEfetivos.Count);
                 foreach (Efetivo efetivoRetorno in efetivosRetorno)
                 {
-                    EfetivoViewModel efetivo = new EfetivoViewModel();
-                    efetivo.Codigo_Efetivo = efetivoRetorno.codigo_efetivo.ToString();
-                    efetivo.Nome = efetivoRetorno.nome;
-                    efetivo.Cpf = efetivoRetorno.cpf;
-                    efetivo.Data_Nascimento = efetivoRetorno.data_Nascimento;
-                    efetivo.Email = efetivoRetorno.email;
-                    efetivo.Cargo = efetivoRetorno.cargo;
-                    efetivo.Empresa = efetivoRetorno.empresa;
-                    efetivo.Endereco = efetivoRetorno.endereco;
+                    if (efetivoRetorno.empresa.codigo_Empresa == codigoEmpresa)
+                    {
+                        EfetivoViewModel efetivo = new EfetivoViewModel();
+                        efetivo.Codigo_Efetivo = efetivoRetorno.codigo_efetivo.ToString();
+                        efetivo.Nome = efetivoRetorno.nome;
+                        efetivo.Cpf = efetivoRetorno.cpf;
+                        efetivo.Data_Nascimento = efetivoRetorno.data_Nascimento;
+                        efetivo.Email = efetivoRetorno.email;
+                        efetivo.Cargo = efetivoRetorno.cargo;
+                        efetivo.Empresa = efetivoRetorno.empresa;
+                        efetivo.Endereco = efetivoRetorno.endereco;
 
-                    listaEfetivos.Add(efetivo);
+                        listaEfetivos.Add(efetivo);
+
+                    }
                 }
             }
         }
@@ -329,7 +348,7 @@ else
             await ListarEfetivo();
             await ListarPeriodico();
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             throw new Exception(ex.Message);
         }

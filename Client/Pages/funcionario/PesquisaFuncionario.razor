@@ -3,6 +3,7 @@
 @using Projeto_Contabilidade.Client.Componentes.Modal;
 @using Negocio.Cadastro;
 @using Newtonsoft.Json;
+@inject IJSRuntime JSRuntime
 @inject HttpClient httpClient;
 @inject NavigationManager NavigationManager;
 
@@ -34,63 +35,70 @@ else
         <tbody>
             @foreach (EfetivoViewModel efetivo in efetivos)
             {
-                <tr>
-                    <td>
-                        @efetivo.Nome
-                    </td>
-                    <td>
-                        @efetivo.Cargo.nome
-                    </td>
-                    <td>
-                        @efetivo.Data_Nascimento
-                    </td>
-                    <td>
-                        @efetivo.Cpf
-                    </td>
-                    <td>
-                        @efetivo.Email
-                    </td>
+                @if (efetivo.Empresa.codigo_Empresa == codigoEmpresa)
+                {
+                    <tr>
+                        <td>
+                            @efetivo.Nome
+                        </td>
+                        <td>
+                            @efetivo.Cargo.nome
+                        </td>
+                        <td>
+                            @efetivo.Data_Nascimento
+                        </td>
+                        <td>
+                            @efetivo.Cpf
+                        </td>
+                        <td>
+                            @efetivo.Email
+                        </td>
 
-                    <td>
-                        <div>
-                            <button type="button" class="btn btn-outline-success"
+                        <td>
+                            <div>
+                                <button type="button" class="btn btn-outline-success"
                             @onclick=@(() => NavigationManager.NavigateTo($"CadastroFuncionario/{efetivo.Codigo_Efetivo}/0"))>
-                                Editar
-                            </button>
-                            <button @onclick=" () => ExcluirEfetivo(efetivo.Codigo_Efetivo)" type="button" class="btn btn-outline-danger">Deletar</button>
-                        </div>
-                    </td>
-                </tr>
+                                    Editar
+                                </button>
+                                <button @onclick=" () => ExcluirEfetivo(efetivo.Codigo_Efetivo)" type="button" class="btn btn-outline-danger">Deletar</button>
+                            </div>
+                        </td>
+                    </tr>
+
+                }
             }
             @foreach (EstagiarioViewModel estagiario in estagiarios)
             {
-                <tr>
-                    <td>
-                        @estagiario.Nome
-                    </td>
-                    <td>
-                        Estagiario
-                    </td>
-                    <td>
-                        @estagiario.Data_Nascimento
-                    </td>
-                    <td>
-                        @estagiario.Cpf
-                    </td>
-                    <td>
-                        @estagiario.Email
-                    </td>
+                @if (estagiario.Empresa.codigo_Empresa == codigoEmpresa)
+                {
+                    <tr>
+                        <td>
+                            @estagiario.Nome
+                        </td>
+                        <td>
+                            Estagiario
+                        </td>
+                        <td>
+                            @estagiario.Data_Nascimento
+                        </td>
+                        <td>
+                            @estagiario.Cpf
+                        </td>
+                        <td>
+                            @estagiario.Email
+                        </td>
 
-                    <td>
-                        <div>
-                            <button type="button" class="btn btn-outline-success"
+                        <td>
+                            <div>
+                                <button type="button" class="btn btn-outline-success"
                             @onclick=@(() => NavigationManager.NavigateTo($"CadastroFuncionario/{estagiario.Codigo_Estagiario}/1"))>
-                                Editar
-                            </button>
-                            <button @onclick=" () => ExcluirEstagiario(estagiario.Codigo_Estagiario)" type="button" class="btn btn-outline-danger">Deletar</button>
-                        </div>
-                    </td>
-                </tr>
+                                    Editar
+                                </button>
+                                <button @onclick=" () => ExcluirEstagiario(estagiario.Codigo_Estagiario)" type="button" class="btn btn-outline-danger">Deletar</button>
+                            </div>
+                        </td>
+                    </tr>
+                }
             }
             <tr>
                 <td colspan=6 class="text-center">
@@ -114,15 +122,27 @@ else
     List<EstagiarioViewModel> estagiarios = new List<EstagiarioViewModel>();
     private Modal modal { get; set; }
     private bool loading = false;
+    private int codigoEmpresa { get; set; }
 
-    protected override void OnInitialized()
+
+
+    private async Task GetCookieCodigoEmpresa()
     {
-
+        try
+        {
+            string cookieEmpresa = await JSRuntime.InvokeAsync<string>("blazorExtensions.GetCookieEmpresa");
+            codigoEmpresa = int.Parse(cookieEmpresa);
+        }
+        catch(Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
     }
 
     async protected override Task OnInitializedAsync()
     {
         await ListarFuncionario();
+        await GetCookieCodigoEmpresa();
         StateHasChanged();
     }
 
